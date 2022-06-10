@@ -4,7 +4,7 @@ import { useFormik } from 'formik'
 
 import { AiOutlineSearch } from "react-icons/ai";
 import { Modal, Button } from 'antd';
-import { t_date, set_member_registration,formatDate } from '../../utils/commons'
+import { t_date, set_member_registration,formatDate, API_URL } from '../../utils/commons'
 import axios from 'axios';
 import { set_tab_active } from '../../redux/actions/UserBehaviourAction';
 
@@ -17,7 +17,7 @@ function Member_registration() {
     const [isAddbenf, setisAddbenf] = useState(false)
 
     const [isAddressModalVisible, setisAddressModalVisible] = useState(false);
-    const API_URL = "http://localhost:8080/app";
+
     const [benf_row_data, setbenf_row_data] = useState([])
     const [emp_no, setemp_no] = useState('')
     function callback(key) {
@@ -58,7 +58,7 @@ function Member_registration() {
         // onSubmit: (reg_sr_values,values) => {
         //     //dispatch(register_sr_employer(values))
         //     console.log({...values,service_request_form:reg_sr_values})
-        //     // axios.post(API_URL+'/app/user/login',{...values,service_request_form:reg_sr_values}).then((response) => {
+        //     // axios.post(API_URL+'/user/login',{...values,service_request_form:reg_sr_values}).then((response) => {
         //     //            console.log(response)
         //     //           });
         //              }

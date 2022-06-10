@@ -3,7 +3,7 @@ import { AiOutlineSearch } from 'react-icons/ai'
 import { Tabs } from 'antd';
 import { useFormik, Field, FormikProvider } from 'formik';
 import axios from 'axios';
-import { formatDate } from '../../utils/commons';
+import { API_URL, formatDate } from '../../utils/commons';
 import { useTable } from 'react-table'
 import { Modal } from 'antd';
 import { setsubmitpayment } from '../../utils/commons'
@@ -12,7 +12,6 @@ const { TabPane } = Tabs;
 
 function Collections() {
     const [enableManRecep, setEnableManRecep] = useState(true)
-    const API_URL = "http://localhost:8080/app";
     const [trans_Type, settrans_Type] = useState('')
     const [isnew, setisnew] = useState(true)
     const [emp_no, setemp_no] = useState('')
@@ -294,7 +293,7 @@ function Collections() {
                                 <tr >
                                     <td className='p-1'><label className='form-label float-end'>Transaction Type: </label></td>
                                     <td className='p-1'>
-                                        <Field component="select" id="trans_type" id="trans_type" value={formik.values.trans_type} className={"form-control float-start"} onChange={formik.handleChange} disabled={isnew} required>
+                                        <Field component="select" id="trans_type" value={formik.values.trans_type} className={"form-control float-start"} onChange={formik.handleChange} disabled={isnew} required>
                                             <option value=" " display='none'></option>
                                             <option value="OTC">OTC</option>
                                             <option value="Manual">Manual</option>
@@ -302,7 +301,7 @@ function Collections() {
                                         </Field></td>
                                     <td className='p-1'><label className='form-label float-end'>Employer No#: </label></td>
                                     <td className='p-1'>
-                                        <input className="form-control float-start" id='emp_no' id='emp_no' placeholder="Search by employer no" style={{ width: '230px' }} defaultValue={formik.values.emp_no} onChange={formik.handleChange} disabled={isnew}></input>
+                                        <input className="form-control float-start" id='emp_no' placeholder="Search by employer no" style={{ width: '230px' }} defaultValue={formik.values.emp_no} onChange={formik.handleChange} disabled={isnew}></input>
                                         <a className="p-0 mx-1" type="button" onClick={searchbyemp}>
                                             <AiOutlineSearch style={{ padding: '0px' }} size={30} color={'black'} />
                                         </a>
@@ -345,7 +344,7 @@ function Collections() {
                                 </tr>
                                 <tr>
                                     <td className='p-1'><label className='form-label float-end'>Manual Receipt: </label></td>
-                                    <td className='p-1'> <input className="form-control float-start" style={{ width: '230px' }} defaultValue={formik.values.man_rec} name='man_rec' id='man_rec' onChange={formik.handleChange} onChange={formik.handleChange} disabled={formik.values.trans_type == 'Manual' ? false : true} ></input></td>
+                                    <td className='p-1'> <input className="form-control float-start" style={{ width: '230px' }} defaultValue={formik.values.man_rec} name='man_rec' id='man_rec' onChange={formik.handleChange} disabled={formik.values.trans_type == 'Manual' ? false : true} ></input></td>
                                 </tr>
                             </tbody>
                         </table>

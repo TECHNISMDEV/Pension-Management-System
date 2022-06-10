@@ -3,7 +3,7 @@ import { useFormik ,Field,FormikProvider} from 'formik';
 import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
 import { register_sr_member } from '../../redux/actions/SRAction';
-import { t_date } from '../../utils/commons'
+import { API_URL, t_date } from '../../utils/commons'
 import { AiOutlineSearch } from "react-icons/ai";
 function Member_register() {
     const [isnewEntry, setIsnewEntry] = useState(true)
@@ -50,7 +50,7 @@ function Member_register() {
     })
     const handlenewentry = (e) => {
         e.preventDefault();
-        axios.get("http://localhost:8080/app/getNewServiceRequest").then(
+        axios.get(API_URL+"/getNewServiceRequest").then(
             (res) => (
                 setSrId(res.data.srNumber)
 
@@ -66,7 +66,7 @@ function Member_register() {
         e.preventDefault();
         setEmpNumb(formik.values.employer_id)
         console.log(formik.values.employer_id)
-        axios.get("http://localhost:8080/app/getCompanyById/" + formik.values.employer_id).then(
+        axios.get(API_URL+"/getCompanyById/" + formik.values.employer_id).then(
             (res) => (
         
                setEmpNum(res.data.name)

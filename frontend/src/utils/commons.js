@@ -1,5 +1,7 @@
 import { SdCardTwoTone } from "@material-ui/icons";
 
+export const API_URL = process.env.NODE_ENV !== 'production'? "http://localhost:8080/app":process.env.REACT_APP_BACKEND_URL;
+
 var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 

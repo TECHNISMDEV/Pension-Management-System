@@ -1,17 +1,17 @@
 import { React, useEffect, useState } from 'react'
 import {  useSelector } from 'react-redux'
-import {formatDate} from '../../utils/commons'
+import {API_URL, formatDate} from '../../utils/commons'
 import {Link} from 'react-router-dom'
 import axios from 'axios'
 
 function Service_request() {
-
+   
     const [srData, setSrData] = useState()
    
     const userdata = useSelector(state => state.AuthReducer).user;
     useEffect(() => {
         
-        axios.post("http://localhost:8080/app"+'/serviceRequestByOwnerId/'+userdata.id).then(
+        axios.post(API_URL+'/serviceRequestByOwnerId/'+userdata.id).then(
             (res)=>(
                 setSrData(res.data)
             )
@@ -46,8 +46,7 @@ function Service_request() {
                                 <tbody>
                                 {srData && srData.map((key)=>(
                                    <tr key={key.id}>
-                                       
-                                        <td scope="row"><a href='#'>{key.srNumber}</a></td>
+                                       <td scope="row">{key.id}</td>
                                         <td scope="row">{key.type}</td>
                                         <td scope="row">{key.company ? key.company.name : ''}</td>
                                         <td scope="row">{key.company?<a href={'/dashboard/employer/'+key.company.id}>{key.company.id}</a>:''}</td>

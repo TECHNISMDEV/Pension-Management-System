@@ -1,11 +1,11 @@
 import axios from 'axios';
+import { API_URL } from '../utils/commons';
 
 
 const payload = {
     "name":"",
     "pass":""
 }
-const API_URL = "http://localhost:8080";
 
 const login = (username,password)=>{
 
@@ -13,8 +13,9 @@ payload.name = username;
 payload.pass = password;
 
 console.log(payload);
-
-return axios.post(API_URL+'/app/user/login',payload)
+console.log(process.env.NODE_ENV);
+console.log(API_URL);
+return axios.post(API_URL+'/user/login',payload)
 
 .then((response) => {
             if (response.data) {

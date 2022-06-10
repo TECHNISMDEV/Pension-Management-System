@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Modal, Button } from "react-bootstrap";
 import axios, { post } from 'axios';
-import { formatDate } from '../../utils/commons'
+import { API_URL, formatDate } from '../../utils/commons'
 import { MicNone } from "@material-ui/icons";
 
 
@@ -31,7 +31,7 @@ class Return extends Component {
   Validate = () => {
 
     axios({
-      url: 'http://localhost:8080/app/validate/'+this.state.returnItemId,
+      url: API_URL+'/validate/'+this.state.returnItemId,
       method: 'GET',
       headers: {
         'Access-Control-Allow-Origin': '*'
@@ -50,7 +50,7 @@ this.setState({isselected_retid:key})
     this.setState({ bgColor: 'blue' });
     this.setState({returnItemId : key})
      axios({
-       url: 'http://localhost:8080/app/getItemsByReturnId/'+key,
+       url: API_URL+'/getItemsByReturnId/'+key,
        method: 'GET',
        headers: {
          'Access-Control-Allow-Origin': '*'
@@ -69,7 +69,7 @@ this.setState({isselected_retid:key})
     formdata.append('file', file)
     formdata.append('msg', 'return .csv file passed to back-end')
     axios({
-      url: 'http://localhost:8080/app/file-upload',
+      url: API_URL+'/file-upload',
       method: 'POST',
       headers: {
         'Access-Control-Allow-Origin': '*',

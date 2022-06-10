@@ -1,9 +1,10 @@
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux'
 import { get_sr_data_action } from "../redux/actions/SRAction"
+import { API_URL } from '../utils/commons';
 
 
-const API_URL = "http://localhost:8080/app";
+
 const reg_payload = {
 "sr_id": "",
 "status": "",

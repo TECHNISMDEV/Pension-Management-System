@@ -4,7 +4,7 @@ import { useFormik,Field,FormikProvider } from 'formik';
 import axios from 'axios'
 
 import { register_sr_employer } from '../../redux/actions/SRAction';
-import { t_date } from '../../utils/commons'
+import { API_URL, t_date } from '../../utils/commons'
 import { Redirect } from "react-router-dom"
 
 function Employer_register() {
@@ -51,7 +51,7 @@ function Employer_register() {
     })
     const handlenewentry = (e) => {
         e.preventDefault();
-        axios.get("http://localhost:8080/app/getNewServiceRequest").then(
+        axios.get(API_URL+"/getNewServiceRequest").then(
             (res) => (
                 setSrId(res.data.srNumber)
 

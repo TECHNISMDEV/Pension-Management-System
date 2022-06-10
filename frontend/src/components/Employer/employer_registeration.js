@@ -4,7 +4,7 @@ import { useFormik,Field,FormikProvider } from 'formik'
 import { set_tab_active } from '../../redux/actions/UserBehaviourAction';
 import { AiOutlineSearch } from "react-icons/ai";
 import { Modal, Button } from 'antd';
-import { t_date, set_employ_registration } from '../../utils/commons'
+import { t_date, set_employ_registration, API_URL } from '../../utils/commons'
 import axios from 'axios';
 import 'antd/dist/antd.css';
 import { formatDate,set_employ_save } from '../../utils/commons'
@@ -18,8 +18,6 @@ function Employer_registration(props) {
     const [isdisabled, setisdisabled] = useState(reg_sr_values ? false : true)
 
     const [isAddressModalVisible, setisAddressModalVisible] = useState(false);
-    const API_URL = "http://localhost:8080/app";
-
     const [emp_name, setemp_name] = useState('')
     const [date_rec, setdate_rec] = useState('')
     const [city, setcity] = useState('')
@@ -31,7 +29,7 @@ function Employer_registration(props) {
     useEffect(() => {
         if (emp_no) {
             setisdisabled(false)
-            axios.get("http://localhost:8080/app/getCompanyById/" + emp_no).then(
+            axios.get(API_URL+"/getCompanyById/" + emp_no).then(
                 (res) => (
                     console.log(res.data),
                     setemp_name(res.data.name),
@@ -90,7 +88,7 @@ function Employer_registration(props) {
         onSubmit: (reg_sr_values,values) => {
             dispatch(register_sr_employer(values))
             console.log({...values,service_request_form:reg_sr_values})
-            axios.post(API_URL+'/app/user/login',{...values,service_request_form:reg_sr_values}).then((response) => {
+            axios.post(API_URL+'/user/login',{...values,service_request_form:reg_sr_values}).then((response) => {
                        console.log(response)
                       });
                      }

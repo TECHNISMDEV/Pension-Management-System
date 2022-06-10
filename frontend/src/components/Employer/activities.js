@@ -2,6 +2,7 @@ import { React, useState,useEffect } from 'react'
 import { Collapse } from 'antd'
 import axios from 'axios'
 import { useFormik } from 'formik';
+import { API_URL } from '../../utils/commons';
 const { Panel } = Collapse;
 
 
@@ -9,7 +10,6 @@ const { Panel } = Collapse;
 
 function Activities(props) {
   const [file1, setfile1] = useState([])
-  const API_URL = "http://localhost:8080/app";
   const formik = useFormik({
     initialValues:{
       file1:null,
