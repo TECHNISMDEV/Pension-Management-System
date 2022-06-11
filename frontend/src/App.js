@@ -11,11 +11,12 @@ function App(props) {
     
       <Router>
         <Switch>
+       
         <Route path="/login" component={Login} />
           <Route path="/logout" component={Logout} />
           <Redirect exact from="/dashboard" to="/dashboard/home" />
           <Route exact path="/dashboard/:page?/:id?" render={props => <Dashboard {...props}/>} />
-          
+          <Redirect from='/' to='/dashboard' />
         </Switch>
 
       </Router>
