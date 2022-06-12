@@ -15,9 +15,7 @@ payload.pass = password;
 console.log(payload);
 console.log(process.env.NODE_ENV);
 console.log(API_URL);
-return axios.post(API_URL+'/user/login',payload)
-
-.then((response) => {
+return axios.post(API_URL+'/user/login',payload).then((response) => {
             if (response.data) {
               //localStorage.setItem("cx_user", JSON.stringify(response.data));
               sessionStorage.setItem("cx_user", JSON.stringify(response.data));
