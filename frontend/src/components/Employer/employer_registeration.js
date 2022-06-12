@@ -36,7 +36,7 @@ function Employer_registration(props) {
                     setdate_rec(formatDate(res.data.companyRegDate)),
                     setcity(res.data.address ? res.data.address.city : ''),
                     setpostal_Code(res.data.address ? res.data.address.postal_Code : ''),
-                    setState(res.data.address ? res.data.address.state : ''),
+                    setState(res.data.address ? res.data.address.state : 'NA'),
                     setarea(res.data.address ? res.data.address.adressLine1 : '')
 
 
