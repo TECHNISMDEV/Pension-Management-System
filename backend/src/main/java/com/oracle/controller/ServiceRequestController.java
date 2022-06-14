@@ -72,8 +72,8 @@ public class ServiceRequestController {
 		if (c != null) {
 			return ResponseEntity.status(403).body(String.class);
 		}else {
-			ServiceRequestService.saveNewServiceRequest(serviceRequest);
-			return ResponseEntity.ok("Service request created with No: -"+serviceRequest.getSrNumber());
+			ServiceRequest req =ServiceRequestService.saveNewServiceRequest(serviceRequest);
+			return ResponseEntity.ok("Service request created with No: -"+req.getSrNumber());
 	}
 		
 	}

@@ -26,7 +26,7 @@ public class ServiceRequestService {
 	@Autowired
 	CompanyRepository companyRepository;
 	
-	public void saveNewServiceRequest(ServiceRequestUiVo serviceRequest) {
+	public ServiceRequest saveNewServiceRequest(ServiceRequestUiVo serviceRequest) {
 		
 		ServiceRequest request = new ServiceRequest();
 		Company company = new Company();
@@ -98,7 +98,7 @@ public class ServiceRequestService {
 		request.setStatus(serviceRequest.getSrStatus());
 
 		request.setCompany(company);
-		repository.save(request);
+		return repository.save(request);
 
 	}
 
