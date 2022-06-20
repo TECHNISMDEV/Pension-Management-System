@@ -67,13 +67,18 @@ public class ServiceRequestController {
 	
 	@PostMapping(path = "/newServiceRequest", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<?> addNewServiceRequest(@RequestBody ServiceRequestUiVo serviceRequest) {
-		
-		Company c = companyRepository.findByName(serviceRequest.getName().toUpperCase());
-		if (c != null) {
-			return ResponseEntity.status(403).body(String.class);
+		ServiceRequest serRequest=null;
+		Optional<ServiceRequest> existingSerRequest=serviceRequestRepository.findById(serviceRequest.getId());
+		if(existingSerRequest.isPresent())
+		{
+			serRequest=existingSerRequest.get();
+		}
+		if (serRequest != null) {
+			ServiceRequest updatedServiceRequest= ServiceRequestService.updateServiceRequest(serRequest,serviceRequest);
+			return ResponseEntity.ok(updatedServiceRequest);
 		}else {
 			ServiceRequest req =ServiceRequestService.saveNewServiceRequest(serviceRequest);
-			return ResponseEntity.ok("Service request created with No: -"+req.getSrNumber());
+			return ResponseEntity.ok(req);
 	}
 		
 	}

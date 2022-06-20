@@ -3,11 +3,9 @@ package com.oracle.Vos;
 import java.math.BigInteger;
 import java.sql.Date;
 
-import javax.persistence.Column;
+import lombok.Data;
 
-import com.oracle.model.Address;
-import com.oracle.model.Company;
-
+@Data
 public class ServiceRequestUiVo {
 	private String id;
 
@@ -117,6 +115,8 @@ public class ServiceRequestUiVo {
 	private Date retirementDate;
 	
 	private Date dob;
+	
+	private String loginUserId;
 
 	public String getId() {
 		return id;
