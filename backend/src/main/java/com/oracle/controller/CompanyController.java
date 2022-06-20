@@ -22,7 +22,7 @@ import com.oracle.service.DocumentService;
 @RestController
 @RequestMapping("/app")
 @CrossOrigin
-public class CompanyController {
+public class  CompanyController {
 
 	@Autowired
 	private CompanyRepository companyRepository;

@@ -55,6 +55,14 @@ public class ServiceRequestController {
 	ResponseEntity<>(e, HttpStatus.OK)) .orElseThrow(() -> new
     RuntimeException("Could not get serviceRequest")); 
 	 }
+
+	@GetMapping(path = "/serviceRequestBySrNumber/{srNumber}")
+	public ResponseEntity<?> findAllServiceRequestBySrNumber(@PathVariable String srNumber) {
+		return (ResponseEntity<?>)
+				Optional.of(serviceRequestRepository.findBySrNumber(srNumber)).map(e -> new
+						ResponseEntity<>(e, HttpStatus.OK)) .orElseThrow(() -> new
+						RuntimeException("Could not get serviceRequest"));
+	}
 	
 	@PostMapping(path = "/serviceRequestByOwnerId/{ownerId}")
 	@CrossOrigin

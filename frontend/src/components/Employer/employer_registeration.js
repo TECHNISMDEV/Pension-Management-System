@@ -135,8 +135,9 @@ function Employer_registration(props) {
     }
 
     return (
-
-        <div>
+        <div className="row p-1">
+        <div class="card">
+        <div class="card-body">
 
 
 <FormikProvider value={formik}>
@@ -229,9 +230,13 @@ function Employer_registration(props) {
                     <h1 className="display-5">{emp_name ? emp_name : reg_sr_values.employer_name}</h1>
 
                     <br /><br /><br />
-                    <div class="px-5 m-2">
-                        <button type="submit" className="btn btn-danger float-end rounded-pill" style={{ width: "200px", display: emp_no ? 'none' : 'block' }} onClick={register_sr_employer} >Register</button>
-                        <button type="submit" className="btn btn-danger float-end rounded-pill" style={{ width: "200px", display: emp_no ? 'block' : 'none' }} onClick={save_emp} >Save</button>
+                    <div class="px-2 m-2">
+                        <table className="float-end">
+                        <td className="px-3"> <button type="submit" className="btn btn-danger float-end rounded-pill" style={{ width: "200px"}} onClick={save_emp} >Save</button></td>
+                        <td className="px-3">  <button type="submit" className="btn btn-danger float-end rounded-pill" style={{ width: "200px" }} onClick={()=>{}} >Send for Approval</button></td>
+                        <td className="px-3">  <button type="submit" className="btn btn-danger float-end rounded-pill" style={{ width: "200px" }} onClick={()=>{}} >Accept</button></td>
+                        <td className="px-3">  <button type="submit" className="btn btn-danger float-end rounded-pill" style={{ width: "200px" }} onClick={()=>{}} >Reject</button></td>
+                        </table>
                     </div>
                     <span>
                         <p className='lead fs-6'>Employer Details</p>
@@ -610,6 +615,8 @@ function Employer_registration(props) {
 
             </form>
             </FormikProvider>
+            </div>
+        </div>
         </div>
     )
 }

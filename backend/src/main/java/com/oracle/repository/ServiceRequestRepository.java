@@ -18,5 +18,6 @@ public interface ServiceRequestRepository extends JpaRepository<ServiceRequest, 
 	List<ServiceRequest> findByOwnerId(String ownerId);
 
 	ServiceRequest save(ServiceRequest serviceRequest);
-	
+
+	ServiceRequest findBySrNumber(String srNumber);
 }

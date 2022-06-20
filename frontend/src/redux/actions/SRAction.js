@@ -33,7 +33,7 @@ import {
 
 
   export const register_sr_employer = (sr_values) => (dispatch) => {
-    dispatch(set_tab_active(2))
+   // dispatch(set_tab_active(2))
     SRService.register_sr_employer(sr_values)
     console.log(sr_values)
     dispatch({
@@ -42,7 +42,7 @@ import {
            });
   }
   export const register_sr_member = (sr_values) => (dispatch) => {
-    dispatch(set_tab_active(4))
+   // dispatch(set_tab_active(4))
     SRService.register_sr_member(sr_values)
     console.log(sr_values)
     dispatch({

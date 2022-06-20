@@ -14,6 +14,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import lombok.Data;
+import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -23,6 +25,8 @@ import com.oracle.sequenceGenerator.StringPrefixedSequenceIdGenerator;
 
 @Entity
 @Table(name="COMPANY")
+@Data
+@ToString
 public class Company implements Serializable {
 
 	@Id
@@ -63,7 +67,12 @@ public class Company implements Serializable {
 	private Date companyRegDate;
 	@Column(name="OWNER_ID")
 	private String ownerId;
-	
+
+	@Column(name="LEGAL_NAME")
+	private String legalName;
+
+	@Column(name="COMPANY_STATUS")
+	private String status;
 	@OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "company")
 	@JsonBackReference
 	private ServiceRequest request;

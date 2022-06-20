@@ -11,15 +11,15 @@ function callback(key) {
   
 }
 
-function Service() {
+function Service(props) {
     return (
-        <div className='p-3'> 
+        <div className='p-2'> 
 
 <div class="card">
   <div class="card-body">
   <Tabs onChange={callback} type="card">
     <TabPane className= {styles.sub_tabs} tab="Employer Registration" key="1">
-      <Employer_register/>
+      <Employer_register id={props.id}/>
     </TabPane>
     <TabPane tab="Member Registration" key="2">
       <Member_register/>

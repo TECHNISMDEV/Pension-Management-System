@@ -20,6 +20,7 @@ import Members from '../Members/members';
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import { grey } from "@material-ui/core/colors";
 import Collections from '../Collections/collections';
+import EmployerList from '../Employer/employer_list';
 
 const theme = createMuiTheme({
     overrides: {
@@ -94,7 +95,6 @@ function Dashboard(props) {
     const { isLoggedIn } = useSelector(state => state.AuthReducer);
 const [req_id, setreq_id] = useState(id)
 
-   
     const [value, setValue] = useState(indexToTabName[page]);
     const dispatch = useDispatch();
 
@@ -132,7 +132,7 @@ const [req_id, setreq_id] = useState(id)
                             onChange={handleChange}
                             indicatorColor="secondary"
                             TabIndicatorProps={{
-                                style: { background: "red", height: "10px", top: "75px",zIndex: 0 }
+                                style: { display:"none"}
                               }}
                             variant="scrollable"
                             scrollButtons="auto"
@@ -159,10 +159,10 @@ const [req_id, setreq_id] = useState(id)
                         <Home />
                     </TabPanel>
                     <TabPanel value={value} index={1}>
-                        <Service/>
+                        <Service id={req_id}/>
                     </TabPanel>
                     <TabPanel value={value} index={2}>
-                        <Employer id={req_id}/>
+                    <EmployerList/>
                     </TabPanel>
                     <TabPanel value={value} index={3}>
                        <Return />
