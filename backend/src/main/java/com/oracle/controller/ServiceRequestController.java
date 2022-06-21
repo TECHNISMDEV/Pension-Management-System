@@ -1,9 +1,14 @@
 package com.oracle.controller;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,10 +16,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.oracle.Vos.ServiceRequestUiVo;
-import com.oracle.model.Company;
+import com.oracle.Vos.UploadFileResponse;
+import com.oracle.model.Document;
 import com.oracle.model.ServiceRequest;
 import com.oracle.repository.CompanyRepository;
 import com.oracle.repository.ServiceRequestRepository;
@@ -99,4 +108,45 @@ public class ServiceRequestController {
 		return ResponseEntity.ok(serviceRequest);
 		
 	}
+	@PostMapping("/uploadFile")
+    public ResponseEntity<UploadFileResponse> uploadFile(@RequestParam("file") MultipartFile file,@RequestParam("companyId") String id) {
+        Document doc = ServiceRequestService.storeFile(file,id);
+        
+        String fileDownloadUri = ServletUriComponentsBuilder
+		          .fromCurrentContextPath()
+		          .path("/files/")
+		          .path(doc.getId())
+		          .toUriString();
+        UploadFileResponse response= new UploadFileResponse(doc.getFileName(),fileDownloadUri,doc.getType(),doc.getActualFile().length);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+	
+	@GetMapping("/filesByCompanyId")
+    public ResponseEntity<List<UploadFileResponse>> filesByCompanyId(@RequestParam("companyId") String companyId) {
+		List<UploadFileResponse> files = ServiceRequestService.getAllFilesByCompanyId(companyId).map(dbFile -> {
+		      String fileDownloadUri = ServletUriComponentsBuilder
+		          .fromCurrentContextPath()
+		          .path("/app/files/")
+		          .path(dbFile.getId())
+		          .toUriString();
+		      return new UploadFileResponse(
+		          dbFile.getFileName(),
+		          fileDownloadUri,
+		          dbFile.getType(),
+		          dbFile.getActualFile().length);
+		    }).collect(Collectors.toList());
+		    return ResponseEntity.status(HttpStatus.OK).body(files);
+    }
+	
+	@GetMapping("/files/{id}")
+	  public ResponseEntity<byte[]> getFile(@PathVariable String id) {
+			
+			  Document fileDB = ServiceRequestService.getFile(id); return
+			  ResponseEntity.ok() .contentType(MediaType.parseMediaType(fileDB.getType()))
+			  .header(HttpHeaders.CONTENT_DISPOSITION,"attachment:filename=\""+fileDB.
+			  getFileName()+"\"") .body(fileDB.getActualFile());
+			 
+		
+	  }
 }

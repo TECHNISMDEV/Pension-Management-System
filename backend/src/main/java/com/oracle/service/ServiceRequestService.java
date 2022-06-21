@@ -1,17 +1,24 @@
 package com.oracle.service;
 
+import java.io.IOException;
+import java.lang.annotation.Documented;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.oracle.Vos.ServiceRequestUiVo;
 import com.oracle.model.Address;
 import com.oracle.model.Company;
 import com.oracle.model.Contact;
+import com.oracle.model.Document;
 import com.oracle.model.ServiceRequest;
 import com.oracle.repository.CompanyRepository;
+import com.oracle.repository.DocumentRepository;
 import com.oracle.repository.ServiceRequestRepository;
 import com.oracle.util.DateUtil;
 
@@ -26,6 +33,12 @@ public class ServiceRequestService {
 	
 	@Autowired
 	CompanyRepository companyRepository;
+	
+	@Autowired
+	DocumentService docService;
+	
+	@Autowired
+	DocumentRepository docRepository;
 	
 	public ServiceRequest saveNewServiceRequest(ServiceRequestUiVo serviceRequest) {
 		
@@ -180,6 +193,31 @@ public class ServiceRequestService {
 
 		return repository.save(serRequest);
 
+	}
+
+	public Document storeFile(MultipartFile file, String companyid) {
+		Document doc=null;
+		try {
+			 doc=docService.saveDocument(file, companyid);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return doc;
+	}
+
+	public Stream<Document> getAllFiles() {
+	    return docRepository.findAll().stream();
+	  }
+
+	public Stream<Document> getAllFilesByCompanyId(String companyId) {
+		// TODO Auto-generated method stub
+		return docRepository.findAllByCompanyId(companyId).stream();
+	}
+
+	public Document getFile(String id) {
+		// TODO Auto-generated method stub
+		return docRepository.findById(id).get();
 	}
 
 	
