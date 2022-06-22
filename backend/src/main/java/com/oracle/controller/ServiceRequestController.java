@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import jdk.jfr.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -143,7 +144,7 @@ public class ServiceRequestController {
 	  public ResponseEntity<byte[]> getFile(@PathVariable String id) {
 			
 			  Document fileDB = ServiceRequestService.getFile(id); return
-			  ResponseEntity.ok() .contentType(MediaType.parseMediaType(fileDB.getType()))
+				ResponseEntity.ok() .contentType(MediaType.APPLICATION_OCTET_STREAM)
 			  .header(HttpHeaders.CONTENT_DISPOSITION,"attachment:filename=\""+fileDB.
 			  getFileName()+"\"") .body(fileDB.getActualFile());
 			 
