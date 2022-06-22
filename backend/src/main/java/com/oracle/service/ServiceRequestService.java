@@ -44,22 +44,25 @@ public class ServiceRequestService {
 		
 		ServiceRequest request = new ServiceRequest();
 		Company company = new Company();
-		Address address = new Address();
-		Contact contact = new Contact();
+		/*
+		 * Address address = new Address(); Contact contact = new Contact();
+		 */
 
-		contact.setContactType(serviceRequest.getContactType());
-		contact.setContactTypeId(serviceRequest.getContactTypeId());
-		contact.setDob(serviceRequest.getDob());
-		contact.setCraeatedBy(serviceRequest.getLoginUserId());
-		contact.setCreated(DateUtil.getCurrentDate());
-		contact.setLastUpdBy(serviceRequest.getLoginUserId());
-		contact.setLast_Updated(DateUtil.getCurrentDate());
-		contact.setFirstName(serviceRequest.getFirstName());
-		contact.setMiddleName(serviceRequest.getMiddleName());
-		contact.setLastName(serviceRequest.getLastName());
-		contact.setDocumentNo(serviceRequest.getDocumentNum());
-		contact.setDocumentType(serviceRequest.getDocumentType());
-		company.setContact(contact);
+		/*
+		 * contact.setContactType(serviceRequest.getContactType());
+		 * contact.setContactTypeId(serviceRequest.getContactTypeId());
+		 * contact.setDob(serviceRequest.getDob());
+		 * contact.setCraeatedBy(serviceRequest.getLoginUserId());
+		 * contact.setCreated(DateUtil.getCurrentDate());
+		 * contact.setLastUpdBy(serviceRequest.getLoginUserId());
+		 * contact.setLast_Updated(DateUtil.getCurrentDate());
+		 * contact.setFirstName(serviceRequest.getFirstName());
+		 * contact.setMiddleName(serviceRequest.getMiddleName());
+		 * contact.setLastName(serviceRequest.getLastName());
+		 * contact.setDocumentNo(serviceRequest.getDocumentNum());
+		 * contact.setDocumentType(serviceRequest.getDocumentType());
+		 * company.setContact(contact);
+		 */
 
 		// Address
 		/*
@@ -91,6 +94,27 @@ public class ServiceRequestService {
 		company.setDocumentType(serviceRequest.getDocumentType());
 		company.setName(serviceRequest.getName().toUpperCase());
 		company.setOwnerId(serviceRequest.getLoginUserId());
+		company.setPropFirstName(serviceRequest.getPropFirstName());
+		company.setPropLastName(serviceRequest.getPropLastName());
+		company.setPropPosition(serviceRequest.getPropPosition());
+		company.setLegalName(serviceRequest.getLegalName());
+		company.setSeasonFlag(serviceRequest.getSeasonFlag());
+		company.setPacraId(serviceRequest.getPacraId());
+		company.setCompanyStatus(serviceRequest.getCompanyStatus());
+		company.setCompanySubStatus(serviceRequest.getCompanySubStatus());
+		company.setCompanyType(serviceRequest.getCompanyType());
+		company.setSector(serviceRequest.getSector());
+		company.setHoldingCompany(serviceRequest.getHoldingCompany());
+		company.setSubsidaryCompany(serviceRequest.getSubsidaryCompany());
+		company.setMainFax(serviceRequest.getMainFax());
+		company.setDateIncopr(serviceRequest.getDateIncopr());
+		company.setStEmploy(serviceRequest.getStEmploy());
+		company.setRegion(serviceRequest.getRegion());
+		company.setProvince(serviceRequest.getProvince());
+		company.setDistrict(serviceRequest.getDistrict());
+		company.setStation(serviceRequest.getStation());
+		company.setZone(serviceRequest.getZone());
+		company.setMainPhone(serviceRequest.getMainPhone());
 		// company.setPrContactId(serviceRequest.getPrContactId());
 
 		// service request
@@ -126,20 +150,22 @@ public class ServiceRequestService {
 	public ServiceRequest updateServiceRequest(ServiceRequest serRequest, ServiceRequestUiVo serviceRequest) {
 		// TODO Auto-generated method stub
 		
-		  Contact contact = serRequest.getCompany().getContact();
-		  contact.setContactType(serviceRequest.getContactType());
-		  contact.setContactTypeId(serviceRequest.getContactTypeId());
-		  contact.setDob(serviceRequest.getDob());
-		  //contact.setCraeatedBy(serviceRequest.getCraeatedBy());
-		  //contact.setCreated(DateUtil.getCurrentDate());
-		  contact.setLastUpdBy(serviceRequest.getLoginUserId());
-		  contact.setLast_Updated(DateUtil.getCurrentDate());
-		  contact.setFirstName(serviceRequest.getFirstName());
-		  contact.setMiddleName(serviceRequest.getMiddleName());
-		  contact.setLastName(serviceRequest.getLastName());
-		  contact.setDocumentNo(serviceRequest.getDocumentNum());
-		  contact.setDocumentType(serviceRequest.getDocumentType());
-		  serRequest.getCompany().setContact(contact);
+		/*
+		 * Contact contact = serRequest.getCompany().getContact();
+		 * contact.setContactType(serviceRequest.getContactType());
+		 * contact.setContactTypeId(serviceRequest.getContactTypeId());
+		 * contact.setDob(serviceRequest.getDob());
+		 * //contact.setCraeatedBy(serviceRequest.getCraeatedBy());
+		 * //contact.setCreated(DateUtil.getCurrentDate());
+		 * contact.setLastUpdBy(serviceRequest.getLoginUserId());
+		 * contact.setLast_Updated(DateUtil.getCurrentDate());
+		 * contact.setFirstName(serviceRequest.getFirstName());
+		 * contact.setMiddleName(serviceRequest.getMiddleName());
+		 * contact.setLastName(serviceRequest.getLastName());
+		 * contact.setDocumentNo(serviceRequest.getDocumentNum());
+		 * contact.setDocumentType(serviceRequest.getDocumentType());
+		 * serRequest.getCompany().setContact(contact);
+		 */
 		  
 			/*
 			 * Address address = serRequest.getCompany().getAddress();
@@ -171,6 +197,27 @@ public class ServiceRequestService {
 		  company.setDocumentNum(serviceRequest.getDocumentNum());
 		  company.setDocumentType(serviceRequest.getDocumentType());
 		  company.setName(serviceRequest.getName().toUpperCase());
+		  company.setPropFirstName(serviceRequest.getPropFirstName());
+			company.setPropLastName(serviceRequest.getPropLastName());
+			company.setPropPosition(serviceRequest.getPropPosition());
+			company.setLegalName(serviceRequest.getLegalName());
+			company.setSeasonFlag(serviceRequest.getSeasonFlag());
+			company.setPacraId(serviceRequest.getPacraId());
+			company.setCompanyStatus(serviceRequest.getCompanyStatus());
+			company.setCompanySubStatus(serviceRequest.getCompanySubStatus());
+			company.setCompanyType(serviceRequest.getCompanyType());
+			company.setSector(serviceRequest.getSector());
+			company.setHoldingCompany(serviceRequest.getHoldingCompany());
+			company.setSubsidaryCompany(serviceRequest.getSubsidaryCompany());
+			company.setMainFax(serviceRequest.getMainFax());
+			company.setDateIncopr(serviceRequest.getDateIncopr());
+			company.setStEmploy(serviceRequest.getStEmploy());
+			company.setRegion(serviceRequest.getRegion());
+			company.setProvince(serviceRequest.getProvince());
+			company.setDistrict(serviceRequest.getDistrict());
+			company.setStation(serviceRequest.getStation());
+			company.setZone(serviceRequest.getZone());
+			company.setMainPhone(serviceRequest.getMainPhone());
 		  //company.setOwnerId(serviceRequest.getOwnerId());
 		  
 		  serRequest.setCompany(company);
