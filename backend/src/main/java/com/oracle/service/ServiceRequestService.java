@@ -62,21 +62,23 @@ public class ServiceRequestService {
 		company.setContact(contact);
 
 		// Address
-		address.setCity(serviceRequest.getCity());
-		address.setAdressLine1(serviceRequest.getAdressLine1());
-		address.setAdressLine2(serviceRequest.getAdressLine2());
-		address.setAdressLine3(serviceRequest.getAdressLine3());
-		address.setAdressLine4(serviceRequest.getAdressLine4());
-		address.setAdressType(serviceRequest.getAdressType());
-		address.setCountry(serviceRequest.getCountry());
-		address.setCraeatedBy(serviceRequest.getLoginUserId());
-		address.setCreated(DateUtil.getCurrentDate());
-		address.setLastUpdBy(serviceRequest.getLoginUserId());
-		address.setLast_Updated(DateUtil.getCurrentDate());
-		address.setDistrictProvience(serviceRequest.getDistrictProvience());
-		address.setState(serviceRequest.getState());
-		address.setPostalCode(serviceRequest.getPostalCode());
-		company.setAddress(address);
+		/*
+		 * address.setCity(serviceRequest.getCity());
+		 * address.setAdressLine1(serviceRequest.getAdressLine1());
+		 * address.setAdressLine2(serviceRequest.getAdressLine2());
+		 * address.setAdressLine3(serviceRequest.getAdressLine3());
+		 * address.setAdressLine4(serviceRequest.getAdressLine4());
+		 * address.setAdressType(serviceRequest.getAdressType());
+		 * address.setCountry(serviceRequest.getCountry());
+		 * address.setCraeatedBy(serviceRequest.getLoginUserId());
+		 * address.setCreated(DateUtil.getCurrentDate());
+		 * address.setLastUpdBy(serviceRequest.getLoginUserId());
+		 * address.setLast_Updated(DateUtil.getCurrentDate());
+		 * address.setDistrictProvience(serviceRequest.getDistrictProvience());
+		 * address.setState(serviceRequest.getState());
+		 * address.setPostalCode(serviceRequest.getPostalCode());
+		 * company.setAddress(address);
+		 */
 
 		// Company
 		company.setCreated(DateUtil.getCurrentDate());
@@ -139,23 +141,25 @@ public class ServiceRequestService {
 		  contact.setDocumentType(serviceRequest.getDocumentType());
 		  serRequest.getCompany().setContact(contact);
 		  
-		    Address address = serRequest.getCompany().getAddress();
-		  address.setCity(serviceRequest.getCity());
-		  address.setAdressLine1(serviceRequest.getAdressLine1());
-		  address.setAdressLine2(serviceRequest.getAdressLine2());
-		  address.setAdressLine3(serviceRequest.getAdressLine3());
-		  address.setAdressLine4(serviceRequest.getAdressLine4());
-		  address.setAdressType(serviceRequest.getAdressType());
-		  address.setCountry(serviceRequest.getCountry());
-		  //address.setCraeatedBy(serviceRequest.getCraeatedBy());
-		  //address.setCreated(DateUtil.getCurrentDate());
-		  address.setLastUpdBy(serviceRequest.getLoginUserId());
-		  address.setLast_Updated(DateUtil.getCurrentDate());
-		  address.setDistrictProvience(serviceRequest.getDistrictProvience());
-		  address.setState(serviceRequest.getState());
-		  address.setPostalCode(serviceRequest.getPostalCode());
-		  
-		  serRequest.getCompany().setAddress(address);
+			/*
+			 * Address address = serRequest.getCompany().getAddress();
+			 * address.setCity(serviceRequest.getCity());
+			 * address.setAdressLine1(serviceRequest.getAdressLine1());
+			 * address.setAdressLine2(serviceRequest.getAdressLine2());
+			 * address.setAdressLine3(serviceRequest.getAdressLine3());
+			 * address.setAdressLine4(serviceRequest.getAdressLine4());
+			 * address.setAdressType(serviceRequest.getAdressType());
+			 * address.setCountry(serviceRequest.getCountry());
+			 * //address.setCraeatedBy(serviceRequest.getCraeatedBy());
+			 * //address.setCreated(DateUtil.getCurrentDate());
+			 * address.setLastUpdBy(serviceRequest.getLoginUserId());
+			 * address.setLast_Updated(DateUtil.getCurrentDate());
+			 * address.setDistrictProvience(serviceRequest.getDistrictProvience());
+			 * address.setState(serviceRequest.getState());
+			 * address.setPostalCode(serviceRequest.getPostalCode());
+			 * 
+			 * serRequest.getCompany().setAddress(address);
+			 */
 		  
 		  Company company = serRequest.getCompany(); // Company
 		  //company.setCreated(DateUtil.getCurrentDate());
