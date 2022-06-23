@@ -11,11 +11,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.oracle.sequenceGenerator.StringPrefixedSequenceIdGenerator;
 
 @Entity
@@ -65,6 +67,10 @@ public class Address {
 	private String companyId;
 	@Column(name="MEMBER_ID")
 	private String memberId;
+	
+	@JsonInclude()
+	@Transient
+	private String loginId;
 	
 	@OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "address")
 	@JsonBackReference
@@ -178,5 +184,12 @@ public class Address {
 	public void setCompany(Company company) {
 		this.company = company;
 	} 
+	
+	public String getLoginId() {
+		return loginId;
+	}
+	public void setLoginId(String loginId) {
+		this.loginId = loginId;
+	}
 	
 }

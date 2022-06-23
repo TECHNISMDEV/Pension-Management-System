@@ -29,4 +29,5 @@ public class AddressVo {
 	private String adressType;
 	private String companyId;
 	private String memberId;
+	private String loginId;
 }
