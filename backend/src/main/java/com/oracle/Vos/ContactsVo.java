@@ -28,4 +28,5 @@ public class ContactsVo {
 	private String memberId;
 	private String companyId;
 	private Date dob;
+	private String loginId;
 }
