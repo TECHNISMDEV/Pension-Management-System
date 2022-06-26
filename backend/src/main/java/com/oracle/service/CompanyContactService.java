@@ -1,6 +1,7 @@
 package com.oracle.service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class CompanyContactService {
 		Optional<Contact> coOptional=null;
 		Contact contact=null;
 		coOptional=contactRepository.findById(vo.getId());
-		if(coOptional.isEmpty()) {
+		if(Objects.nonNull(coOptional)) {
 			contact=new Contact();
 			contact.setCompanyId(vo.getCompanyId());
 			contact.setContactType(vo.getContactType());

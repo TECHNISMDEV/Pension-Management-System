@@ -19,9 +19,9 @@ export const  t_date = ()=>{
 
 export const set_employ_save = (values)=>{
     var payload ={
-        "adressLine1": values.plot_no+' '+values.box_no+' '+values.street_name+' '+values.residency_area,
-        "adressLine2": values.postal_name+' '+values.town+' '+values.postal_code,
-        "adressLine3": "",
+        "adressLine1": values.residencyArea,
+        "adressLine2": values.residencyArea,
+        "adressLine3": values.residencyArea,
         "adressLine4": "",
         "adressType": "",
         "area": values.area,
@@ -33,7 +33,7 @@ export const set_employ_save = (values)=>{
         "companyId": "",
         "companyRegDate": "",
         "contactName": values.owner_name,
-        "contactNumber": values.phone_no,
+        "contactNumber": values.phoneNo,
         "contactType": "",
         "contactTypeId": "",
         "country": values.nationality,
@@ -41,19 +41,19 @@ export const set_employ_save = (values)=>{
         "created": "",
         "districtProvience": values.province,
         "dob": "",
-        "documentNum": values.employer_name,
-        "documentType": values.employer_name,
+        "documentNum": values.companyName,
+        "documentType": values.companyName,
         "email": values.email,
         "endDate": "",
         "firstName": "",
-        "id": values.employer_no,
+        "id": values.srId,
         "lastName": "",
         "lastUpdBy": values.owner_id,
         "last_Updated": "",
         "memberId": "",
         "middleName": "",
-        "mobileNo": values.phone_no,
-        "name": values.employer_name,
+        "mobileNo": values.phoneNo,
+        "name": values.companyName,
         "orgId": "",
         "ownerId": values.owner_id,
         "postalCode": values.postal_code?values.postal_code:'NA',
@@ -202,14 +202,17 @@ export const  formatDate = (date)=>{
     var d = new Date(date),
         month = '' + (d.getMonth()+1),
         day = '' + d.getDate(),
-        year = d.getFullYear();
+        year = d.getFullYear(),
+        hour = d.getHours(),
+        minutes = d.getMinutes(),
+        seconds = d.getSeconds();
 
     if (month.length < 2) 
         month = '0' + month;
     if (day.length < 2) 
         day = '0' + day;
 
-    return [month, day, year].join('/');
+    return [month, day, year].join('/') + " "+[hour,minutes,seconds].join(':');
 }
 
 

@@ -20,9 +20,30 @@ function Employer_register(props) {
     const [enableEmpRegForm, setEnableEmpRegForm] = useState(false)
     const [employer_number,setEmployer_Number] = useState('')
     const [srForm,setSrForm] = useState({})
+    const [lookUp,setLookUp] = useState({})
     const dispatch = useDispatch();
     let history = useHistory(); 
     const userdata = useSelector(state => state.AuthReducer).user;
+    const _ = require('lodash')
+
+    useEffect(() => {
+
+        if(props.id){
+            axios.get(API_URL + '/serviceRequestBySrNumber/'+srNum).then(
+            (res) => {
+                console.log(res.data)
+                setSrForm(res.data)
+                setEmployer_Number(res.data.company.id)
+            } 
+        )
+    }
+    axios.get(API_URL + '/getLookUpForEmployer').then(
+        (res) => {
+            console.log(res.data)
+            setLookUp(res.data)
+           
+        })
+    }, [])
 
     const formik = useFormik({
         initialValues: {
@@ -31,11 +52,11 @@ function Employer_register(props) {
             status: status,
             owner_type: '',
             date_received: isDisable ? '' : t_date().year + '-' + t_date().month + '-' + t_date().date,
-            contact_name: '',
-            contact_no: '',
+            contact_name: srForm.company?srForm.contactName:'',
+            contact_no: srForm.company?srForm.contactNumber:'',
             contact_mail:'',
-            employer_id: '',
-            employer_name: '',
+            employer_id: srForm.company?srForm.company.id:'',
+            employer_name: srForm.company?srForm.company.name:'',
             employer_type: '',
             nationality: '',
             nrc: '',
@@ -56,18 +77,7 @@ function Employer_register(props) {
             formik.setValues(values)
         }
     })
-    useEffect(() => {
-
-        if(props.id){
-            axios.get(API_URL + '/serviceRequestBySrNumber/'+srNum).then(
-            (res) => {
-                console.log(res.data)
-                setSrForm(res.data)
-                setEmployer_Number(res.data.company.id)
-            }
-        )}
-
-    }, [])
+  
     const handlenewentry = (e) => {
         e.preventDefault();
         axios.get(API_URL + "/getNewServiceRequest").then(
@@ -259,9 +269,12 @@ function Employer_register(props) {
                                         <td className='p-1'>
 
                                             <Field component="select" class="form-select float-start " style={{ width: '100%' }} id="owner_type" name="owner_type" onChange={formik.handleChange} disabled={isDisable}>
-                                                <option defaultValue=""></option>
-                                                <option defaultValue="Customer Service Clerk">Customer Service Clerk</option>
-                                                <option defaultValue="Station Head">Station Head</option>
+                                            <option defaultValue=''></option>  
+                                                { lookUp.TCX_OWNER_TYPE ? lookUp.TCX_OWNER_TYPE.map((item)=>(
+                                                   <option defaultValue={item}>{item}</option>  
+                                                )):null
+                                            }
+                                           
 
                                             </Field></td>
                                             <td className='tcx-form-label'>
@@ -329,7 +342,7 @@ function Employer_register(props) {
 
                         </div>
                     </div>
-                    {employer_number ? <Employer_registration id={employer_number} /> : null}
+                    {employer_number ? <Employer_registration id={employer_number} srForm={srForm}/> : null}
                 </form>
             </FormikProvider>
         </div>

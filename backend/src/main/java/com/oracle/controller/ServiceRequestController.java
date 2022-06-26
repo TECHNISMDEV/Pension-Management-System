@@ -109,8 +109,8 @@ public class ServiceRequestController {
 		return ResponseEntity.ok(serviceRequest);
 		
 	}
-	@PostMapping("/uploadFile")
-    public ResponseEntity<UploadFileResponse> uploadFile(@RequestParam("file") MultipartFile file,@RequestParam("companyId") String id) {
+	@PostMapping("/uploadFile/{companyId}")
+    public ResponseEntity<UploadFileResponse> uploadFile(@RequestParam("file") MultipartFile file,@PathVariable("companyId") String id) {
         Document doc = ServiceRequestService.storeFile(file,id);
         
         String fileDownloadUri = ServletUriComponentsBuilder
@@ -123,8 +123,8 @@ public class ServiceRequestController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 	
-	@GetMapping("/filesByCompanyId")
-    public ResponseEntity<List<UploadFileResponse>> filesByCompanyId(@RequestParam("companyId") String companyId) {
+	@GetMapping("/filesByCompanyId/{companyId}")
+    public ResponseEntity<List<UploadFileResponse>> filesByCompanyId(@PathVariable("companyId") String companyId) {
 		List<UploadFileResponse> files = ServiceRequestService.getAllFilesByCompanyId(companyId).map(dbFile -> {
 		      String fileDownloadUri = ServletUriComponentsBuilder
 		          .fromCurrentContextPath()

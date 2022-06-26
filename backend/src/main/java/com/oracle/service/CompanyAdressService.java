@@ -1,6 +1,7 @@
 package com.oracle.service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class CompanyAdressService {
 		Optional<Address> addr=null;
 		Address address=null;
 		addr=adressRepository.findById(addressVo.getId());
-		if(addr.isEmpty())
+		if(Objects.nonNull(addr))
 		{
 			address=new Address();
 			address.setAdressLine1(addressVo.getAdressLine1());
