@@ -15,7 +15,7 @@ public class DocumentService {
 	@Autowired
 	DocumentRepository docRepo;
 	
-	public void saveDocument(MultipartFile file,String companyId) throws IOException
+	public Document saveDocument(MultipartFile file,String companyId) throws IOException
 	{
 		Document doc=new Document();
 		doc.setDocumentName(file.getName());
@@ -25,6 +25,11 @@ public class DocumentService {
 		doc.setFileName(file.getOriginalFilename());
 		doc.setCompanyId(companyId);
 		
-		docRepo.save(doc);
+		return docRepo.save(doc);
+	}
+
+	public void getDocumentById(String docId) {
+
+		docRepo.findById(docId);
 	}
 }

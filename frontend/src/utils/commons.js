@@ -19,9 +19,9 @@ export const  t_date = ()=>{
 
 export const set_employ_save = (values)=>{
     var payload ={
-        "adressLine1": values.plot_no+' '+values.box_no+' '+values.street_name+' '+values.residency_area,
-        "adressLine2": values.postal_name+' '+values.town+' '+values.postal_code,
-        "adressLine3": "",
+        "adressLine1": values.residencyArea,
+        "adressLine2": values.residencyArea,
+        "adressLine3": values.residencyArea,
         "adressLine4": "",
         "adressType": "",
         "area": values.area,
@@ -33,7 +33,7 @@ export const set_employ_save = (values)=>{
         "companyId": "",
         "companyRegDate": "",
         "contactName": values.owner_name,
-        "contactNumber": values.phone_no,
+        "contactNumber": values.phoneNo,
         "contactType": "",
         "contactTypeId": "",
         "country": values.nationality,
@@ -41,19 +41,19 @@ export const set_employ_save = (values)=>{
         "created": "",
         "districtProvience": values.province,
         "dob": "",
-        "documentNum": values.employer_name,
-        "documentType": values.employer_name,
+        "documentNum": values.companyName,
+        "documentType": values.companyName,
         "email": values.email,
         "endDate": "",
         "firstName": "",
-        "id": values.employer_no,
+        "id": values.srId,
         "lastName": "",
         "lastUpdBy": values.owner_id,
         "last_Updated": "",
         "memberId": "",
         "middleName": "",
-        "mobileNo": values.phone_no,
-        "name": values.employer_name,
+        "mobileNo": values.phoneNo,
+        "name": values.companyName,
         "orgId": "",
         "ownerId": values.owner_id,
         "postalCode": values.postal_code?values.postal_code:'NA',
@@ -72,7 +72,7 @@ export const set_employ_save = (values)=>{
     return payload
 }
 
-export const set_employ_registration = (values)=>{
+export const set_employ_registration = (values,userId)=>{
     var payload ={
         "adressLine1": values.plot_no+' '+values.box_no+' '+values.street_name+' '+values.residency_area,
         "adressLine2": values.postal_name+' '+values.town+' '+values.postal_code,
@@ -87,42 +87,43 @@ export const set_employ_registration = (values)=>{
         "compMemId": "",
         "companyId": values.employer_no?values.employer_no:'',
         "companyRegDate": "",
-        "contactName": values.service_request_form.owner_name,
+        "contactName": values.owner_name,
         "contactNumber": values.phone_no,
         "contactType": "",
         "contactTypeId": "",
-        "country": "ZAMBIAN",
-        "craeatedBy": values.service_request_form.owner_id,
+        "country": values.nationality?values.nationality:'ZAMBIAN',
+        "craeatedBy": values.owner_id,
         "created": "",
         "districtProvience": values.province,
         "dob": "",
-        "documentNum": values.service_request_form.employer_name,
-        "documentType": values.service_request_form.employer_name,
+        "documentNum": values.employer_name,
+        "documentType": values.employer_name,
         "email": values.email,
         "endDate": "",
         "firstName": "",
         "id": "",
         "lastName": "",
-        "lastUpdBy": values.service_request_form.owner_id,
+        "lastUpdBy": userId,
         "last_Updated": "",
+        "loginUserId": userId,
         "memberId": "",
         "middleName": "",
         "mobileNo": values.phone_no,
-        "name": values.service_request_form.employer_name,
+        "name": values.employer_name,
         "orgId": "",
-        "ownerId": values.service_request_form.owner_id,
+        "ownerId": values.owner_id,
         "postalCode": values.postal_code?values.postal_code:'NA',
         "prContactId": "",
         "priority": "",
         "process": "",
         "resolution": "",
         "source": "",
-        "srNumber": values.service_request_form.sr_num,
-        "srStatus": values.service_request_form.status,
+        "srNumber": values.sr_num,
+        "srStatus": values.status,
         "startDate": values.date_of_employing,
         "state": values.region?values.region:'NA',
         "subArea": "",
-        "type": values.service_request_form.sr_type
+        "type": values.sr_type
       }
 console.log(payload)
 return payload
@@ -184,12 +185,12 @@ export const set_member_registration = (values)=>{
           
             "ssn": values.ssn,
     
-            "srNumber": values.service_request_form.sr_num,
-            "srStatus": values.service_request_form.status,
+            "srNumber": values.sr_num,
+            "srStatus": values.status,
             "startDate": '2020-03-02',
-            "state": values.region,
+            "state":"",
             "subArea": "",
-            "type": values.service_request_form.sr_type
+            "type": values.sr_type
           
       }
 console.log(payload)
@@ -201,14 +202,17 @@ export const  formatDate = (date)=>{
     var d = new Date(date),
         month = '' + (d.getMonth()+1),
         day = '' + d.getDate(),
-        year = d.getFullYear();
+        year = d.getFullYear(),
+        hour = d.getHours(),
+        minutes = d.getMinutes(),
+        seconds = d.getSeconds();
 
     if (month.length < 2) 
         month = '0' + month;
     if (day.length < 2) 
         day = '0' + day;
 
-    return [month, day, year].join('-');
+    return [month, day, year].join('/') + " "+[hour,minutes,seconds].join(':');
 }
 
 

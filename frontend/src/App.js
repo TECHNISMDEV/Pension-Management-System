@@ -6,10 +6,11 @@ import Logout from "./components/Session/logout";
 import Dashboard from "./components/Common/dashboard";
 
 
+
 function App(props) {
   return (
     
-      <Router>
+      <Router forceRefresh={true}>
         <Switch>
        
         <Route path="/login" component={Login} />

@@ -4,22 +4,72 @@ import {API_URL, formatDate} from '../../utils/commons'
 import {Link} from 'react-router-dom'
 import axios from 'axios'
 
+import { SearchOutlined } from '@ant-design/icons';
+import { Button, Input, Space, Table } from 'antd';
+import Highlighter from 'react-highlight-words';
+
 function Service_request() {
    
-    const [srData, setSrData] = useState()
+    const [srData, setSrData] = useState([])
    
     const userdata = useSelector(state => state.AuthReducer).user;
     useEffect(() => {
         
         axios.post(API_URL+'/serviceRequestByOwnerId/'+userdata.id).then(
             (res)=>(
+                console.log(res.data),
                 setSrData(res.data)
             )
         )
         
        
     }, [])
-    console.log(srData)
+    const columns = [
+        {
+          title: 'SR#',
+          dataIndex: 'srNumber',
+          key: 'srNumber',
+          render: text => <a className="stretched-link" href={"/dashboard/service/"+text}>{text}</a>
+        },
+        {
+          title: 'SR Type',
+          dataIndex: 'type',
+          key: 'type',
+        },
+        {
+          title: 'Employer Name',
+          dataIndex: ['company','name'],
+          key: 'name',
+        },
+        {
+            title: 'Employer Number',
+            dataIndex: ['company','id'],
+            key: 'address',
+          },
+          {
+            title: 'Status',
+            dataIndex: 'status',
+            key: 'status',
+          },
+          {
+            title: 'Owner',
+            dataIndex: 'ownerId',
+            key: 'ownerId',
+          },
+          {
+            title: 'SSN',
+            dataIndex: 'address',
+            key: 'address',
+          },
+          {
+            title: 'Created On',
+            dataIndex: 'created',
+            key: 'created',
+            render: text => <p>{formatDate(text)}</p>
+          }
+      ]
+
+
     return (
 
 
@@ -29,7 +79,7 @@ function Service_request() {
                     <div className="card-body">
                         <p className="card-title fs-3 mb-3">My Service Request</p>
 
-                        <table class="table table-striped">
+                        {/* <table class="table table-striped">
                             <thead>
                                 <tr>
                                     <th scope="col">SR#</th>
@@ -64,7 +114,18 @@ function Service_request() {
                                 </tbody>
                                                   
 
-                        </table>
+                        </table> */}
+
+                    <Table  onRow={(record, rowIndex) => {
+                            return {
+                                onClick: event => { }, // click row
+                                onDoubleClick: event => { }, // double click row
+                                onContextMenu: event => { }, // right button click row
+                                onMouseEnter: event => { }, // mouse enter row
+                                onMouseLeave: event => { }, // mouse leave row
+                            };
+                        }} columns={columns} dataSource={srData} 
+                        loading={srData.length===0?true:false} />
 
                     </div>
                 </div>
