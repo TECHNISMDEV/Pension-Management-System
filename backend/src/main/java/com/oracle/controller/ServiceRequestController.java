@@ -24,8 +24,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.oracle.Vos.ServiceRequestUiVo;
 import com.oracle.Vos.UploadFileResponse;
+import com.oracle.model.AppUser;
 import com.oracle.model.Document;
 import com.oracle.model.ServiceRequest;
+import com.oracle.repository.AppUserService;
 import com.oracle.repository.CompanyRepository;
 import com.oracle.repository.ServiceRequestRepository;
 import com.oracle.service.DataSourceConfigService;
@@ -47,6 +49,9 @@ public class ServiceRequestController {
 
 	@Autowired
 	private CompanyRepository companyRepository;
+	
+	@Autowired
+	private AppUserService appUserService;
 	
 	
 	@GetMapping(path = "/service/allServiceRequest")
@@ -150,4 +155,18 @@ public class ServiceRequestController {
 			 
 		
 	  }
+	  @PostMapping("/sendForApproval")
+		public ResponseEntity<?> sendForApproval(@RequestBody ServiceRequestUiVo serviceRequest) {
+
+			ServiceRequest serRequest = null;
+			Optional<ServiceRequest> existingSerRequest = serviceRequestRepository.findById(serviceRequest.getId());
+			if (existingSerRequest.isPresent()) {
+				serRequest = existingSerRequest.get();
+			}
+			AppUser manager = appUserService.findCurrentManager(serviceRequest.getLoginUserId());
+			serRequest.setOwnerId(manager.getId());
+			ServiceRequest updatedServiceRequest=ServiceRequestService.submitForApproval(serRequest);
+			return ResponseEntity.ok(updatedServiceRequest);
+
+		}
 }
