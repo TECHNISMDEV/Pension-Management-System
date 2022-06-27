@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -155,15 +156,15 @@ public class ServiceRequestController {
 			 
 		
 	  }
-	  @PostMapping("/sendForApproval")
-		public ResponseEntity<?> sendForApproval(@RequestBody ServiceRequestUiVo serviceRequest) {
+	  @PutMapping("/sendForApproval")
+		public ResponseEntity<?> sendForApproval(@RequestParam(value = "serviceRequestId") String serviceRequestId,@RequestParam(value = "loginId") String loginId  ) {
 
 			ServiceRequest serRequest = null;
-			Optional<ServiceRequest> existingSerRequest = serviceRequestRepository.findById(serviceRequest.getId());
+			Optional<ServiceRequest> existingSerRequest = serviceRequestRepository.findById(serviceRequestId);
 			if (existingSerRequest.isPresent()) {
 				serRequest = existingSerRequest.get();
 			}
-			AppUser manager = appUserService.findCurrentManager(serviceRequest.getLoginUserId());
+			AppUser manager = appUserService.findCurrentManager(loginId);
 			serRequest.setOwnerId(manager.getId());
 			ServiceRequest updatedServiceRequest=ServiceRequestService.submitForApproval(serRequest);
 			return ResponseEntity.ok(updatedServiceRequest);
