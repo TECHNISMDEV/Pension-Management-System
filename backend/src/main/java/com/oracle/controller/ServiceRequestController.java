@@ -1,6 +1,7 @@
 package com.oracle.controller;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -33,6 +34,7 @@ import com.oracle.repository.CompanyRepository;
 import com.oracle.repository.ServiceRequestRepository;
 import com.oracle.service.DataSourceConfigService;
 import com.oracle.service.ServiceRequestService;
+import com.oracle.util.LookUpConstant;
 @RestController
 @RequestMapping("/app")
 @CrossOrigin
@@ -157,17 +159,37 @@ public class ServiceRequestController {
 		
 	  }
 	  @PutMapping("/sendForApproval")
-		public ResponseEntity<?> sendForApproval(@RequestParam(value = "serviceRequestId") String serviceRequestId,@RequestParam(value = "loginId") String loginId  ) {
+		public ResponseEntity<?> sendForApproval(@RequestParam(value = "serviceRequestId") String serviceRequestId ) {
 
 			ServiceRequest serRequest = null;
 			Optional<ServiceRequest> existingSerRequest = serviceRequestRepository.findById(serviceRequestId);
 			if (existingSerRequest.isPresent()) {
 				serRequest = existingSerRequest.get();
+				AppUser manager = appUserService.findCurrentManager(serRequest.getOwnerId());
+				serRequest.setOwnerId(manager.getId());
+				serRequest.setStatus(LookUpConstant.SERVICE_REQUEST_STATUS_REGISTERED);
+				ServiceRequest updatedServiceRequest=ServiceRequestService.submitForApproval(serRequest);
+				return ResponseEntity.ok(updatedServiceRequest);
 			}
-			AppUser manager = appUserService.findCurrentManager(loginId);
-			serRequest.setOwnerId(manager.getId());
-			ServiceRequest updatedServiceRequest=ServiceRequestService.submitForApproval(serRequest);
-			return ResponseEntity.ok(updatedServiceRequest);
+			
+			return ResponseEntity.ok("somthing wrong with Service Request");
+
+		}
+	  
+	  @PutMapping("/approveSrRequest")
+		public ResponseEntity<?> approveSrRequest(@RequestParam(value = "serviceRequestId") String serviceRequestId ) {
+
+			ServiceRequest serRequest = null;
+			Optional<ServiceRequest> existingSerRequest = serviceRequestRepository.findById(serviceRequestId);
+			if (Objects.nonNull(existingSerRequest)) {
+				serRequest = existingSerRequest.get();
+				serRequest.setStatus(LookUpConstant.SERVICE_REQUEST_STATUS_APPROVED);
+				ServiceRequest updatedServiceRequest=ServiceRequestService.submitForApproval(serRequest);
+				return ResponseEntity.ok(updatedServiceRequest);
+			}
+			
+			return ResponseEntity.ok("somthing wrong with Service Request");
+			
 
 		}
 }
