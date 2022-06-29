@@ -132,35 +132,59 @@ function EmployerList() {
 
     const columns = [
         {
-            title: 'Employer Number',
-            dataIndex: 'id',
-            key: 'id',
-            width: '20%',
-            ...getColumnSearchProps('id'),
-        }, {
             title: 'Name',
             dataIndex: 'name',
             key: 'name',
-            width: '30%',
+          
             ...getColumnSearchProps('name'),
+        }, 
+        {
+            title: 'Legal Name',
+            dataIndex: 'legalName',
+            key: 'legalName',
         },
         {
-            title: 'Country',
-            dataIndex: ['address', 'country'],
-            key: 'country',
-            width: '20%'
+            title: 'Company CX Ref',
+            dataIndex: 'compCxRef',
+            key: 'compCxRef',
         },
+        {
+            title: 'Pacra Id',
+            dataIndex: 'pacraId',
+            key: 'pacraId',
+        },
+        {
+            title: 'Company Type',
+            dataIndex: 'companyType',
+            key: 'companyType',
+        },
+        {
+            title: 'Phone Number',
+            dataIndex: 'mainPhone',
+            key: 'mainPhone',
+        },
+        {
+            title: 'Sector',
+            dataIndex: 'sector',
+            key: 'sector',
+        },
+        // {
+        //     title: 'Country',
+        //     dataIndex: ['address', 'country'],
+        //     key: 'country',
+           
+        // },
         {
             title: 'Owner Id',
             dataIndex: 'ownerId',
             key: 'ownerId',
-            width: '20%'
+          
         },
         {
             title: 'Created On',
             dataIndex: 'created',
             key: 'created',
-            width: '20%',
+           
             render: date => <p>{formatDate(date)}</p>,
         }
     ];
@@ -183,6 +207,10 @@ function EmployerList() {
                             };
                         }} columns={columns} dataSource={employerList} 
                         loading={employerList.length===0?true:false}
+                        pagination={{
+                            position: ['none','bottomCenter'],
+                            defaultPageSize: 5,
+                          }}
                         /></div>:<EmployerFormView employer={formData}/>}
                              
 

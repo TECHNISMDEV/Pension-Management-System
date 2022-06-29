@@ -10,15 +10,18 @@ import Highlighter from 'react-highlight-words';
 
 function Service_request() {
    
-    const [srData, setSrData] = useState([])
+    const [srData, setSrData] = useState(null)
+    const _ = require('lodash')
    
     const userdata = useSelector(state => state.AuthReducer).user;
     useEffect(() => {
         
         axios.post(API_URL+'/serviceRequestByOwnerId/'+userdata.id).then(
             (res)=>(
+              
                 console.log(res.data),
                 setSrData(res.data)
+         
             )
         )
         
@@ -125,7 +128,11 @@ function Service_request() {
                                 onMouseLeave: event => { }, // mouse leave row
                             };
                         }} columns={columns} dataSource={srData} 
-                        loading={srData.length===0?true:false} />
+                        loading={_.isNull(srData)?true:false} 
+                        pagination={{
+                            position: ['none','bottomCenter'],
+                            defaultPageSize: 5,
+                          }}/>
 
                     </div>
                 </div>

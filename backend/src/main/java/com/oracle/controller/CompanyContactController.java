@@ -6,12 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.oracle.Vos.AddressVo;
 import com.oracle.Vos.ContactsVo;
@@ -21,6 +16,7 @@ import com.oracle.service.CompanyContactService;
 
 @RestController
 @RequestMapping(path = "/app")
+@CrossOrigin
 public class CompanyContactController {
 	
 	@Autowired
@@ -40,8 +36,8 @@ public class CompanyContactController {
 		return companyContactService.addCompanyContact(vo);
 	}
 	
-	@GetMapping(path = "/getContactByCompanyId")
-	public ResponseEntity<?> getAddresByCompanyId(@RequestParam("companyId") String companyId ){
+	@GetMapping(path = "/getContactByCompanyId/{companyId}")
+	public ResponseEntity<?> getAddresByCompanyId(@PathVariable("companyId") String companyId ){
 		
 		
 		return (ResponseEntity<?>) Optional.of(companyContactService.getContactListByCompanyId(companyId)).map(e -> new ResponseEntity<>(e, HttpStatus.OK))
