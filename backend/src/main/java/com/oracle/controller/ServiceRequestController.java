@@ -1,6 +1,9 @@
 package com.oracle.controller;
 
 import java.util.List;
+
+import java.util.Objects;
+
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,12 +28,17 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.oracle.Vos.ServiceRequestUiVo;
 import com.oracle.Vos.UploadFileResponse;
+
+import com.oracle.model.AppUser;
+
 import com.oracle.model.Document;
 import com.oracle.model.ServiceRequest;
+import com.oracle.repository.AppUserService;
 import com.oracle.repository.CompanyRepository;
 import com.oracle.repository.ServiceRequestRepository;
 import com.oracle.service.DataSourceConfigService;
 import com.oracle.service.ServiceRequestService;
+import com.oracle.util.LookUpConstant;
 @RestController
 @RequestMapping("/app")
 @CrossOrigin
@@ -47,6 +56,9 @@ public class ServiceRequestController {
 
 	@Autowired
 	private CompanyRepository companyRepository;
+	
+	@Autowired
+	private AppUserService appUserService;
 	
 	
 	@GetMapping(path = "/service/allServiceRequest")
@@ -150,4 +162,39 @@ public class ServiceRequestController {
 			 
 		
 	  }
+	  @PutMapping("/sendForApproval")
+		public ResponseEntity<?> sendForApproval(@RequestParam(value = "serviceRequestId") String serviceRequestId ) {
+
+			ServiceRequest serRequest = null;
+			Optional<ServiceRequest> existingSerRequest = serviceRequestRepository.findById(serviceRequestId);
+			if (existingSerRequest.isPresent()) {
+				serRequest = existingSerRequest.get();
+				AppUser manager = appUserService.findCurrentManager(serRequest.getOwnerId());
+				serRequest.setOwnerId(manager.getId());
+				serRequest.setStatus(LookUpConstant.SERVICE_REQUEST_STATUS_REGISTERED);
+				ServiceRequest updatedServiceRequest=ServiceRequestService.submitForApproval(serRequest);
+				return ResponseEntity.ok(updatedServiceRequest);
+			}
+			
+			return ResponseEntity.ok("somthing wrong with Service Request");
+
+		}
+	  
+	  @PutMapping("/approveSrRequest")
+		public ResponseEntity<?> approveSrRequest(@RequestParam(value = "serviceRequestId") String serviceRequestId ) {
+
+			ServiceRequest serRequest = null;
+			Optional<ServiceRequest> existingSerRequest = serviceRequestRepository.findById(serviceRequestId);
+			if (Objects.nonNull(existingSerRequest)) {
+				serRequest = existingSerRequest.get();
+				serRequest.setStatus(LookUpConstant.SERVICE_REQUEST_STATUS_APPROVED);
+				ServiceRequest updatedServiceRequest=ServiceRequestService.submitForApproval(serRequest);
+				return ResponseEntity.ok(updatedServiceRequest);
+			}
+			
+			return ResponseEntity.ok("somthing wrong with Service Request");
+			
+
+		}
+
 }

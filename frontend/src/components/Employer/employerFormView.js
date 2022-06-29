@@ -27,7 +27,9 @@ function EmployerFormView(props) {
 
 
             <div className='col'>
-                <p className='lead mx-3'>Employer Details</p>
+
+            <p className="card-title fs-3 mb-3">Employer Details</p>
+
                 <hr />
             </div>
             <table style={{ width: "100%" }}>
@@ -132,7 +134,9 @@ function EmployerFormView(props) {
             </table>
 
             <div className='col pt-3'>
-                <p className='lead mx-3'>Business Details</p>
+
+            <p className="card-title fs-3 mb-3">Business Details</p>
+
                 <hr />
             </div>
             <table style={{ width: "100%" }}>
@@ -192,7 +196,9 @@ function EmployerFormView(props) {
             </table>
 
             <div className='col pt-3'>
-                <p className='lead mx-3'>Properietor Details</p>
+
+            <p className="card-title fs-3 mb-3">Properietor Details</p>
+
                 <hr />
             </div>
             <table style={{ width: "100%" }}>
@@ -241,7 +247,9 @@ function EmployerFormView(props) {
             </table>
 
             <div className='col pt-3'>
-                <p className='lead mx-3'>Location Details</p>
+
+            <p className="card-title fs-3 mb-3">Location Details</p>
+
                 <hr />
             </div>
             <table style={{ width: "100%" }}>

@@ -96,6 +96,14 @@ public class AppUserController {
 
   		}
 	    
+	    @GetMapping(path = "/getCurrentManagerByLoginId/{loginId}")
+  		public ResponseEntity<?> findManagerforUserId(@PathVariable String loginId) {
+
+  			return (ResponseEntity<?>) Optional.of(appUserService.findCurrentManager(loginId)).map(e -> new ResponseEntity<>(e, HttpStatus.OK))
+  					.orElseThrow(() -> new RuntimeException("Could not get Fund events"));
+
+  		} 
+	    
 	
 
 }

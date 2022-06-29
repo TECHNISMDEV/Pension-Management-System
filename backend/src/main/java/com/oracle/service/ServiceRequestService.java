@@ -272,4 +272,11 @@ public class ServiceRequestService {
 	}
 
 	
+	public ServiceRequest submitForApproval(ServiceRequest serRequest) {
+		return repository.save(serRequest);
+		
+	}
+
+
+	
 }

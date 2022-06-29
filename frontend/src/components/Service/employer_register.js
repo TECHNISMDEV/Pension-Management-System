@@ -87,7 +87,7 @@ function Employer_register(props) {
             )
         )
 
-        setsrType('Employer registration')
+        setsrType('Employer Registration')
         setstatus('Open')
         setIsDisable(false)
     }
