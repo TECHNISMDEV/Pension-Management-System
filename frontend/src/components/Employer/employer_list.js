@@ -174,17 +174,17 @@ function EmployerList() {
         //     key: 'country',
            
         // },
+
         {
             title: 'Owner Id',
             dataIndex: 'ownerId',
             key: 'ownerId',
-          
         },
         {
             title: 'Created On',
             dataIndex: 'created',
             key: 'created',
-           
+
             render: date => <p>{formatDate(date)}</p>,
         }
     ];
@@ -211,6 +211,7 @@ function EmployerList() {
                             position: ['none','bottomCenter'],
                             defaultPageSize: 5,
                           }}
+
                         /></div>:<EmployerFormView employer={formData}/>}
                              
 

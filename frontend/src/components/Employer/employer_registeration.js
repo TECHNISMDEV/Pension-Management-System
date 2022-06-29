@@ -12,8 +12,10 @@ import { Tabs } from 'antd';
 import Activities from './activities';
 import { _ } from 'lodash'
 import ChecklistUpload from './checklistUpload';
+
 import Contacts  from './contacts';
 import Address from './address';
+
 
 function Employer_registration(props) {
     const [emp_no, setemp_no] = useState(props.id)
@@ -155,6 +157,7 @@ function Employer_registration(props) {
 
                                 <div class="px-2 m-2">
                                     <table className="float-end">
+
                                         <td className="px-3"> <button type="submit" className="btn btn-danger float-end rounded-pill"  onClick={save_emp} >Save</button></td>
                                         <td className="px-3">  <button type="button" className="btn btn-danger float-end rounded-pill" style={{ width: "200px" }} onClick={() => { }} >Send for Approval</button></td>
                                         <td className="px-3">  <button type="button" className="btn btn-danger float-end rounded-pill"  onClick={() => { }} >Accept</button></td>
@@ -478,6 +481,7 @@ function Employer_registration(props) {
                             </div> */}
 
 <div className='col pt-3'>
+
 <p className="card-title fs-3 mb-3">Business Details</p>
                 <hr />
             </div>
@@ -554,6 +558,7 @@ function Employer_registration(props) {
 
             <div className='col pt-3'>
             <p className="card-title fs-3 mb-3">Properietor Details</p>
+
                 <hr />
             </div>
             <table style={{ width: "100%" }}>
@@ -602,7 +607,9 @@ function Employer_registration(props) {
             </table>
 
             <div className='col pt-3'>
+
             <p className="card-title fs-3 mb-3">Location Details</p>
+
                 <hr />
             </div>
             <table style={{ width: "100%" }}>
@@ -661,6 +668,7 @@ function Employer_registration(props) {
                                 <Tabs onChange={callback} defaultActiveKey='1' type="card">
                                     <TabPane tab="Checklist (Attachments)" key="1">
                                         <div className='row'>
+
                                             <div className='col px-5'>
                                                 {/* <Activities show={false} emp={emp_no} /> */}
                                                 <ChecklistUpload empNumber={emp_no}/>
@@ -669,9 +677,11 @@ function Employer_registration(props) {
                                     </TabPane>
                                     <TabPane tab="Contacts" key="2">
                                         <div className='row'>
+
                                             
                                             <div className='col px-5'>
                                                 <Contacts empNumber={emp_no}/>
+
                                             </div>
                                         </div>
                                     </TabPane>
@@ -680,6 +690,7 @@ function Employer_registration(props) {
                                           
                                             <div className='col px-5'>
                                             <Address empNumber={emp_no}/>
+
                                             </div>
                                         </div>
                                     </TabPane>

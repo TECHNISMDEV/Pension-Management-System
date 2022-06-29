@@ -10,6 +10,7 @@ import Highlighter from 'react-highlight-words';
 
 function Service_request() {
    
+
     const [srData, setSrData] = useState(null)
     const _ = require('lodash')
    
@@ -18,7 +19,7 @@ function Service_request() {
         
         axios.post(API_URL+'/serviceRequestByOwnerId/'+userdata.id).then(
             (res)=>(
-              
+
                 console.log(res.data),
                 setSrData(res.data)
          
@@ -133,6 +134,7 @@ function Service_request() {
                             position: ['none','bottomCenter'],
                             defaultPageSize: 5,
                           }}/>
+
 
                     </div>
                 </div>
