@@ -21,6 +21,7 @@ import com.oracle.repository.CompanyRepository;
 import com.oracle.repository.DocumentRepository;
 import com.oracle.repository.ServiceRequestRepository;
 import com.oracle.util.DateUtil;
+import com.oracle.util.LookUpConstant;
 
 @Service
 public class ServiceRequestService {
@@ -100,8 +101,8 @@ public class ServiceRequestService {
 		company.setLegalName(serviceRequest.getLegalName());
 		company.setSeasonFlag(serviceRequest.getSeasonFlag());
 		company.setPacraId(serviceRequest.getPacraId());
-		company.setCompanyStatus(serviceRequest.getCompanyStatus());
-		company.setCompanySubStatus(serviceRequest.getCompanySubStatus());
+		company.setCompanyStatus(LookUpConstant.COMPANY_STATUS_INPROGRESS);
+		company.setCompanySubStatus(LookUpConstant.COMPANY_SUB_STATUS_INPROGRESS);
 		company.setCompanyType(serviceRequest.getCompanyType());
 		company.setSector(serviceRequest.getSector());
 		company.setHoldingCompany(serviceRequest.getHoldingCompany());
@@ -135,7 +136,7 @@ public class ServiceRequestService {
 		request.setArea(serviceRequest.getArea());
 		request.setSubArea(serviceRequest.getSubArea());
 		request.setSource(serviceRequest.getSource());
-		request.setStatus(serviceRequest.getSrStatus());
+		request.setStatus(LookUpConstant.SERVICE_REQUEST_STATUS_REGISTERED);
 
 		request.setCompany(company);
 		return repository.save(request);

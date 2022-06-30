@@ -171,7 +171,8 @@ public class ServiceRequestController {
 				serRequest = existingSerRequest.get();
 				AppUser manager = appUserService.findCurrentManager(serRequest.getOwnerId());
 				serRequest.setOwnerId(manager.getId());
-				serRequest.setStatus(LookUpConstant.SERVICE_REQUEST_STATUS_REGISTERED);
+				//serRequest.setStatus(LookUpConstant.SERVICE_REQUEST_STATUS_REGISTERED);
+				serRequest.getCompany().setCompanySubStatus(LookUpConstant.COMPANY_SUB_STATUS_SENDFORAPPROVAL);
 				ServiceRequest updatedServiceRequest=ServiceRequestService.submitForApproval(serRequest);
 				return ResponseEntity.ok(updatedServiceRequest);
 			}
@@ -187,6 +188,8 @@ public class ServiceRequestController {
 			Optional<ServiceRequest> existingSerRequest = serviceRequestRepository.findById(serviceRequestId);
 			if (Objects.nonNull(existingSerRequest)) {
 				serRequest = existingSerRequest.get();
+				serRequest.getCompany().setCompanyStatus(LookUpConstant.COMPANY_STATUS_APPROVE);
+				serRequest.getCompany().setCompanySubStatus(LookUpConstant.COMPANY_SUB_STATUS_APPROVED);
 				serRequest.setStatus(LookUpConstant.SERVICE_REQUEST_STATUS_APPROVED);
 				ServiceRequest updatedServiceRequest=ServiceRequestService.submitForApproval(serRequest);
 				return ResponseEntity.ok(updatedServiceRequest);
