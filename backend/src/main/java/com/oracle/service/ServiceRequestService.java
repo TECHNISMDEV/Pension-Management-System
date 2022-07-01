@@ -59,7 +59,7 @@ public class ServiceRequestService {
 		company.setLastUpdatedBy(companyVo.getLoginUserId());
 		company.setCompanyRegDate(companyVo.getCompanyRegDate());
 		company.setCompCxRef(companyVo.getCompCxRef());
-		company.setDocumentNum(companyVo.getDocumentNum());
+		company.setDocumentNum(DateUtil.getCurrentDate().toString());
 		company.setDocumentType(companyVo.getDocumentType());
 		company.setName(companyVo.getName().toUpperCase());
 		company.setOwnerId(companyVo.getLoginUserId());

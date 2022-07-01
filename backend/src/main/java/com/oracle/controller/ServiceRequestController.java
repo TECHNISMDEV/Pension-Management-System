@@ -116,7 +116,7 @@ public class ServiceRequestController {
 			serviceRequest.setServiceRequestVo(req.getVo());
 			serviceRequest.getServiceRequestVo().setUser(user);
 			serviceRequest.setCompanyVo(req.getCompany().getVo());
-			return ResponseEntity.ok(req);
+			return ResponseEntity.ok(serviceRequest);
 	}
 		
 	}
