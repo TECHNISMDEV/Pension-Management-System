@@ -20,7 +20,10 @@ import org.hibernate.annotations.Parameter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.oracle.Vos.ServiceRequestVo;
 import com.oracle.sequenceGenerator.StringPrefixedSequenceIdGenerator;
+import com.oracle.util.DateUtil;
+import com.oracle.util.LookUpConstant;
 
 import lombok.Data;
 
@@ -80,20 +83,13 @@ public class ServiceRequest implements Serializable {
 	 
 	 @Column(name = "COMMENTS")
 	 private String comments;
-	 
-		/*
-		 * @Column(name = "COMAPNY_ID") private String companyId;
-		 */
-	 
-		/*
-		 * @Column(name = "COMP_MEM_ID") private String compMemId;
-		 */
-	 
+
 	 @Column(name = "CLAIM_ID")
 	 private String claimId;
-	 
+
 	 @Column(name = "OWNER_ID")
 	 private String ownerId;
+		 
  
 	 @Column(name = "ORG_ID")
 	 private String orgId;
@@ -113,6 +109,31 @@ public class ServiceRequest implements Serializable {
 	 @Column(name="STATUS")
 	 private String status;
 	 
+	 @Column(name="PROP_FST_NAME")
+	 private String srPropiterFirstName;
+	 
+	 @Column(name="PROP_LAST_NAME")
+	 private String srPropiterLastName;
+	 
+	 @Column(name="NATIONALITY")
+	 private String propiterNationality;
+	 
+	 @Column(name="NRC")
+	 private String proprietorNRC;
+	 
+	 @Column(name="NAME")
+	 private String name;
+	 
+	 @Column(name="COMPANY_TYPE")
+	 private String companyType;
+	 
+	 @Column(name="LOCATION")
+	 private String location;
+	 
+	 @Column(name="CONTACT_EMAIL")
+	 private String contactEmail;
+
+	 
 	 @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 	 @JoinColumn(name="COMAPNY_ID",referencedColumnName = "ID")
 	 @JsonManagedReference
@@ -122,210 +143,52 @@ public class ServiceRequest implements Serializable {
 	 @JoinColumn(name="COMP_MEM_ID",referencedColumnName = "ID")
 	 @JsonManagedReference
 	 private CompanyMember member;
+	 
+	 
+	 public ServiceRequestVo getVo()
+	 {
+		 ServiceRequestVo request=new ServiceRequestVo();
+		 
+		 request.setId(this.getId());
+			request.setCreated(this.created);
+			request.setCraeatedBy(this.craeatedBy);
+			request.setLast_Updated(this.last_Updated);
+			request.setLastUpdBy(this.lastUpdBy);
+			request.setOrgId(this.getOrgId());
+			request.setOwnerId(this.ownerId);
+			request.setClaimId(this.getClaimId());
+			request.setSrNumber(this.getSrNumber());
+			request.setSource(this.getSource());
+			request.setContactName(this.getContactName());
+			request.setType(this.getType());
+			request.setStartDate(this.getStartDate());
+			request.setEndDate(this.getEndDate());
+			request.setArea(this.getArea());
+			request.setSubArea(this.getSubArea());
+			request.setSource(this.getSource());
+			request.setStatus(this.getStatus());
+			request.setProcess(this.getProcess());
+			request.setResolution(this.getResolution());
+			request.setComments(this.getComments());
+			request.setProcess(this.getPriority());
+			request.setContactNumber(this.getContactNumber());
+			request.setContactEmail(this.getContactEmail());
+			request.setSrPropiterFirstName(this.getSrPropiterFirstName());
+			request.setSrPropiterLastName(this.getSrPropiterLastName());
+			request.setProprietorNRC(this.getProprietorNRC());
+			request.setPropiterNationality(this.getPropiterNationality());
+			request.setName(this.getName());
+			request.setCompanyType(this.getCompanyType());
+			request.setLocation(this.getLocation());
+		 
+		 return request;
+	 }
+	 
+	
 
-	public String getId() {
-		return id;
-	}
+	
 
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public Date getCreated() {
-		return created;
-	}
-
-	public void setCreated(Date created) {
-		this.created = created;
-	}
-
-	public String getCraeatedBy() {
-		return craeatedBy;
-	}
-
-	public void setCraeatedBy(String craeatedBy) {
-		this.craeatedBy = craeatedBy;
-	}
-
-	public Date getLast_Updated() {
-		return last_Updated;
-	}
-
-	public void setLast_Updated(Date last_Updated) {
-		this.last_Updated = last_Updated;
-	}
-
-	public String getLastUpdBy() {
-		return lastUpdBy;
-	}
-
-	public void setLastUpdBy(String lastUpdBy) {
-		this.lastUpdBy = lastUpdBy;
-	}
-
-	public String getSrNumber() {
-		return srNumber;
-	}
-
-	public void setSrNumber(String srNumber) {
-		this.srNumber = srNumber;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public Date getStartDate() {
-		return startDate;
-	}
-
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
-	}
-
-	public Date getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
-
-	public String getArea() {
-		return area;
-	}
-
-	public void setArea(String area) {
-		this.area = area;
-	}
-
-	public String getSubArea() {
-		return subArea;
-	}
-
-	public void setSubArea(String subArea) {
-		this.subArea = subArea;
-	}
-
-	public String getProcess() {
-		return process;
-	}
-
-	public void setProcess(String process) {
-		this.process = process;
-	}
-
-	public String getResolution() {
-		return resolution;
-	}
-
-	public void setResolution(String resolution) {
-		this.resolution = resolution;
-	}
-
-	public String getComments() {
-		return comments;
-	}
-
-	public void setComments(String comments) {
-		this.comments = comments;
-	}
-
-	/*
-	 * public String getCompanyId() { return companyId; }
-	 * 
-	 * public void setCompanyId(String companyId) { this.companyId = companyId; }
-	 */
-
-	/*
-	 * public String getCompMemId() { return compMemId; }
-	 * 
-	 * public void setCompMemId(String compMemId) { this.compMemId = compMemId; }
-	 */
-
-	public String getClaimId() {
-		return claimId;
-	}
-
-	public void setClaimId(String claimId) {
-		this.claimId = claimId;
-	}
-
-	public String getOwnerId() {
-		return ownerId;
-	}
-
-	public void setOwnerId(String ownerId) {
-		this.ownerId = ownerId;
-	}
-
-	public String getOrgId() {
-		return orgId;
-	}
-
-	public void setOrgId(String orgId) {
-		this.orgId = orgId;
-	}
-
-	public String getSource() {
-		return source;
-	}
-
-	public void setSource(String source) {
-		this.source = source;
-	}
-
-	public String getPriority() {
-		return priority;
-	}
-
-	public void setPriority(String priority) {
-		this.priority = priority;
-	}
-
-	public BigInteger getContactNumber() {
-		return contactNumber;
-	}
-
-	public void setContactNumber(BigInteger contactNumber) {
-		this.contactNumber = contactNumber;
-	}
-
-	public String getContactName() {
-		return contactName;
-	}
-
-	public void setContactName(String contactName) {
-		this.contactName = contactName;
-	}
-
-	public Company getCompany() {
-		return company;
-	}
-
-	public void setCompany(Company company) {
-		this.company = company;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	public CompanyMember getMember() {
-		return member;
-	}
-
-	public void setMember(CompanyMember member) {
-		this.member = member;
-	}
+	
 
 	
 	 

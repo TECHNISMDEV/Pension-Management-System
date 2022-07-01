@@ -98,16 +98,24 @@ public class ServiceRequestController {
 	@PostMapping(path = "/newServiceRequest", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<?> addNewServiceRequest(@RequestBody ServiceRequestUiVo serviceRequest) {
 		ServiceRequest serRequest=null;
-		Optional<ServiceRequest> existingSerRequest=serviceRequestRepository.findById(serviceRequest.getId());
+		Optional<ServiceRequest> existingSerRequest=serviceRequestRepository.findById(serviceRequest.getServiceRequestVo().getId());
+		String loginId=serviceRequest.getServiceRequestVo().getLoginUserId();
+		AppUser user=appUserService.findUserById(loginId);
 		if(existingSerRequest.isPresent())
 		{
 			serRequest=existingSerRequest.get();
 		}
 		if (serRequest != null) {
 			ServiceRequest updatedServiceRequest= ServiceRequestService.updateServiceRequest(serRequest,serviceRequest);
-			return ResponseEntity.ok(updatedServiceRequest);
+			serviceRequest.setServiceRequestVo(updatedServiceRequest.getVo());
+			serviceRequest.getServiceRequestVo().setUser(user);
+			serviceRequest.setCompanyVo(updatedServiceRequest.getCompany().getVo());
+			return ResponseEntity.ok(serviceRequest);
 		}else {
 			ServiceRequest req =ServiceRequestService.saveNewServiceRequest(serviceRequest);
+			serviceRequest.setServiceRequestVo(req.getVo());
+			serviceRequest.getServiceRequestVo().setUser(user);
+			serviceRequest.setCompanyVo(req.getCompany().getVo());
 			return ResponseEntity.ok(req);
 	}
 		
