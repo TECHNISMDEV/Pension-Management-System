@@ -80,8 +80,15 @@ public class ServiceRequestController {
 
 	@GetMapping(path = "/serviceRequestBySrNumber/{srNumber}")
 	public ResponseEntity<?> findAllServiceRequestBySrNumber(@PathVariable String srNumber) {
+		ServiceRequest request=serviceRequestRepository.findBySrNumber(srNumber);
+		ServiceRequestUiVo uiVo=new ServiceRequestUiVo();
+		uiVo.setCompanyVo(request.getCompany().getVo());
+		uiVo.setServiceRequestVo(request.getVo());
+		String loginId=request.getOwnerId();
+		AppUser user=appUserService.findUserById(loginId);
+		uiVo.getServiceRequestVo().setUser(user);
 		return (ResponseEntity<?>)
-				Optional.of(serviceRequestRepository.findBySrNumber(srNumber)).map(e -> new
+				Optional.of(uiVo).map(e -> new
 						ResponseEntity<>(e, HttpStatus.OK)) .orElseThrow(() -> new
 						RuntimeException("Could not get serviceRequest"));
 	}
