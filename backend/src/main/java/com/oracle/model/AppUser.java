@@ -15,6 +15,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Data;
 
@@ -25,7 +26,13 @@ public class AppUser implements Serializable
 {
 	
 	
-	 @Column(name = "LOGIN")
+	 /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+
+	@Column(name = "LOGIN")
 	 @Id
 	 private String login;
 	 
@@ -60,110 +67,14 @@ public class AppUser implements Serializable
 	 @Column(name = "RESP_ID")
 	 private String respID;
 	 
-	 @Column(name = "POS_ID")
-	 private String posID;
+		/*
+		 * @Column(name = "POS_ID") private String posID;
+		 */
 	 
-	
-	 
-	 
-
-	public String getLogin() {
-		return login;
-	}
-
-	public void setLogin(String login) {
-		this.login = login;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public Date getCreated() {
-		return created;
-	}
-
-	public void setCreated(Date created) {
-		this.created = created;
-	}
-
-	public String getCraeatedBy() {
-		return craeatedBy;
-	}
-
-	public void setCraeatedBy(String craeatedBy) {
-		this.craeatedBy = craeatedBy;
-	}
-
-	public Date getLast_Updated() {
-		return last_Updated;
-	}
-
-	public void setLast_Updated(Date last_Updated) {
-		this.last_Updated = last_Updated;
-	}
-
-	public String getLastUpdBy() {
-		return lastUpdBy;
-	}
-
-	public void setLastUpdBy(String lastUpdBy) {
-		this.lastUpdBy = lastUpdBy;
-	}
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-	public Integer getMobileNo() {
-		return mobileNo;
-	}
-
-	public void setMobileNo(Integer mobileNo) {
-		this.mobileNo = mobileNo;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getRespID() {
-		return respID;
-	}
-
-	public void setRespID(String respID) {
-		this.respID = respID;
-	}
-
-	public String getPosID() {
-		return posID;
-	}
-
-	public void setPosID(String posID) {
-		this.posID = posID;
-	}
-
-	
-	 
+	 @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+	 @JoinColumn(name="POS_ID",referencedColumnName = "ID")
+	 @JsonManagedReference
+	 private Position position;
+	 	 
 	
 }
