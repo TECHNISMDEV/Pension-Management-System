@@ -36,6 +36,9 @@ public class ServiceRequestService {
 	
 	@Autowired
 	CompanyRepository companyRepository;
+
+	@Autowired
+	ServiceRequestRepository serviceRequestRepository;
 	
 	@Autowired
 	DocumentService docService;
@@ -50,7 +53,6 @@ public class ServiceRequestService {
 		
 		CompanyVo companyVo=uiVo.getCompanyVo();
 		ServiceRequestVo serviceRequest=uiVo.getServiceRequestVo();
-		
 
 		// Company
 		company.setCreated(DateUtil.getCurrentDate());

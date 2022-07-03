@@ -24,6 +24,7 @@ public class CompanyContactService {
 		Optional<Contact> coOptional=null;
 		Contact contact=null;
 		coOptional=contactRepository.findById(vo.getId());
+
 		if(Objects.nonNull(coOptional)) {
 			contact=new Contact();
 			contact.setCompanyId(vo.getCompanyId());
@@ -32,8 +33,8 @@ public class CompanyContactService {
 			contact.setCraeatedBy(vo.getLoginId());
 			contact.setCreated(DateUtil.getCurrentDate());
 			contact.setDob(vo.getDob());
-			contact.setDocumentNo(vo.getDocumentNo());
-			contact.setDocumentType(vo.getDocumentType());
+			contact.setDocumentNo(vo.getCompanyId()+vo.getFirstName());
+			contact.setDocumentType(vo.getCompanyId()+vo.getFirstName());
 			contact.setEmail(vo.getEmail());
 			contact.setFirstName(vo.getFirstName());
 			contact.setLastName(vo.getLastName());
@@ -47,8 +48,8 @@ public class CompanyContactService {
 			contact.setContactType(vo.getContactType());
 			contact.setContactTypeId(vo.getContactTypeId());
 			contact.setDob(vo.getDob());
-			contact.setDocumentNo(vo.getDocumentNo());
-			contact.setDocumentType(vo.getDocumentType());
+			contact.setDocumentNo(vo.getCompanyId()+vo.getFirstName());
+			contact.setDocumentType(vo.getCompanyId()+vo.getFirstName());
 			contact.setEmail(vo.getEmail());
 			contact.setFirstName(vo.getFirstName());
 			contact.setLastName(vo.getLastName());

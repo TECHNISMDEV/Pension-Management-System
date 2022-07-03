@@ -72,65 +72,179 @@ export const set_employ_save = (values)=>{
     return payload
 }
 
-export const set_employ_registration = (values,userId)=>{
-    var payload ={
-        "adressLine1": values.plot_no+' '+values.box_no+' '+values.street_name+' '+values.residency_area,
-        "adressLine2": values.postal_name+' '+values.town+' '+values.postal_code,
-        "adressLine3": "",
-        "adressLine4": "",
-        "adressType": "",
-        "area": values.area,
-        "city": "",
-        "claimId": "",
-        "comments": "",
-        "compCxRef": "",
-        "compMemId": "",
-        "companyId": values.employer_no?values.employer_no:'',
-        "companyRegDate": "",
-        "contactName": values.owner_name,
-        "contactNumber": values.phone_no,
-        "contactType": "",
-        "contactTypeId": "",
-        "country": values.nationality?values.nationality:'ZAMBIAN',
-        "craeatedBy": values.owner_id,
-        "created": "",
-        "districtProvience": values.province,
-        "dob": "",
-        "documentNum": values.employer_name,
-        "documentType": values.employer_name,
-        "email": values.email,
-        "endDate": "",
+// export const set_employ_registration = (values,userId)=>{
+//     var payload ={
+//         "adressLine1": values.plot_no+' '+values.box_no+' '+values.street_name+' '+values.residency_area,
+//         "adressLine2": values.postal_name+' '+values.town+' '+values.postal_code,
+//         "adressLine3": "",
+//         "adressLine4": "",
+//         "adressType": "",
+//         "area": values.area,
+//         "city": "",
+//         "claimId": "",
+//         "comments": "",
+//         "compCxRef": "",
+//         "compMemId": "",
+//         "companyId": values.employer_no?values.employer_no:'',
+//         "companyRegDate": "",
+//         "contactName": values.owner_name,
+//         "contactNumber": values.phone_no,
+//         "contactType": "",
+//         "contactTypeId": "",
+//         "country": values.nationality?values.nationality:'ZAMBIAN',
+//         "craeatedBy": values.owner_id,
+//         "created": "",
+//         "districtProvience": values.province,
+//         "dob": "",
+//         "documentNum": values.employer_name,
+//         "documentType": values.employer_name,
+//         "email": values.email,
+//         "endDate": "",
+//         "firstName": "",
+//         "id": "",
+//         "lastName": "",
+//         "lastUpdBy": userId,
+//         "last_Updated": "",
+//         "loginUserId": userId,
+//         "memberId": "",
+//         "middleName": "",
+//         "mobileNo": values.phone_no,
+//         "name": values.employer_name,
+//         "orgId": "",
+//         "ownerId": values.owner_id,
+//         "postalCode": values.postal_code?values.postal_code:'NA',
+//         "prContactId": "",
+//         "priority": "",
+//         "process": "",
+//         "resolution": "",
+//         "source": "",
+//         "srNumber": values.sr_num,
+//         "srStatus": values.status,
+//         "startDate": values.date_of_employing,
+//         "state": values.region?values.region:'NA',
+//         "subArea": "",
+//         "type": values.sr_type
+//       }
+// console.log(payload)
+// return payload
+
+// }
+
+
+export const setSrRegistration =(srFormData,userId)=>{
+var payload = {
+    "companyVo": {
+      "adressLine1": "",
+      "adressLine2": "",
+      "adressLine3": "",
+      "adressLine4": "",
+      "adressType": "",
+      "city": "",
+      "compCxRef": "",
+      "companyRegDate": "",
+      "companyStatus": "",
+      "companySubStatus": "",
+      "companyType": srFormData.employer_type,
+      "contactType": "",
+      "contactTypeId": "",
+      "country": '',
+      "created":'',
+      "createdBy": userId,
+      "dateIncopr": "",
+      "district": "",
+      "districtProvience": "",
+      "dob": "",
+      "documentNum": srFormData.employer_name,
+      "documentType":srFormData.employer_name,
+      "dod": "",
+      "email": "string",
+      "firstName": "string",
+      "holdingCompany": "string",
+      "id": "string",
+      "lastName": "string",
+      "lastUpdated":'',
+      "lastUpdatedBy": userId,
+      "legalName": "string",
+      "loginUserId": "string",
+      "mainFax": "string",
+      "mainPhone": "string",
+      "memberId": "string",
+      "middleName": "string",
+      "mobileNo": "string",
+      "name": srFormData.employer_name,
+      "nationality": "string",
+      "nrc": "string",
+      "ownerId": "string",
+      "pacraId": "string",
+      "postalCode": "string",
+      "prContactId": "string",
+      "propFirstName": "string",
+      "propLastName": "string",
+      "propPosition": "string",
+      "province": "string",
+      "region": "string",
+      "retirementDate": "",
+      "seasonFlag": 0,
+      "sector": "string",
+      "srStatus": srFormData.status,
+      "ssn": "string",
+      "stEmploy": "",
+      "state": "string",
+      "station": "string",
+      "subsidaryCompany": "string",
+      "zone": "string"
+    },
+    "serviceRequestVo": {
+      "area": "",
+      "claimId":"",
+      "comments": srFormData.notes,
+      "companyType": srFormData.employer_type,
+      "contactEmail": srFormData.contact_mail,
+      "contactName": srFormData.contact_name,
+      "contactNumber": srFormData.contact_no,
+      "craeatedBy": userId,
+      "created":'',
+      "endDate": "",
+      "id": '',
+      "lastUpdBy": userId,
+      "last_Updated":'',
+      "location": srFormData.location,
+      "loginUserId": userId,
+      "name": srFormData.owner_name,
+      "orgId": "",
+      "ownerId": userId,
+      "priority": "",
+      "process": "",
+      "propiterNationality": srFormData.nationality,
+      "proprietorNRC": srFormData.nrc,
+      "resolution":"",
+      "source": "",
+      "srNumber":srFormData.sr_num,
+      "srPropiterFirstName": srFormData.prop_firstname,
+      "srPropiterLastName":srFormData.prop_lastname,
+      "startDate":'',
+      "status": srFormData.status,
+      "subArea":  "",
+      "type":  srFormData.sr_type,
+      "user": {
+        "craeatedBy":  srFormData.contactEmail,
+        "created":'',
+        "email": "",
         "firstName": "",
-        "id": "",
+        "id": userId,
         "lastName": "",
-        "lastUpdBy": userId,
+        "lastUpdBy": "",
         "last_Updated": "",
-        "loginUserId": userId,
-        "memberId": "",
-        "middleName": "",
-        "mobileNo": values.phone_no,
-        "name": values.employer_name,
-        "orgId": "",
-        "ownerId": values.owner_id,
-        "postalCode": values.postal_code?values.postal_code:'NA',
-        "prContactId": "",
-        "priority": "",
-        "process": "",
-        "resolution": "",
-        "source": "",
-        "srNumber": values.sr_num,
-        "srStatus": values.status,
-        "startDate": values.date_of_employing,
-        "state": values.region?values.region:'NA',
-        "subArea": "",
-        "type": values.sr_type
+        "login": userId,
+        "mobileNo": 0,
+        "posID": "",
+        "respID": ""
       }
-console.log(payload)
-return payload
-
+    }
+  }
+  console.log(payload)
+  return payload
 }
-
-
 
 export const set_member_registration = (values)=>{
     var payload ={
@@ -236,4 +350,55 @@ export const setsubmitpayment = (responseData,payments)=>{
    
     
     return pay_list
+}
+
+
+export const submitNewContact = (data,empNumber,userId) => {
+        var payload = {
+            companyId: empNumber,
+            contactType: data.contactType?'primary':'',
+            contactTypeId: '',
+            craeatedBy: userId,
+            created: '',
+            dob: data.dob,
+            documentNo: empNumber,
+            documentType: empNumber,
+            email: data.email,
+            firstName: data.firstName,
+            id: '',
+            lastName: data.lastName,
+            lastUpdBy: userId,
+            last_Updated: '',
+            loginId:userId,
+            memberId: '',
+            middleName: '',
+            mobileNo: data.mobileNo
+        }
+        return payload
+       
+}
+
+export const submitNewAddress = (data,empNumber,userId) =>{
+    var payload = {
+        adressLine1: data.adressLine1,
+        adressLine2: data.adressLine2, 
+        adressLine3: '',
+        adressLine4: '',
+        adressType: data.adressType?'primary':'',
+        city: data.city,
+        companyId: empNumber,
+        country: data.country,
+        craeatedBy: '',
+        created: '',
+        districtProvience: data.districtProvience,
+        id: empNumber,
+        lastUpdBy: '',
+        last_Updated: '',
+        loginId: userId,
+        memberId: '',
+        postalCode: data.postalCode,
+        state: data.districtProvience,
+      }
+
+      return payload
 }

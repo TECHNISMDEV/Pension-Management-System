@@ -177,8 +177,8 @@ public class ServiceRequestController {
 			 
 		
 	  }
-	  @PutMapping("/sendForApproval")
-		public ResponseEntity<?> sendForApproval(@RequestParam(value = "serviceRequestId") String serviceRequestId ) {
+	  @PutMapping("/sendForApproval/{serviceRequestId}")
+		public ResponseEntity<?> sendForApproval(@PathVariable(value = "serviceRequestId") String serviceRequestId ) {
 
 			ServiceRequest serRequest = null;
 			Optional<ServiceRequest> existingSerRequest = serviceRequestRepository.findById(serviceRequestId);
@@ -196,8 +196,8 @@ public class ServiceRequestController {
 
 		}
 	  
-	  @PutMapping("/approveSrRequest")
-		public ResponseEntity<?> approveSrRequest(@RequestParam(value = "serviceRequestId") String serviceRequestId ) {
+	  @PutMapping("/approveSrRequest/{serviceRequestId}")
+		public ResponseEntity<?> approveSrRequest(@PathVariable(value = "serviceRequestId") String serviceRequestId ) {
 
 			ServiceRequest serRequest = null;
 			Optional<ServiceRequest> existingSerRequest = serviceRequestRepository.findById(serviceRequestId);

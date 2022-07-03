@@ -1,13 +1,23 @@
+
+import { Tabs } from 'antd';
 import { useFormik } from 'formik';
 import React, { useEffect, useState } from 'react';
+
 import { formatDate } from '../../utils/commons';
+import Address from './address';
+import Contacts from './contacts';
+import ChecklistUpload from './checklistUpload';
 
 function EmployerFormView(props) {
     const [formData, setFormData] = useState(props.employer)
     const _ = require('lodash')
+    const { TabPane } = Tabs;
     useEffect(() => {
         console.log(formData)
     }, [])
+
+    function callback(key) {
+    }
 
     return (
         <div className='container-fluid p-0'>
@@ -302,6 +312,38 @@ function EmployerFormView(props) {
                 
                 </tbody>
                 </table>
+                <div className='row mt-5'>
+                                <Tabs onChange={callback} defaultActiveKey='1' type="card">
+                                    <TabPane tab="Checklist (Attachments)" key="1">
+                                        <div className='row'>
+
+                                            <div className='col px-5'>
+                                                {/* <Activities show={false} emp={emp_no} /> */}
+                                                <ChecklistUpload empNumber={formData.id} hide={true}/>
+                                            </div>
+                                        </div>
+                                    </TabPane>
+                                    <TabPane tab="Contacts" key="2">
+                                        <div className='row'>
+
+
+                                            <div className='col px-5'>
+                                                <Contacts empNumber={formData.id} hide={true}/>
+
+                                            </div>
+                                        </div>
+                                    </TabPane>
+                                    <TabPane tab="Addresses" key="3">
+                                        <div className='row'>
+
+                                            <div className='col px-5'>
+                                                <Address empNumber={formData.id} hide={true}/>
+
+                                            </div>
+                                        </div>
+                                    </TabPane>
+                                </Tabs>
+                            </div>
         </div>
     );
 }
