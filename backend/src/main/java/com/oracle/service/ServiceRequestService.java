@@ -100,7 +100,7 @@ public class ServiceRequestService {
 		request.setSrNumber(serviceRequest.getSrNumber());
 		request.setSource(serviceRequest.getSource());
 		request.setContactName(serviceRequest.getContactName());
-		request.setType(serviceRequest.getType());
+		request.setType(LookUpConstant.SERVICE_REQUEST_TYPE_EMPLOYER_REG);
 		request.setStartDate(serviceRequest.getStartDate());
 		request.setEndDate(serviceRequest.getEndDate());
 		request.setArea(serviceRequest.getArea());

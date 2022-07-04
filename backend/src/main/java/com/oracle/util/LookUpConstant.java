@@ -10,6 +10,8 @@ public class LookUpConstant {
 	public static String COMPANY_SUB_STATUS_SENDFORAPPROVAL="Under Approval";
 	public static String COMPANY_SUB_STATUS_APPROVED="Approved";
 	public static String COMPANY_SUB_STATUS_REJECTED="Rejected";
+	public static String SERVICE_REQUEST_TYPE_EMPLOYER_REG="Employer Registration";
+	public static String SERVICE_REQUEST_TYPE_MEMBER_REG="Member Registration";
 
 
 
