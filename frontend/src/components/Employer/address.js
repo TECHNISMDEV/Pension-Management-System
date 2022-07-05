@@ -62,6 +62,7 @@ function Address(props) {
             dataIndex: 'adressLine2',
             key: 'adressLine2',
         },
+        {
 
             title: 'Country',
             dataIndex: 'country',
