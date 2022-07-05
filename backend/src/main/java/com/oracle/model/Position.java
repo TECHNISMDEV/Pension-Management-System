@@ -2,13 +2,21 @@ package com.oracle.model;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import lombok.Data;
 
 @Entity
 @Table(name="POSITION")
+@Data
 public class Position {
 
 	@Id
@@ -30,60 +38,16 @@ public class Position {
 	private String positionType;
 	@Column(name="ORG_ID")
 	private String orgId;
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
-	public Date getCreDate() {
-		return creDate;
-	}
-	public void setCreDate(Date creDate) {
-		this.creDate = creDate;
-	}
-	public String getCreatedBy() {
-		return createdBy;
-	}
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-	public Date getLastUpDate() {
-		return lastUpDate;
-	}
-	public void setLastUpDate(Date lastUpDate) {
-		this.lastUpDate = lastUpDate;
-	}
-	public String getLastUpdateBy() {
-		return lastUpdateBy;
-	}
-	public void setLastUpdateBy(String lastUpdateBy) {
-		this.lastUpdateBy = lastUpdateBy;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getDesc() {
-		return desc;
-	}
-	public void setDesc(String desc) {
-		this.desc = desc;
-	}
-	public String getPositionType() {
-		return positionType;
-	}
-	public void setPositionType(String positionType) {
-		this.positionType = positionType;
-	}
-	public String getOrgId() {
-		return orgId;
-	}
-	public void setOrgId(String orgId) {
-		this.orgId = orgId;
-	}
+	@Column(name="DIV_ID")
+	private String divId;
+	
+	@Column(name="PAR_POS_ID")
+	private String paraPosid;
+	
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "position")
+	@JsonBackReference
+	private AppUser user;
+	
 	
 	
 }

@@ -5,6 +5,7 @@ import { Tabs } from 'antd';
 import Employer_register from './employer_register'
 import Member_register from './member_register';
 import styles from '../../asset/css/ant.css'
+import ServiceRegistration from './serviceRegistration';
 const { TabPane } = Tabs;
 
 function callback(key) {
@@ -20,6 +21,7 @@ function Service(props) {
   <Tabs onChange={callback} type="card">
     <TabPane className= {styles.sub_tabs} tab="Employer Registration" key="1">
       <Employer_register id={props.id}/>
+    {/* <ServiceRegistration id={props.id}/> */}
     </TabPane>
     <TabPane tab="Member Registration" key="2">
       <Member_register/>

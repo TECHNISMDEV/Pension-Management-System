@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 
 import com.oracle.Vos.AddressVo;
 import com.oracle.model.Address;
+import com.oracle.model.Company;
 import com.oracle.repository.AdressRepository;
+import com.oracle.repository.CompanyRepository;
 import com.oracle.util.DateUtil;
 
 @Service
@@ -17,6 +19,9 @@ public class CompanyAdressService {
 
 	@Autowired
 	AdressRepository adressRepository;
+	
+	@Autowired
+	CompanyRepository companyRepository;
 	
 	public List<Address> getAddressListByCompanyId(String companyId) {
 		
@@ -64,7 +69,13 @@ public class CompanyAdressService {
 			address.setLastUpdBy(addressVo.getLoginId());
 			
 		}
-		
-		return adressRepository.save(address);
+		if(addressVo.getIsPrimary()) {
+		 Address add=adressRepository.save(address);
+		 Company company=companyRepository.findById(add.getCompanyId()).get();
+		 company.setAddress(add);
+		 companyRepository.save(company);
+		}
+		 return address;
+		 
 	}
 }

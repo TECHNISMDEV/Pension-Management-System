@@ -21,7 +21,10 @@ import org.hibernate.annotations.Parameter;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.oracle.Vos.CompanyVo;
 import com.oracle.sequenceGenerator.StringPrefixedSequenceIdGenerator;
+import com.oracle.util.DateUtil;
+import com.oracle.util.LookUpConstant;
 
 @Entity
 @Table(name = "COMPANY")
@@ -71,6 +74,12 @@ public class Company implements Serializable {
 
 	@Column(name = "PROP_POSITION")
 	private String propPosition;
+
+	@Column(name = "PROP_NATIONALITY")
+	private String propNationality;
+
+	@Column(name = "PROP_NRC")
+	private String propNrc;
 
 	@Column(name = "SEASONAL_FLG")
 	private String seasonFlag;
@@ -122,6 +131,15 @@ public class Company implements Serializable {
 
 	@Column(name = "MAIN_PHONE")
 	private String mainPhone;
+	
+	@Column(name="MAIN_EMAIL")
+	private String mainEmail;
+	
+	@Column(name = "AREA")
+	private String area;
+	
+	@Column(name="NO_OF_EMPLOYEE")
+	private Integer noOfEmployee;
 
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "company")
 	@JsonBackReference
@@ -137,12 +155,47 @@ public class Company implements Serializable {
 	@JsonManagedReference
 	private Contact contact;
 
-	/*
-	 * @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-	 * 
-	 * @JoinColumn(name="DOCUMENT_NUM",referencedColumnName = "ID")
-	 * 
-	 * @JsonManagedReference private Document document;
-	 */
+	
+	public CompanyVo getVo() {
+		
+		CompanyVo company=new CompanyVo();
+		
+		company.setId(this.id);
+		company.setCreated(this.created);
+		company.setCreatedBy(this.createdBy);
+		company.setLastUpdated(this.lastUpdated);
+		company.setLastUpdatedBy(this.lastUpdatedBy);
+		company.setCompanyRegDate(this.getCompanyRegDate());
+		company.setCompCxRef(this.getCompCxRef());
+		company.setDocumentNum(this.getDocumentNum());
+		company.setDocumentType(this.getDocumentType());
+		company.setName(this.getName().toUpperCase());
+		company.setOwnerId(this.getOwnerId());
+		company.setPropFirstName(this.getPropFirstName());
+		company.setPropLastName(this.getPropLastName());
+		company.setPropPosition(this.getPropPosition());
+		company.setLegalName(this.getLegalName());
+		company.setSeasonFlag(this.getSeasonFlag());
+		company.setPacraId(this.getPacraId());
+		company.setCompanyStatus(this.companyStatus);
+		company.setCompanySubStatus(this.companySubStatus);
+		company.setCompanyType(this.getCompanyType());
+		company.setSector(this.getSector());
+		company.setHoldingCompany(this.getHoldingCompany());
+		company.setSubsidaryCompany(this.getSubsidaryCompany());
+		company.setMainFax(this.getMainFax());
+		company.setDateIncopr(this.getDateIncopr());
+		company.setStEmploy(this.getStEmploy());
+		company.setRegion(this.getRegion());
+		company.setProvince(this.getProvince());
+		company.setDistrict(this.getDistrict());
+		company.setStation(this.getStation());
+		company.setZone(this.getZone());
+		company.setMainPhone(this.getMainPhone());
+		company.setMainEmail(this.getMainEmail());
+		company.setNoOfEmployee(this.getNoOfEmployee());
+		
+		return company;
+	}
 
 }

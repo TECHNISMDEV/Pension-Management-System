@@ -31,6 +31,8 @@ import com.oracle.Vos.UploadFileResponse;
 
 import com.oracle.model.AppUser;
 
+import com.oracle.model.Company;
+
 import com.oracle.model.Document;
 import com.oracle.model.ServiceRequest;
 import com.oracle.repository.AppUserService;
@@ -80,13 +82,20 @@ public class ServiceRequestController {
 
 	@GetMapping(path = "/serviceRequestBySrNumber/{srNumber}")
 	public ResponseEntity<?> findAllServiceRequestBySrNumber(@PathVariable String srNumber) {
+		ServiceRequest request=serviceRequestRepository.findBySrNumber(srNumber);
+		ServiceRequestUiVo uiVo=new ServiceRequestUiVo();
+		uiVo.setCompanyVo(request.getCompany().getVo());
+		uiVo.setServiceRequestVo(request.getVo());
+		String loginId=request.getOwnerId();
+		AppUser user=appUserService.findUserById(loginId);
+		uiVo.getServiceRequestVo().setUser(user);
 		return (ResponseEntity<?>)
-				Optional.of(serviceRequestRepository.findBySrNumber(srNumber)).map(e -> new
+				Optional.of(uiVo).map(e -> new
 						ResponseEntity<>(e, HttpStatus.OK)) .orElseThrow(() -> new
 						RuntimeException("Could not get serviceRequest"));
 	}
 	
-	@PostMapping(path = "/serviceRequestByOwnerId/{ownerId}")
+	@GetMapping(path = "/serviceRequestByOwnerId/{ownerId}")
 	@CrossOrigin
 	public ResponseEntity<?> findAllServiceRequestByOwnerId(@PathVariable String ownerId) {
 	return (ResponseEntity<?>)
@@ -97,18 +106,40 @@ public class ServiceRequestController {
 	
 	@PostMapping(path = "/newServiceRequest", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<?> addNewServiceRequest(@RequestBody ServiceRequestUiVo serviceRequest) {
-		ServiceRequest serRequest=null;
-		Optional<ServiceRequest> existingSerRequest=serviceRequestRepository.findById(serviceRequest.getId());
-		if(existingSerRequest.isPresent())
-		{
-			serRequest=existingSerRequest.get();
-		}
-		if (serRequest != null) {
-			ServiceRequest updatedServiceRequest= ServiceRequestService.updateServiceRequest(serRequest,serviceRequest);
-			return ResponseEntity.ok(updatedServiceRequest);
-		}else {
+		
+		String loginId=serviceRequest.getServiceRequestVo().getLoginUserId();
+		AppUser user=appUserService.findUserById(loginId);
+		
+		
 			ServiceRequest req =ServiceRequestService.saveNewServiceRequest(serviceRequest);
-			return ResponseEntity.ok(req);
+			serviceRequest.setServiceRequestVo(req.getVo());
+			serviceRequest.getServiceRequestVo().setUser(user);
+			serviceRequest.setCompanyVo(req.getCompany().getVo());
+		
+		return ResponseEntity.ok(serviceRequest);
+
+		
+	}
+	
+	@PostMapping(path = "/saveCompanyDetails", consumes = "application/json", produces = "application/json")
+	public ResponseEntity<?> saveCompanyDetails(@RequestBody ServiceRequestUiVo serviceRequest) {
+		Company company=null;
+		Optional<Company> existingCompany=companyRepository.findById(serviceRequest.getCompanyVo().getId());
+		String loginId=serviceRequest.getCompanyVo().getLoginUserId();
+		AppUser user=appUserService.findUserById(loginId);
+		if(existingCompany.isPresent())
+		{
+			company=existingCompany.get();
+		}
+		if (company != null) {
+			Company updatedCompany= ServiceRequestService.updateServiceRequestForCompanyInfo(company,serviceRequest);
+			serviceRequest.getServiceRequestVo().setUser(user);
+			serviceRequest.setCompanyVo(updatedCompany.getVo());
+			serviceRequest.setServiceRequestVo(updatedCompany.getRequest().getVo());
+			return ResponseEntity.ok(serviceRequest);
+		}else {
+			
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Company doesnot exist");
 	}
 		
 	}
@@ -162,8 +193,10 @@ public class ServiceRequestController {
 			 
 		
 	  }
-	  @PutMapping("/sendForApproval")
-		public ResponseEntity<?> sendForApproval(@RequestParam(value = "serviceRequestId") String serviceRequestId ) {
+
+	  @PutMapping("/sendForApproval/{serviceRequestId}")
+		public ResponseEntity<?> sendForApproval(@PathVariable(value = "serviceRequestId") String serviceRequestId ) {
+
 
 			ServiceRequest serRequest = null;
 			Optional<ServiceRequest> existingSerRequest = serviceRequestRepository.findById(serviceRequestId);
@@ -171,7 +204,10 @@ public class ServiceRequestController {
 				serRequest = existingSerRequest.get();
 				AppUser manager = appUserService.findCurrentManager(serRequest.getOwnerId());
 				serRequest.setOwnerId(manager.getId());
-				serRequest.setStatus(LookUpConstant.SERVICE_REQUEST_STATUS_REGISTERED);
+
+				//serRequest.setStatus(LookUpConstant.SERVICE_REQUEST_STATUS_REGISTERED);
+				serRequest.getCompany().setCompanySubStatus(LookUpConstant.COMPANY_SUB_STATUS_SENDFORAPPROVAL);
+
 				ServiceRequest updatedServiceRequest=ServiceRequestService.submitForApproval(serRequest);
 				return ResponseEntity.ok(updatedServiceRequest);
 			}
@@ -180,13 +216,19 @@ public class ServiceRequestController {
 
 		}
 	  
-	  @PutMapping("/approveSrRequest")
-		public ResponseEntity<?> approveSrRequest(@RequestParam(value = "serviceRequestId") String serviceRequestId ) {
+
+	  @PutMapping("/approveSrRequest/{serviceRequestId}")
+		public ResponseEntity<?> approveSrRequest(@PathVariable(value = "serviceRequestId") String serviceRequestId ) {
+
 
 			ServiceRequest serRequest = null;
 			Optional<ServiceRequest> existingSerRequest = serviceRequestRepository.findById(serviceRequestId);
 			if (Objects.nonNull(existingSerRequest)) {
 				serRequest = existingSerRequest.get();
+
+				serRequest.getCompany().setCompanyStatus(LookUpConstant.COMPANY_STATUS_APPROVE);
+				serRequest.getCompany().setCompanySubStatus(LookUpConstant.COMPANY_SUB_STATUS_APPROVED);
+
 				serRequest.setStatus(LookUpConstant.SERVICE_REQUEST_STATUS_APPROVED);
 				ServiceRequest updatedServiceRequest=ServiceRequestService.submitForApproval(serRequest);
 				return ResponseEntity.ok(updatedServiceRequest);

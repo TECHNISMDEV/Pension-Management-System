@@ -30,4 +30,5 @@ public class AddressVo {
 	private String companyId;
 	private String memberId;
 	private String loginId;
+	private Boolean isPrimary;
 }

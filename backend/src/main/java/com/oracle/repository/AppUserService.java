@@ -14,4 +14,11 @@ public interface AppUserService extends JpaRepository<AppUser, String>{
 			)
 	AppUser findCurrentManager(String loginId);
 
+	
+	@Query(value ="SELECT * FROM APP_USER au WHERE au.id =:id",
+			nativeQuery = true
+			)
+	AppUser findUserById(String id);
+
+
 }

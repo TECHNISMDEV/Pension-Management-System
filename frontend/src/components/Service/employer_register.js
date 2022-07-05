@@ -1,30 +1,75 @@
 import { React, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
-import { useFormik, Field, FormikProvider } from 'formik';
 import axios from 'axios'
 import {  useHistory } from "react-router-dom";
-import { register_sr_employer } from '../../redux/actions/SRAction';
-import { API_URL, set_employ_registration, t_date } from '../../utils/commons'
-import { Redirect } from "react-router-dom"
+
+import { API_URL, formatDate, setSrRegistration, set_employ_registration, t_date } from '../../utils/commons'
+
 import Employer_registration from '../Employer/employer_registeration';
 import '../../App.css';
-import { NavigateBefore } from '@material-ui/icons';
+
+import { useForm } from "react-hook-form";
+import * as yup from 'yup'
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Alert } from 'antd';
+
+const _ = require('lodash')
 function Employer_register(props) {
 
     
-    const [srNum, setSrId] = useState(props.id?props.id:'')
-    const [isDisable, setIsDisable] = useState(srNum?false:true)
-    const [srType, setsrType] = useState('')
-    const [status, setstatus] = useState('')
+    const [srNum, setSrId] = useState(props.id?props.id:null)
+    const [isDisable, setIsDisable] = useState(true)
     const [date_received, setDate_received] = useState('')
     const [enableEmpRegForm, setEnableEmpRegForm] = useState(false)
     const [employer_number,setEmployer_Number] = useState('')
     const [srForm,setSrForm] = useState({})
-    const [lookUp,setLookUp] = useState({})
-    const dispatch = useDispatch();
+    const [lookUp,setLookUp] = useState(null)
+    // const [initialValues,setInitialValues] = useState()
+
+
+    const schema = yup.object().shape({
+        contact_no : yup.string().min(10),
+        contact_mail : yup.string().email()
+    })
+
+
     let history = useHistory(); 
     const userdata = useSelector(state => state.AuthReducer).user;
-    const _ = require('lodash')
+
+    const initialValues = {
+    
+
+        sr_num:'',
+        id:'',
+        sr_type:'',
+        sr_type:  'Employer Registration',
+        status: '',
+        owner_type: '',
+        date_received:'',
+        contact_name:'',
+        contact_mail:'',
+        contact_no:'',
+        employer_id: '',
+        employer_name:'',
+        employer_type:'',
+        nationality: '',
+        nrc: '',
+        prop_firstname:'',
+        prop_lastname:'',
+        location:'',
+        owner_name:'',
+        owner_id: userdata.id,
+        notes:'',
+    }
+
+    const { register, handleSubmit,getValues,watch, formState: { errors } ,setValue} = useForm(
+        { resolver: yupResolver(schema), defaultValues:initialValues }
+    );
+
+    const onSubmitSR = data =>{
+        console.log(data)
+        submitServiceRequest(data,userdata.id)
+    }
 
     useEffect(() => {
 
@@ -33,70 +78,71 @@ function Employer_register(props) {
             (res) => {
                 console.log(res.data)
                 setSrForm(res.data)
-                setEmployer_Number(res.data.company.id)
+                setEmployer_Number(res.data.companyVo.id)
+                setSRFormData(res.data)
+               
             } 
         )
     }
+
     axios.get(API_URL + '/getLookUpForEmployer').then(
         (res) => {
             console.log(res.data)
             setLookUp(res.data)
            
         })
+
+   
     }, [])
 
-    const formik = useFormik({
-        initialValues: {
-            sr_num: srNum,
-            sr_type: srType,
-            status: status,
-            owner_type: '',
-            date_received: isDisable ? '' : t_date().year + '-' + t_date().month + '-' + t_date().date,
-            contact_name: srForm.company?srForm.contactName:'',
-            contact_no: srForm.company?srForm.contactNumber:'',
-            contact_mail:'',
-            employer_id: srForm.company?srForm.company.id:'',
-            employer_name: srForm.company?srForm.company.name:'',
-            employer_type: '',
-            nationality: '',
-            nrc: '',
-            prop_firstname: '',
-            prop_lastname: '',
-            prop_position: '',
-            owner_name: '',
-            owner_id: userdata.id,
-            notes: '',
+    console.log(errors)  ;
+    const setSRFormData = (data)=>{
+        setValue("id",data.serviceRequestVo.id)
+        setValue("sr_num",data.serviceRequestVo.srNumber)
+        setValue("sr_type",data.serviceRequestVo.type)
+        setValue("status",data.serviceRequestVo.status)
+       // setValue("owner_type",data.serviceRequestVo.srNumber)
+        setValue("date_received",formatDate(data.serviceRequestVo.created))
+        setValue("contact_name",data.serviceRequestVo.contactName)
+        setValue("contact_no",data.serviceRequestVo.contactNumber)
+        setValue("contact_mail",data.serviceRequestVo.contactEmail)
+        setValue("employer_id",data.companyVo.id)
+        setValue("employer_name",data.companyVo.name)
+        setValue("employer_type",data.companyVo.companyType)
+        setValue("nationality",data.serviceRequestVo.propiterNationality)
+        setValue("location",data.serviceRequestVo.location)
+        setValue("nrc",data.serviceRequestVo.proprietorNRC)
+        setValue("prop_firstname",data.serviceRequestVo.srPropiterFirstName)
+        setValue("prop_lastname",data.serviceRequestVo.srPropiterLastName)
+        setValue("owner_name",data.serviceRequestVo.user.position.name)
+        setValue("owner_type",data.serviceRequestVo.user.position.positionType)
+        setValue("owner_id",data.serviceRequestVo.user.id)
+        setValue("notes",data.serviceRequestVo.comments)
+    }
 
-        },
-        enableReinitialize: true,
-        onSubmit: values => {
-            //dispatch(register_sr_employer(values))
-            submitServiceRequest(values,userdata.id)
-        },
-        onChange: values => {
-            formik.setValues(values)
-        }
-    })
-  
+    
+     
     const handlenewentry = (e) => {
         e.preventDefault();
         axios.get(API_URL + "/getNewServiceRequest").then(
             (res) => (
-                setSrId(res.data.srNumber),
-                formik.setFieldValue("sr_num",res.data.srNumber)
+                //setSrId(res.data.srNumber),
+                setValue('sr_num', res.data.srNumber)
             )
         )
 
-        setsrType('Employer Registration')
-        setstatus('Open')
+
+        setValue("date_received",t_date().month + '/' + t_date().date + '/' + t_date().year)
+        setValue("status","Open")
+
         setIsDisable(false)
     }
 
     const submitServiceRequest = (sr_values,userId)=>{
-        console.log(sr_values)
-        axios.post(API_URL+'/newServiceRequest',set_employ_registration(sr_values,userId)).
+        axios.post(API_URL+'/newServiceRequest',setSrRegistration(sr_values,userId)).
         then((res)=>{
-            setEmployer_Number(res.data.company.id)
+            setEmployer_Number(res.data.companyVo.id)
+            setValue("employer_id",res.data.companyVo.id)
             alert("Service request created successfully!!")
         }).catch((err)=>{
             alert("Failed to create Service Request!!")
@@ -109,24 +155,31 @@ function Employer_register(props) {
 
     return (
         <div className="p-2">
-            <FormikProvider value={formik}>
-                <form className='form' onSubmit={formik.handleSubmit} onReset={formik.resetForm}>
+          
+                <form className='form' onSubmit={handleSubmit(onSubmitSR)}>
                     <div className='row p-1'>
                         <div class="card py-3">
                             <div class="card-body">
-
+                            {Object.keys(errors).map((key)=>(
+                                 <span className='p-1' key={key}><Alert message={errors[key].message} type="error" showIcon />
+                                
+                                 </span>
+                                 
+                                ))}
 
                                 <table className="float-end">
 
                                     <td className="p-3"> <button type="button" className="btn btn-danger float-start rounded-pill" onClick={(handlenewentry)}>+ Add</button></td>
-                                    <td className="p-3"> <button type="button" className="btn btn-danger float-start rounded-pill" onClick={(handleResetForm)}>Cancel</button></td>
+                                    <td className="p-3"> <button type="reset" className="btn btn-danger float-start rounded-pill" onClick={(handleResetForm)}>Cancel</button></td>
                                     <td className="p-3">     <button type="submit" className="btn btn-danger float-start rounded-pill">Proceed</button></td>
                                 </table>
 
-
+                              
 
 
                             </div>
+
+                   
                             <div class="row">
                                 <div className="font-weight-bolder col ">
                                     <h4 className="lead text-center"> Service Request Details </h4>
@@ -141,6 +194,7 @@ function Employer_register(props) {
                                     <h4 className="lead  text-center"> Contact Details </h4>
                                 </div>
                             </div>
+                           
 
                             <table className=''>
                                 <tbody className='fs-6'>
@@ -152,7 +206,7 @@ function Employer_register(props) {
                                             id="sr_num"
                                             name="sr_num"
                                             style={{ width: '100%' }}
-                                            defaultValue={formik.values.sr_num} onChange={formik.handleChange} disabled /></td>
+                                            defaultValue={initialValues.sr_num} {...register("sr_num")} disabled /></td>
                                         <td className='tcx-form-label'><label className='form-label float-end'>Employer Name: </label></td>
                                         <td className='' colSpan={3}>
                                             <input type="text"
@@ -160,40 +214,36 @@ function Employer_register(props) {
                                                 name='employer_name'
                                                 id='employer_name'
                                                 style={{ width: '100%' }}
-                                                defaultValue={formik.values.employer_name.toUpperCase()}  value={formik.values.employer_name.toUpperCase()} onChange={formik.handleChange} disabled={isDisable} required />
+                                                defaultValue={initialValues.employer_name.toUpperCase()} {...register("employer_name")} onChange={(e)=> setValue("employer_name",e.target.value.toUpperCase())} disabled={isDisable} required />
                                         </td>
-                                        {/* <td className='p-1 tcx-form-label'></td>
-                                    <td className='p-1 tcx-form-label'> </td> */}
+                                     
                                         <td className='p-1 tcx-form-label'><label className='form-label float-end'>Contact Name: </label></td>
                                         <td className='p-1'> <input type="text"
                                             className='form-control float-start '
                                             name='contact_name'
                                             id='contact_name'
                                             style={{ width: '100%' }}
-                                            defaultValue={formik.values.contact_name} onChange={formik.handleChange} disabled={isDisable} />
+                                            defaultValue={initialValues.contact_name}  {...register("contact_name")} disabled={isDisable} />
                                         </td>
 
 
                                     </tr>
                                     <tr>
-                                        {/* <td className='p-1 tcx-form-label'><label className='form-label float-end'>SR Type: </label></td>
-                                        <td className='p-1'>
-                                            <Field component="select" id="sr_type" name="sr_type" defaultValue={formik.values.sr_type} className={"form-control float-start"} style={{ width: '100%' }} onChange={formik.handleChange} disabled>
-                                                <option value=' '></option>
-                                                <option value='Employer registration'>Employer registration</option>
-                                                <option value='Employer registration'>Member registration</option>
+                                                <td className='tcx-form-label'><label className='form-label float-end'>Status: </label></td>
+                                        <td className='p-1'> <select class="form-select" id="status" style={{ width: '100%' }} {...register("status")} disabled>
+                                               
+                                                { lookUp ? lookUp.TCX_STATUS.map((item)=>(
+                                                   <option defaultValue={item} key={item} >{item}</option>  
+                                                )):null
+                                            }
+                                             
 
-                                            </Field>
-                                        </td> */}
-                                         <td className='tcx-form-label'><label className='form-label float-end'>Status: </label></td>
-                                        <td className='p-1'> <select class="form-select" style={{ width: '100%' }} onChange={formik.handleChange} disabled>
-                                            <option defaultValue={formik.values.status}>{formik.values.status}</option>
 
                                         </select></td>
 
                                         <td className='p-1 tcx-form-label'><label className='form-label float-end'>Employer Type: </label></td>
                                         <td className='p-1'>
-                                            <Field component="select" name='employer_type' id='employer_type' defaultValue={formik.values.sr_type} className={"form-control float-start"} style={{ width: '100%' }} onChange={formik.handleChange} disabled={isDisable}>
+                                            <select name='employer_type' id='employer_type' defaultValue={initialValues.sr_type} className={"form-control float-start"} style={{ width: '100%' }}  {...register("employer_type")} disabled={isDisable}>
 
                                                 <option defaultValue=""></option>
                                                 <option defaultValue="Domestic Employer">Domestic Employer</option>
@@ -203,7 +253,7 @@ function Employer_register(props) {
                                                 <option defaultValue="Statutory">Statutory</option>
 
 
-                                            </Field>
+                                            </select>
                                         </td>
                                         <td className='p-1 tcx-form-label'>
                                             <label class="form-label float-end">Properietor First Name: </label>
@@ -215,15 +265,15 @@ function Employer_register(props) {
                                                 name='prop_firstname'
                                                 id='prop_firstname'
                                                 style={{ width: '100%' }}
-                                                defaultValue={formik.values.prop_firstname} onChange={formik.handleChange} disabled={isDisable} />
+                                                defaultValue={initialValues.prop_firstname}  {...register("prop_firstname")} disabled={isDisable} />
                                         </td>
                                         <td className='p-1 tcx-form-label'><label className='form-label float-end'>Contact Mobile #: </label></td>
-                                        <td className='p-1'>  <input type="text"
+                                        <td className='p-1'>  <input type="number"
                                             className='form-control float-start '
-                                            name='contact_no'
+                                            name='contactNumber'
                                             id='contact_no'
                                             style={{ width: '100%' }}
-                                            defaultValue={formik.values.contact_no} onChange={formik.handleChange} disabled={isDisable} /></td>
+                                            defaultValue={initialValues.contact_no}  {...register("contact_no")}  disabled={isDisable} /></td>
 
                                     </tr>
                                     <tr>
@@ -232,14 +282,14 @@ function Employer_register(props) {
                                             className='form-control float-start '
                                             name='date_received'
                                             style={{ width: '100%' }}
-                                            defaultValue={formik.values.date_received} disabled /></td>
+                                            defaultValue={initialValues.date_received}  {...register("date_received")}  disabled /></td>
                                         <td className='p-1 tcx-form-label'><label className='form-label float-end'>Employer #: </label></td>
                                         <td className='p-1'><input type="text"
                                             className='form-control float-start '
                                             name='employer_id'
                                             id="employer_id"
                                             style={{ width: '100%' }}
-                                            defaultValue={formik.values.employer_id} onChange={formik.handleChange} disabled /></td>
+                                            defaultValue={initialValues.employer_id}  {...register("employer_id")}  disabled /></td>
                                              
                                              <td className='p-1 tcx-form-label'>
                                             <label class="form-label float-end">Properietor Last Name: </label>
@@ -251,16 +301,16 @@ function Employer_register(props) {
                                                 name='prop_lastname'
                                                 id='prop_lastname'
                                                 style={{ width: '100%' }}
-                                                defaultValue={formik.values.prop_lastname} onChange={formik.handleChange} disabled={isDisable} />
+                                                defaultValue={initialValues.prop_lastname}  {...register("prop_lastname")}  disabled={isDisable} />
                                         </td>
                                        
                                         <td className='p-1 tcx-form-label'><label className='form-label float-end'>Contact Email: </label></td>
                                         <td className='p-1'> <input type="text"
                                             className='form-control float-start '
-                                            name='contact_name'
-                                            id='contact_name'
+                                            name='contactEmail'
+                                            id='contact_mail'
                                             style={{ width: '100%' }}
-                                            defaultValue={formik.values.contact_mail} onChange={formik.handleChange} disabled={isDisable} />
+                                            defaultValue={initialValues.contact_mail}  {...register("contact_mail")}  disabled={isDisable} />
                                         </td>
 
                                     </tr>
@@ -268,43 +318,41 @@ function Employer_register(props) {
                                         <td className='p-1 tcx-form-label'><label className='form-label float-end'>Owner Type: </label></td>
                                         <td className='p-1'>
 
-                                            <Field component="select" class="form-select float-start " style={{ width: '100%' }} id="owner_type" name="owner_type" onChange={formik.handleChange} disabled={isDisable}>
-                                            <option defaultValue=''></option>  
-                                                { lookUp.TCX_OWNER_TYPE ? lookUp.TCX_OWNER_TYPE.map((item)=>(
-                                                   <option defaultValue={item}>{item}</option>  
+                                            <select class="form-select float-start " style={{ width: '100%' }} id="owner_type" name="owner_type" defaultChecked={initialValues.owner_type} {...register("owner_type")}  disabled={isDisable}>
+                                            
+                                                { lookUp ? lookUp.TCX_OWNER_TYPE.map((item)=>(
+                                                   <option defaultValue={item} key={item}>{item}</option>  
                                                 )):null
                                             }
                                            
 
-                                            </Field></td>
+                                            </select></td>
                                             <td className='tcx-form-label'>
-                                            <label class="form-label float-end">Properietor Location: </label>
+                                            <label class="form-label float-end">Location: </label>
 
                                         </td>
                                         <td className='p-1'>
                                             <input type="text"
                                                 className='form-control float-start'
-                                                name='prop_position'
-                                                id='prop_position'
+                                                name='location'
+                                                id='location'
                                                 style={{ width: '100%' }}
-                                                defaultValue={formik.values.prop_position} onChange={formik.handleChange} disabled={isDisable} />
+                                                defaultValue={initialValues.location}  {...register("location")}  disabled={isDisable} />
                                         </td>
                                         
                                         <td className='p-1 tcx-form-label'> <label class="form-label float-end">Nationality: </label></td>
 
-                                        <td>
-                                            <Field component="select" name='nationality' id='nationality' value={formik.values.nationality} className={"form-control float-start"} style={{ width: '100%' }} onChange={formik.handleChange} required disabled={isDisable}>
+                                        <td className='p-1'>  
+                                         <select id="nationality" name="nationality"  {...register("nationality")} defaultValue={initialValues.nationality} className={"form-control float-start"} style={{ width: '230px' }}  disabled={isDisable} >
+                                             
+                                                { lookUp ? lookUp.TCX_NATIOANLITY.map((item)=>(
+                                                   <option defaultValue={item} key={item} >{item}</option>  
+                                                )):null}
 
-                                                <option defaultValue=""></option>
-                                                <option defaultValue="Zambian">Zambian</option>
-                                                <option defaultValue="Foreigner">Foreigner</option>
-
-
-                                            </Field>
-                                        </td>
+                                            </select></td>
                                       
                                         <td className='p-1 tcx-form-label'><label className='form-label float-end'>Notes: </label></td>
-                                        <td className='p-1 align-top' rowSpan={2}>  <textarea class="form-control float-start h-100" placeholder="Notes" id="notes" name="notes" defaultValue={formik.values.notes} onChange={formik.handleChange} disabled={isDisable}></textarea></td>
+                                        <td className='p-1 align-top' rowSpan={2}>  <textarea class="form-control float-start h-100" placeholder="Notes" id="notes" name="notes" defaultValue={initialValues.notes}  {...register("notes")}  disabled={isDisable}></textarea></td>
                                   
 
                                     </tr>
@@ -315,7 +363,7 @@ function Employer_register(props) {
                                             name="owner_name"
                                             id="owner_name"
                                             style={{ width: '100%' }}
-                                            defaultValue={formik.values.owner_name} placeholder="Owner name" onChange={formik.handleChange} required disabled={isDisable} />
+                                            defaultValue={initialValues.owner_name} placeholder="Owner name"  {...register("owner_name")}  required disabled={isDisable} />
                                         </td>
                                         <td className='p-1 tcx-form-label'></td>
                                             <td className='p-1 tcx-form-label'></td>
@@ -327,7 +375,7 @@ function Employer_register(props) {
                                                 name='nrc'
                                                 id='nrc'
                                                 style={{ width: '100%' }}
-                                                defaultValue={formik.values.nrc} onChange={formik.handleChange} disabled={isDisable} />
+                                                defaultValue={initialValues.nrc}  {...register("nrc")}  disabled={isDisable} />
                                         </td>
                                    
                                           </tr>
@@ -342,9 +390,9 @@ function Employer_register(props) {
 
                         </div>
                     </div>
-                    {employer_number ? <Employer_registration id={employer_number} srForm={srForm}/> : null}
+                    {employer_number ? <Employer_registration id={employer_number} srForm={srForm} lookUp={lookUp}/> : null}
                 </form>
-            </FormikProvider>
+            {/* </FormikProvider> */}
         </div>
     )
 }
