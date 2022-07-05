@@ -131,6 +131,9 @@ public class Company implements Serializable {
 	
 	@Column(name = "AREA")
 	private String area;
+	
+	@Column(name="NO_OF_EMPLOYEE")
+	private Integer noOfEmployee;
 
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "company")
 	@JsonBackReference
@@ -184,6 +187,7 @@ public class Company implements Serializable {
 		company.setZone(this.getZone());
 		company.setMainPhone(this.getMainPhone());
 		company.setMailEmail(this.getMainEmail());
+		company.setNoOfEmployee(this.getNoOfEmployee());
 		
 		return company;
 	}

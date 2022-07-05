@@ -127,5 +127,7 @@ public class CompanyVo {
 	private String mailEmail;
 	
 	private String area;
+	
+	private Integer noOfEmployee;
 
 }

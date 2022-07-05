@@ -170,6 +170,7 @@ public class ServiceRequestService {
 		company.setMainPhone(companyVo.getMainPhone());
 		company.setMainEmail(companyVo.getMailEmail());
 		company.setArea(companyVo.getArea());
+		company.setNoOfEmployee(companyVo.getNoOfEmployee());
 
 		/*
 		 * serRequest.setCompany(company);
