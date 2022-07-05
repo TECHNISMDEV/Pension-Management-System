@@ -93,7 +93,7 @@ public class ServiceRequestController {
 						RuntimeException("Could not get serviceRequest"));
 	}
 	
-	@PostMapping(path = "/serviceRequestByOwnerId/{ownerId}")
+	@GetMapping(path = "/serviceRequestByOwnerId/{ownerId}")
 	@CrossOrigin
 	public ResponseEntity<?> findAllServiceRequestByOwnerId(@PathVariable String ownerId) {
 	return (ResponseEntity<?>)
@@ -133,6 +133,7 @@ public class ServiceRequestController {
 			Company updatedCompany= ServiceRequestService.updateServiceRequestForCompanyInfo(company,serviceRequest);
 			serviceRequest.getServiceRequestVo().setUser(user);
 			serviceRequest.setCompanyVo(updatedCompany.getVo());
+			serviceRequest.setServiceRequestVo(updatedCompany.getRequest().getVo());
 			return ResponseEntity.ok(serviceRequest);
 		}else {
 			
