@@ -17,7 +17,7 @@ function Service_request() {
     const userdata = useSelector(state => state.AuthReducer).user;
     useEffect(() => {
         
-        axios.post(API_URL+'/serviceRequestByOwnerId/'+userdata.id).then(
+        axios.get(API_URL+'/serviceRequestByOwnerId/'+userdata.id).then(
             (res)=>(
 
                 console.log(res.data),
