@@ -1,6 +1,7 @@
 import { Table } from 'antd';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+
 import { API_URL, submitNewContact } from '../../utils/commons';
 import { Modal } from 'antd';
 import { useForm } from "react-hook-form";
@@ -44,13 +45,16 @@ function Contacts(props) {
     useEffect(() => {
     console.log("invoked")
         axios.get(API_URL + '/getContactByCompanyId/' + empNumber).then(
+
             (res) => {
                 console.log(res.data)
                 setContactData(res.data)
             }
         )
 
+
     }, [])
+
 
     const columns = [
         {
@@ -78,6 +82,7 @@ function Contacts(props) {
             key: 'email',
         }
     ]
+
 
 
     const showModal = () => {
@@ -204,6 +209,7 @@ function Contacts(props) {
                     position: ['none', 'bottomCenter'],
                     defaultPageSize: 5,
                 }} />
+
         </>
     );
 }

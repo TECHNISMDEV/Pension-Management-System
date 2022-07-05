@@ -30,7 +30,9 @@ import com.oracle.Vos.ServiceRequestUiVo;
 import com.oracle.Vos.UploadFileResponse;
 
 import com.oracle.model.AppUser;
+
 import com.oracle.model.Company;
+
 import com.oracle.model.Document;
 import com.oracle.model.ServiceRequest;
 import com.oracle.repository.AppUserService;
@@ -191,8 +193,10 @@ public class ServiceRequestController {
 			 
 		
 	  }
+
 	  @PutMapping("/sendForApproval/{serviceRequestId}")
 		public ResponseEntity<?> sendForApproval(@PathVariable(value = "serviceRequestId") String serviceRequestId ) {
+
 
 			ServiceRequest serRequest = null;
 			Optional<ServiceRequest> existingSerRequest = serviceRequestRepository.findById(serviceRequestId);
@@ -200,8 +204,10 @@ public class ServiceRequestController {
 				serRequest = existingSerRequest.get();
 				AppUser manager = appUserService.findCurrentManager(serRequest.getOwnerId());
 				serRequest.setOwnerId(manager.getId());
+
 				//serRequest.setStatus(LookUpConstant.SERVICE_REQUEST_STATUS_REGISTERED);
 				serRequest.getCompany().setCompanySubStatus(LookUpConstant.COMPANY_SUB_STATUS_SENDFORAPPROVAL);
+
 				ServiceRequest updatedServiceRequest=ServiceRequestService.submitForApproval(serRequest);
 				return ResponseEntity.ok(updatedServiceRequest);
 			}
@@ -210,15 +216,19 @@ public class ServiceRequestController {
 
 		}
 	  
+
 	  @PutMapping("/approveSrRequest/{serviceRequestId}")
 		public ResponseEntity<?> approveSrRequest(@PathVariable(value = "serviceRequestId") String serviceRequestId ) {
+
 
 			ServiceRequest serRequest = null;
 			Optional<ServiceRequest> existingSerRequest = serviceRequestRepository.findById(serviceRequestId);
 			if (Objects.nonNull(existingSerRequest)) {
 				serRequest = existingSerRequest.get();
+
 				serRequest.getCompany().setCompanyStatus(LookUpConstant.COMPANY_STATUS_APPROVE);
 				serRequest.getCompany().setCompanySubStatus(LookUpConstant.COMPANY_SUB_STATUS_APPROVED);
+
 				serRequest.setStatus(LookUpConstant.SERVICE_REQUEST_STATUS_APPROVED);
 				ServiceRequest updatedServiceRequest=ServiceRequestService.submitForApproval(serRequest);
 				return ResponseEntity.ok(updatedServiceRequest);

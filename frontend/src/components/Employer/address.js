@@ -1,15 +1,18 @@
 import { Table } from 'antd';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+
 import { API_URL, submitNewAddress } from '../../utils/commons';
 import { Modal } from 'antd';
 import { useSelector } from 'react-redux';
 import { useForm } from "react-hook-form";
 
 
+
 function Address(props) {
 
     const[empNumber,setEmpNumber] = useState(props.empNumber)
+
     const[addressData,setAddressData] = useState([])
     const [isDisable,setIsDisable] = useState(!props.hide)
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -35,6 +38,7 @@ function Address(props) {
         })
 }
 
+
     useEffect(()=>{
         
         axios.get(API_URL+'/getAdressByCompanyId/'+empNumber).then(
@@ -48,6 +52,7 @@ function Address(props) {
 
     const columns = [
         {
+
             title: 'Address Line 1',
             dataIndex: 'adressLine1',
             key: 'adressLine1',
@@ -57,7 +62,7 @@ function Address(props) {
             dataIndex: 'adressLine2',
             key: 'adressLine2',
         },
-        {
+
             title: 'Country',
             dataIndex: 'country',
             key: 'country',
@@ -82,6 +87,7 @@ function Address(props) {
             key: 'postalCode',
         },
     ]
+
 
 
     const showModal = () => {
@@ -120,9 +126,11 @@ function Address(props) {
 
 
 
+
     return (
         <>
          <table className="float-end">
+
 
          { isDisable && <td className="p-3"> <button type="button" className="btn btn-danger float-start rounded-pill" onClick={showModal}>+ Add</button></td>}
 
@@ -206,6 +214,7 @@ function Address(props) {
                     </div> 
                 </form>
             </Modal>
+
 
 
             <Table onRow={(record, rowIndex) => {

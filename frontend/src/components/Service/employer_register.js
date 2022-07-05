@@ -131,8 +131,10 @@ function Employer_register(props) {
             )
         )
 
+
         setValue("date_received",t_date().month + '/' + t_date().date + '/' + t_date().year)
         setValue("status","Open")
+
         setIsDisable(false)
     }
 

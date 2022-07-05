@@ -2,6 +2,7 @@ package com.oracle.util;
 
 public class LookUpConstant {
 	
+
 	public static String  SERVICE_REQUEST_STATUS_APPROVED="Closed";
 	public static String  SERVICE_REQUEST_STATUS_REGISTERED="In Progress";
 	public static String COMPANY_STATUS_INPROGRESS="In Progress";

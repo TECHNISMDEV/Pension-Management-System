@@ -13,6 +13,7 @@ import Activities from './activities';
 import { _ } from 'lodash'
 import ChecklistUpload from './checklistUpload';
 
+
 import Contacts from './contacts';
 import Address from './address';
 import { useHistory } from 'react-router-dom';
@@ -20,6 +21,7 @@ import { useForm } from "react-hook-form";
 import * as yup from 'yup'
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Alert } from 'antd';
+
 
 
 function Employer_registration(props) {
@@ -213,14 +215,18 @@ const initialValues = {
                                 <div class="px-2 m-2">
                                     <table className="float-end">
 
+
                                         <td className="px-3"> <button type="button" className="btn btn-danger float-end rounded-pill" onClick={handleSubmit(onSubmitSRE)}>Save</button></td>
                                         <td className="px-3">  <button type="button" className="btn btn-danger float-end rounded-pill" style={{ width: "200px" }} onClick={sendForApproval} >Send for Approval</button></td>
                                         <td className="px-3">  <button type="button" className="btn btn-danger float-end rounded-pill" onClick={sendForAccept} >Accept</button></td>
+
                                         <td className="px-3">  <button type="button" className="btn btn-danger float-end rounded-pill" onClick={() => { }} >Reject</button></td>
                                     </table>
                                 </div>
                                 <div className='col'>
+
                                     <p className="card-title fs-3 mb-3">Employer Details</p>
+
                                     <hr />
                                 </div>
                                 <table style={{ width: "100%" }}>
@@ -461,10 +467,12 @@ const initialValues = {
 
                                 <p className="card-title fs-3 mb-3">Location Details</p>
 
+
                                 <hr />
                             </div>
                             <table style={{ width: "100%" }}>
                                 <tbody className='fs-6'>
+
 
                                     <tr className='p-1'>
                                         <td className=' p-1 tcx-form-label'><label className='form-label float-end'>Region :  </label></td>
@@ -505,6 +513,7 @@ const initialValues = {
                                                    <option defaultValue={item} key={item}>{item}</option>  
                                                 )):null}
 
+
                                             </select>
                                         </td>
                                     </tr>
@@ -519,6 +528,7 @@ const initialValues = {
 
                                             </select>
                                         </td>
+
 
                                         <td className=' p-1 tcx-form-label'><label className='form-label float-end'>Zone :  </label></td>
                                         <td className='p-1'>
@@ -549,8 +559,10 @@ const initialValues = {
                                         <div className='row'>
 
 
+
                                             <div className='col px-5'>
                                                 <Contacts empNumber={emp_no} />
+
 
                                             </div>
                                         </div>
@@ -558,8 +570,10 @@ const initialValues = {
                                     <TabPane tab="Addresses" key="3">
                                         <div className='row'>
 
+
                                             <div className='col px-5'>
                                                 <Address empNumber={emp_no}/>
+
 
                                             </div>
                                         </div>
