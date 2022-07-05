@@ -4,7 +4,7 @@ import { useFormik, Field, FormikProvider } from 'formik'
 import { set_tab_active } from '../../redux/actions/UserBehaviourAction';
 import { AiOutlineSearch } from "react-icons/ai";
 import { Modal, Button } from 'antd';
-import { t_date, set_employ_registration, API_URL } from '../../utils/commons'
+import { t_date, set_employ_registration, API_URL, submitServiceRequestEmployerData } from '../../utils/commons'
 import axios from 'axios';
 import 'antd/dist/antd.css';
 import { formatDate, set_employ_save } from '../../utils/commons'
@@ -16,10 +16,15 @@ import ChecklistUpload from './checklistUpload';
 import Contacts from './contacts';
 import Address from './address';
 import { useHistory } from 'react-router-dom';
+import { useForm } from "react-hook-form";
+import * as yup from 'yup'
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Alert } from 'antd';
 
 
 function Employer_registration(props) {
     const [emp_no, setemp_no] = useState(props.id)
+    const lookUp = props.lookUp
     const reg_sr_values = useSelector(state => state.SRReducer).reg_sr_employer;
     const dispatch = useDispatch()
     const [isdisabled, setisdisabled] = useState(reg_sr_values ? false : true)
@@ -35,12 +40,41 @@ function Employer_registration(props) {
     const [srForm, setSrForm] = useState(props.srForm)
     const _ = require("lodash");
     let history = useHistory(); 
+
+    const schema = yup.object().shape({
+        contact_no : yup.string().min(10),
+        contact_mail : yup.string().email()
+    })
+
+    const userdata = useSelector(state => state.AuthReducer).user;
+
+    const { register, handleSubmit, watch, formState: { errors } ,setValue} = useForm(
+        { resolver: yupResolver(schema) }
+    );
+
+    const onSubmitSRE = data =>{
+        console.log(data)
+       submitServiceRequestEmployer(data,userdata.id,props.srForm)
+    }
+
+    const submitServiceRequestEmployer = (data,userId,srId)=>{
+        axios.post(API_URL+'/newServiceRequest',submitServiceRequestEmployerData(data,userId,srId,srForm)).
+        then((res)=>{
+            setCompanyData(res.data)
+            setCompanyFormData(res.data)
+            // setValue("employer_id",res.data.companyVo.id)
+            alert("Service request saved successfully!!")
+        }).catch((err)=>{
+            alert("Failed to save Service Request!!")
+        })
+    }
+
     useEffect(() => {
         if (emp_no) {
             setisdisabled(false)
             getCompanyDetails()
         }
-    }, [emp_no])
+    }, [])
 
 
     const sendForApproval = ()=>{
@@ -69,92 +103,94 @@ function Employer_registration(props) {
             (res) => (
                 console.log(res.data),
                 setCompanyData(res.data),
-                setemp_name(res.data.name),
-                setdate_rec(formatDate(res.data.companyRegDate)),
-                setcity(res.data.address ? res.data.address.city : ''),
-                setpostal_Code(res.data.address ? res.data.address.postal_Code : ''),
-                setState(res.data.address ? res.data.address.state : 'NA'),
-                setarea(res.data.address ? res.data.address.adressLine1 : '')
+                setCompanyFormData(res.data)
+          
+                //setemp_name(res.data.name),
+                //setdate_rec(formatDate(res.data.companyRegDate)),
+                //setcity(res.data.address ? res.data.address.city : ''),
+                //setpostal_Code(res.data.address ? res.data.address.postal_Code : ''),
+                //setState(res.data.address ? res.data.address.state : 'NA'),
+                //setarea(res.data.address ? res.data.address.adressLine1 : '')
 
             ))
     }
 
-    const formik = useFormik({
-        initialValues: {
-            srId: srForm.id,
-            companyName: companyData.id ? companyData.name : '',
-            companyNumber: companyData.id ? companyData.id : '',
-            trading_name: companyData.id ? companyData.name : '',
-            legalName: companyData.id ? companyData.legalName : '',
-            primary_type: companyData.id ? true : false,
-            residencyArea: companyData.address ? companyData.address.adressLine1 : '',
-            status: '',
-            subStatus: '',
-            postal_code: companyData.address ? companyData.address.postalCode : '',
-            legal_name: companyData.legalName,
-            contact_person: '',
-            employer_type: '',
-            pacraId: '',
-            phoneNo: '',
-            email: '',
-            seasonFlag: true,
-            fax: '',
-            employer_status: companyData.id ? 'In Progress' : '',
-            employer_sub_status: '',
-            province: emp_no ? 'LUSAKA' : '',
-            region: emp_no ? 'NORTHERN' : '',
-            sector_code: '',
-            date_received: date_rec,
-            dateIncorporated: companyData.created,
-            holding_company: emp_name,
-            subsidiary_company: '',
-            dateRegistered: companyData.created,
-            no_of_employees: '',
-            dateEmployed: companyData.created,
-            nrc: companyData.id ? '' : '',
-            nationality: companyData.address ? companyData.address.country : '',
-            propFirstName: companyData.propFirstName,
-            propLastName: companyData.propLastName,
-            propPosition: companyData.propPosition
-        },
-        enableReinitialize: true,
-        onSubmit: (reg_sr_values, values) => {
+const setCompanyFormData = (companyData)=>{
+    setValue('srId', srForm.id)
+    setValue('companyName', companyData.id ? companyData.name : '')
+    setValue('companyNumber', companyData.id ? companyData.id : '')
 
-            console.log({ ...values, service_request_form: reg_sr_values })
+    setValue('legalName', companyData.id ? companyData.legalName : '')
 
-        }
-        ,
+    setValue('adressLine1', companyData.address ? companyData.address.adressLine1 : '')
+    setValue('companyStatus', companyData.companyStatus ? companyData.companyStatus : '')
+    setValue('companySubStatus', companyData.companySubStatus ? companyData.companySubStatus : '')
+    setValue('postalCode', companyData.address ? companyData.address.postalCode : '')
+    setValue('legalName', companyData.legalName)
+    setValue('companyType', companyData.companyType)
+    setValue('pacraId', companyData.pacraId)
+    setValue('mobileNo', companyData.contact ? companyData.contact.mobileNo : '')
+    setValue('email', companyData.contact ? companyData.contact.email : '')
+    setValue('seasonFlag', companyData.seasonFlag == 0 ? false : true)
+    setValue('fax', companyData.mainFax)
+    setValue('province', companyData.province)
+    setValue('region', companyData.region)
+    setValue('station', companyData.station)
+    setValue('zone', companyData.zone)
+    setValue('district', companyData.district)
+    setValue('sector', companyData.sector)
+    setValue('created',companyData.created)
+    setValue('dateIncorporated', companyData.created)
+    setValue('holdingCompany', companyData.holdingCompany)
+    setValue('subsidaryCompany', companyData.subsidaryCompany)
+    setValue('dateRegistered', companyData.companyRegDate)
+    setValue('no_of_employees', companyData.companyType)
+    setValue('dateEmployed', companyData.stEmploy)
+    setValue('nrc', companyData.vo ? companyData.vo.nrc : '')
+    setValue('nationality', companyData.address ? companyData.address.country : '')
+    setValue('propFirstName', companyData.propFirstName)
+    setValue('propLastName', companyData.propLastName)
+    setValue('propPosition', companyData.propPosition)
+
+}
 
 
-        onChange: values => {
-            formik.setValues(values)
-        }
-    })
+const initialValues = {
+    srId: srForm.id,
+    companyName: companyData.id ? companyData.name : '',
+    companyNumber: companyData.id ? companyData.id : '',
+    legalName: companyData.id ? companyData.legalName : '',
+    adressLine1: companyData.address ? companyData.address.adressLine1 : '',
+    companyStatus:  companyData.companyStatus ? companyData.companyStatus : '',
+    companySubStatus:  companyData.companySubStatus ? companyData.companySubStatus : '',
+    postalCode: companyData.address ? companyData.address.postalCode : '',
+    legalName: companyData.legalName,
+    companyType: companyData.companyType,
+    pacraId: companyData.pacraId,
+    mobileNo:companyData.contact?companyData.contact.mobileNo:'',
+    email: companyData.contact?companyData.contact.email:'',
+    seasonFlag: companyData.seasonFlag == 0? false:true,
+    fax:companyData.mainFax,
+    province: companyData.province,
+    region: companyData.region,
+    station: companyData.station,
+    zone: companyData.zone,
+    district: companyData.district,
+    sector: companyData.sector,
+    created: formatDate(companyData.created),
+    dateIncorporated:formatDate(companyData.dateIncopr),
+    holdingCompany:companyData.holdingCompany,
+    subsidaryCompany:companyData.subsidaryCompany,
+    dateRegistered: companyData.companyRegDate,
+    no_of_employees: companyData.compCxRef,
+    dateEmployed: formatDate(companyData.stEmploy),
+    nrc: companyData.vo?companyData.vo.nrc:'',
+    nationality: companyData.address ? companyData.address.country : '',
+    propFirstName: companyData.propFirstName,
+    propLastName: companyData.propLastName,
+    propPosition: companyData.propPosition
+}
 
-
-    const save_emp = (e) => {
-        e.preventDefault();
-        console.log(set_employ_save({ ...formik.values }))
-        axios.post(API_URL + '/newServiceRequest', set_employ_save({ ...formik.values })).then((response) => {
-            console.log(response)
-            getCompanyDetails()
-            alert("Successfully saved Employer!!")
-        }).catch((error) => {
-            alert("Failed to save employer details!!")
-        })
-
-    }
-
-    const showAddressModal = () => {
-        setisAddressModalVisible(true);
-    };
-    const handleRAOk = () => {
-        setisAddressModalVisible(false);
-    };
-
-    const handleRACancel = () => {
-        setisAddressModalVisible(false);
-    };
     function callback(key) {
     }
 
@@ -164,13 +200,13 @@ function Employer_registration(props) {
                 <div class="card-body">
 
 
-                    <FormikProvider value={formik}>
-                        <form className='form' onSubmit={formik.handleSubmit}>
+                    {/* <FormikProvider value={formik}> */}
+                        <form className='form'>
 
 
                             <div className='row'>
                                 <div className='col'>
-                                    <h1 className="display-5">{emp_name ? emp_name : reg_sr_values.employer_name}</h1>
+                                    <h1 className="display-5">{initialValues.companyName}</h1>
                                 </div>
                                 <div className='col float-end'>
                                     <p className='font-weight-bold font-italic fs-6 float-end '><i>Last Updated : {formatDate(companyData.lastUpdated)}</i></p>
@@ -181,7 +217,7 @@ function Employer_registration(props) {
                                 <div class="px-2 m-2">
                                     <table className="float-end">
 
-                                        <td className="px-3"> <button type="submit" className="btn btn-danger float-end rounded-pill" onClick={save_emp} >Save</button></td>
+                                        <td className="px-3"> <button type="button" className="btn btn-danger float-end rounded-pill" onClick={handleSubmit(onSubmitSRE)}>Save</button></td>
                                         <td className="px-3">  <button type="button" className="btn btn-danger float-end rounded-pill" style={{ width: "200px" }} onClick={sendForApproval} >Send for Approval</button></td>
                                         <td className="px-3">  <button type="button" className="btn btn-danger float-end rounded-pill" onClick={sendForAccept} >Accept</button></td>
                                         <td className="px-3">  <button type="button" className="btn btn-danger float-end rounded-pill" onClick={() => { }} >Reject</button></td>
@@ -202,7 +238,7 @@ function Employer_registration(props) {
                                                     id="companyName"
                                                     name="companyName"
                                                     style={{ width: '100%' }}
-                                                    defaultValue={formik.values.companyName} value={formik.values.companyName.toUpperCase()} onChange={formik.handleChange} disabled={isdisabled} />
+                                                    defaultValue={initialValues.companyName.toUpperCase()} {...register("companyName")} onChange={(e)=> setValue("companyName",e.target.value.toUpperCase())} disabled={isdisabled} />
                                             </td>
 
 
@@ -214,8 +250,7 @@ function Employer_registration(props) {
                                                     id="legalName"
                                                     name="legalName"
                                                     style={{ width: '100%' }}
-                                                    defaultValue={_.defaultTo(formik.values.legalName, '').toUpperCase()}
-                                                    value={_.defaultTo(formik.values.legalName, '').toUpperCase()} onChange={formik.handleChange} disabled={isdisabled} />
+                                                    defaultValue={initialValues.legalName} {...register("legalName")} onChange={(e)=> setValue("legalName",e.target.value.toUpperCase())} disabled={isdisabled} />
                                             </td>
 
                                         </tr>
@@ -223,72 +258,74 @@ function Employer_registration(props) {
                                             <td className=' p-1 tcx-form-label'><label className='form-label float-end'>Employer # : </label></td>
                                             <td className='p-1'> <input type="text"
                                                 className='form-control float-start '
-                                                name='id'
-                                                id='id'
+                                                name='companyNumber'
+                                                id='companyNumber'
                                                 style={{ width: '230px' }}
-                                                defaultValue={formik.values.companyNumber} onChange={formik.handleChange} disabled /></td>
+                                                defaultValue={initialValues.companyNumber}  {...register("companyNumber")} disabled /></td>
                                             <td className=' p-1 tcx-form-label'><label className='form-label float-end'>Employer Type :  </label></td>
                                             <td className='p-1'> <input type="text" className='form-control float-start '
-                                                id="type"
-                                                name="type"
+                                                id="companyType"
+                                                name="companyType"
                                                 style={{ width: '100%' }}
-                                                value={companyData.type} onChange={formik.handleChange} disabled={isdisabled} /></td>
+                                                value={companyData.companyType}  {...register("companyType")} disabled={isdisabled} /></td>
                                             <td className=' p-1 tcx-form-label'><label className='form-label float-end'>PACRA ID :  </label></td>
                                             <td className='p-1'> <input type="text" className='form-control float-start '
                                                 id="pacraId"
                                                 name="pacraId"
                                                 style={{ width: '100%' }}
-                                                defaultValue={formik.values.pacraId} onChange={formik.handleChange} disabled={isdisabled} /></td>
+                                                defaultValue={initialValues.pacraId} {...register("pacraId")} disabled={isdisabled} /></td>
                                             <td className=' p-1 tcx-form-label'><label className='form-label float-end'>Seasonal/Regular Flag :  </label></td>
                                             <td className='p-1'>
                                                 <input type="checkbox" className='float-start '
                                                     id="seasonFlag"
                                                     name="seasonFlag"
 
-                                                    defaultValue={formik.values.seasonFlag} onChange={formik.handleChange} disabled={isdisabled} checked={formik.values.seasonFlag} /></td>
+                                                    defaultChecked={initialValues.seasonFlag}  {...register("seasonFlag")} disabled={isdisabled}/></td>
                                         </tr>
                                         <tr className='p-1'>
                                             <td className=' p-1 tcx-form-label'><label className='form-label float-end'>Main Phone # :  </label></td>
-                                            <td className='p-1'> <input type="text"
+                                            <td className='p-1'> <input type="number"
                                                 className='form-control float-start '
-                                                name='contactNo'
-                                                id='contactNo'
+                                                name='mobileNo'
+                                                id='mobileNo'
                                                 style={{ width: '230px' }}
-                                                value={''} onChange={formik.handleChange} disabled={isdisabled} /></td>
+                                                defaultValue={initialValues.mobileNo}
+                                                {...register("phoneNo")} disabled={isdisabled} /></td>
                                             <td className=' p-1 tcx-form-label'><label className='form-label float-end'>Main Email ID :  </label></td>
                                             <td className='p-1'> <input type="text" className='form-control float-start '
-                                                id="type"
-                                                name="type"
+                                                id="email"
+                                                name="email"
                                                 style={{ width: '100%' }}
-                                                value={''} onChange={formik.handleChange} disabled={isdisabled} /></td>
+                                                defaultValue={initialValues.email}
+                                                {...register("email")} disabled={isdisabled} /></td>
                                             <td className=' p-1 tcx-form-label'><label className='form-label float-end'>Main Fax :  </label></td>
                                             <td className='p-1'> <input type="text" className='form-control float-start '
-                                                id="pacraId"
-                                                name="pacraId"
+                                                id="fax"
+                                                name="fax"
                                                 style={{ width: '100%' }}
-                                                defaultValue={''} onChange={formik.handleChange} disabled={isdisabled} /></td>
+                                                defaultValue={initialValues.fax}    {...register("fax")} disabled={isdisabled} /></td>
 
                                         </tr>
                                         <tr className='p-1'>
                                             <td className=' p-1 tcx-form-label'><label className='form-label float-end'>Residential Address:  </label></td>
                                             <td className='p-1' colSpan={3}> <input type="text"
                                                 className='form-control float-start '
-                                                name='id'
-                                                id='id'
+                                                name='adressLine1'
+                                                id='adressLine1'
                                                 style={{ width: '100%' }}
-                                                defaultValue={_.defaultTo(formik.values.residencyArea, '')} disabled={isdisabled} /></td>
+                                                defaultValue={_.defaultTo(initialValues.adressLine1, '')} {...register("adressLine1")} disabled={isdisabled} /></td>
                                             <td className=' p-1 tcx-form-label'><label className='form-label float-end'>Status :  </label></td>
                                             <td className='p-1'> <input type="text" className='form-control float-start '
-                                                id="pacraId"
-                                                name="pacraId"
+                                                id="companyStatus"
+                                                name="companyStatus"
                                                 style={{ width: '100%' }}
-                                                defaultValue={formik.values.status} disabled={isdisabled} /></td>
+                                                defaultValue={initialValues.companyStatus} disabled={true} /></td>
                                             <td className=' p-1 tcx-form-label'><label className='form-label float-end'>Sub Status :  </label></td>
                                             <td className='p-1'> <input type="text" className='form-control float-start '
-                                                id="seasonFlag"
-                                                name="seasonFlag"
+                                                id="companySubStatus"
+                                                name="companySubStatus"
                                                 style={{ width: '100%' }}
-                                                defaultValue={formik.values.subStatus} disabled={isdisabled} /></td>
+                                                defaultValue={initialValues.companySubStatus}  {...register("companySubStatus")} disabled={true} /></td>
                                         </tr>
 
                                     </tbody>
@@ -313,61 +350,58 @@ function Employer_registration(props) {
                                             name='holdingCompany'
                                             id='holdingCompany'
                                             style={{ width: '230px' }}
-                                            defaultValue={_.defaultTo(formik.values.holdingCompany)} onChange={formik.handleChange} disabled={isdisabled} /></td>
+                                            defaultValue={_.defaultTo(initialValues.holdingCompany)}    {...register("holdingCompany")} disabled={isdisabled} /></td>
                                         <td className=' p-1 tcx-form-label'><label className='form-label float-end'>Subsidiary Company :  </label></td>
                                         <td className='p-1'> <input type="text" className='form-control float-start '
-                                            id="type"
-                                            name="type"
+                                            id="subsidaryCompany"
+                                            name="subsidaryCompany"
                                             style={{ width: '100%' }}
-                                            defaultValue={formik.values.subsidaryCompany} onChange={formik.handleChange} disabled={isdisabled} /></td>
+                                            defaultValue={initialValues.subsidaryCompany}  {...register("subsidaryCompany")} disabled={isdisabled} /></td>
                                         <td className=' p-1 tcx-form-label'><label className='form-label float-end'>Sector Code :  </label></td>
                                         <td className='p-1'>
                                             {/* <input type="text" className='form-control float-start '
                             id="pacraId"
                             name="pacraId"
                             style={{ width: '100%' }}
-                            defaultValue={formik.values.sectorCode}  disabled={isdisabled} /> */}
+                            defaultValue={initialValues.sectorCode}  disabled={isdisabled} /> */}
 
-                                            <select class="form-select float-start" name='sector_code' id='sector_code' style={{ width: '230px' }} defaultValue={formik.values.sector_code} onChange={formik.handleChange} disabled={isdisabled}>
+                                            <select class="form-select float-start" name='sector' id='sector' style={{ width: '230px' }} defaultValue={initialValues.sector}    {...register("sector")} disabled={isdisabled}>
                                                 <option value=''></option>
-                                                <option defaultValue="0119">GROWING OF OTHER NON-PERENNIAL CORPS</option>
-                                                <option defaultValue="1010">PROCESSING & PRESERVING OF MEAT</option>
-                                                <option defaultValue="1020">PROCESSING & PRESERVING OF FISH, CRUSTACEANS&MOLLUSCS</option>
-                                                <option defaultValue="1030">PROCESSING & PRESERVING OF FRUITS AND VEGETABLES</option>
-                                                <option defaultValue="1050">MANUFACTURING DAIRY PRODUCTS</option>
-                                                <option defaultValue="1071">MANUFACTURING BAKERY PRODUCTS</option>
-
+                                                { lookUp ? lookUp.TCX_SECTOR.map((item)=>(
+                                                   <option defaultValue={item} key={item}>{item}</option>  
+                                                )):null
+                                            }
 
                                             </select>
                                         </td>
                                         <td className=' p-1 tcx-form-label'><label className='form-label float-end'>Number of Employees :  </label></td>
-                                        <td className='p-1'> <input type="text" className='form-control float-start '
-                                            id="seasonFlag"
-                                            name="seasonFlag"
+                                        <td className='p-1'> <input type="number" className='form-control float-start '
+                                            id="no_of_employees"
+                                            name="no_of_employees"
                                             style={{ width: '100%' }}
-                                            defaultValue={formik.values.numberOfEmployees} onChange={formik.handleChange} disabled={isdisabled} /></td>
+                                            defaultValue={initialValues.no_of_employees}   {...register("no_of_employees")} disabled={isdisabled} /></td>
                                     </tr>
                                     <tr className='p-1'>
                                         <td className=' p-1 tcx-form-label'><label className='form-label float-end'>Date Incorporated :  </label></td>
-                                        <td className='p-1'> <input type="text"
+                                        <td className='p-1'> <input type="date"
                                             className='form-control float-start '
                                             name='dateIncorporated'
                                             id='dateIncorporated'
                                             style={{ width: '230px' }}
-                                            defaultValue={formatDate(Date.parse(formik.values.dateIncorporated))}
-                                            value={formatDate(Date.parse(formik.values.dateIncorporated))} onChange={formik.handleChange} disabled={isdisabled} /></td>
+                                            defaultValue={formatDate(Date.parse(initialValues.dateIncorporated))}
+                                             {...register("dateIncorporated")} disabled={isdisabled} /></td>
                                         <td className=' p-1 tcx-form-label'><label className='form-label float-end'>Date Started Employing :  </label></td>
-                                        <td className='p-1'> <input type="text" className='form-control float-start '
+                                        <td className='p-1'> <input type="date" className='form-control float-start '
                                             id="dateEmployed"
                                             name="dateEmployed"
                                             style={{ width: '100%' }}
-                                            defaultValue={formatDate(Date.parse(formik.values.dateEmployed))} value={formatDate(Date.parse(formik.values.dateEmployed))} onChange={formik.handleChange} disabled={isdisabled} /></td>
+                                            defaultValue={formatDate(Date.parse(initialValues.dateEmployed))} {...register("dateEmployed")} disabled={isdisabled} /></td>
                                         <td className=' p-1 tcx-form-label'><label className='form-label float-end'>Date Registered with NAPSA :  </label></td>
-                                        <td className='p-1'> <input type="text" className='form-control float-start '
+                                        <td className='p-1'> <input type="date" className='form-control float-start '
                                             id="dateRegistered"
                                             name="dateRegistered"
                                             style={{ width: '100%' }}
-                                            value={formatDate(Date.parse(formik.values.dateRegistered))} onChange={formik.handleChange} disabled={isdisabled} /></td>
+                                            defaultValue={formatDate(Date.parse(initialValues.dateRegistered))}    {...register("dateRegistered")} disabled={isdisabled} /></td>
 
                                     </tr>
 
@@ -389,25 +423,27 @@ function Employer_registration(props) {
                                             name='propFirstName'
                                             id='propFirstName'
                                             style={{ width: '230px' }}
-                                            defaultValue={_.defaultTo(formik.values.propFirstName, '')} onChange={formik.handleChange} disabled={isdisabled} /></td>
+                                            defaultValue={_.defaultTo(initialValues.propFirstName, '')}    {...register("propFirstName")} disabled={isdisabled} /></td>
                                         <td className=' p-1 tcx-form-label'><label className='form-label float-end'>Last Name :  </label></td>
                                         <td className='p-1'> <input type="text" className='form-control float-start '
                                             id="propLastName"
                                             name="propLastName"
                                             style={{ width: '100%' }}
-                                            defaultValue={_.defaultTo(formik.values.propLastName, '')} onChange={formik.handleChange} disabled={isdisabled} /></td>
+                                            defaultValue={_.defaultTo(initialValues.propLastName, '')}  {...register("propLastName")} disabled={isdisabled} /></td>
                                         <td className=' p-1 tcx-form-label'><label className='form-label float-end'>NRC # :  </label></td>
                                         <td className='p-1'> <input type="text" className='form-control float-start '
                                             id="nrc"
                                             name="nrc"
                                             style={{ width: '100%' }}
-                                            value={_.defaultTo(formik.values.nrc, '')} disabled={isdisabled} /></td>
+                                            defaultValue={_.defaultTo(initialValues.nrc, '')}    {...register("nrc")} disabled={isdisabled} /></td>
                                         <td className=' p-1 tcx-form-label'><label className='form-label float-end'>Nationality :  </label></td>
-                                        <td className='p-1'> <input type="text" className='form-control float-start '
-                                            id="nationality"
-                                            name="nationality"
-                                            style={{ width: '100%' }}
-                                            defaultValue={_.defaultTo(formik.values.nationality, '')} onChange={formik.handleChange} disabled={isdisabled} /></td>
+                                        <td className='p-1'>   <select id="nationality" name="nationality" defaultValue={_.defaultTo(initialValues.nationality, '')} className={"form-control float-start"} style={{ width: '230px' }}    {...register("nationality")} disabled={isdisabled} >
+                                                <option value=' '></option>
+                                                { lookUp ? lookUp.TCX_NATIOANLITY.map((item)=>(
+                                                   <option defaultValue={item} key={item}>{item}</option>  
+                                                )):null}
+
+                                            </select></td>
                                     </tr>
                                     <tr className='p-1'>
                                         <td className=' p-1 tcx-form-label'><label className='form-label float-end'>Position :  </label></td>
@@ -416,7 +452,7 @@ function Employer_registration(props) {
                                             name='propPosition'
                                             id='propPosition'
                                             style={{ width: '230px' }}
-                                            defaultValue={_.defaultTo(formik.values.propPosition, '')} onChange={formik.handleChange} disabled={isdisabled} /></td>
+                                            defaultValue={_.defaultTo(initialValues.propPosition, '')}    {...register("propPosition")} disabled={isdisabled} /></td>
 
 
                                     </tr>
@@ -436,48 +472,67 @@ function Employer_registration(props) {
                                     <tr className='p-1'>
                                         <td className=' p-1 tcx-form-label'><label className='form-label float-end'>Region :  </label></td>
                                         <td className='p-1'>
-                                            <Field component="select" id="region" name="region" defaultValue={_.defaultTo(formik.values.region, '')} className={"form-control float-start"} style={{ width: '230px' }} onChange={formik.handleChange} disabled={isdisabled} >
+                                            <select id="region" name="region" defaultValue={_.defaultTo(initialValues.region, '')} className={"form-control float-start"} style={{ width: '230px' }}    {...register("region")} disabled={isdisabled} >
                                                 <option value=' '></option>
-                                                <option value='Northern'>NORTHERN</option>
-                                                <option value='Southern'>SOUTHERN</option>
+                                                { lookUp ? lookUp.TCX_NATIOANLITY.map((item)=>(
+                                                   <option defaultValue={item} key={item}>{item}</option>  
+                                                )):null}
 
-                                            </Field>
+                                            </select>
                                         </td>
                                         <td className=' p-1 tcx-form-label'><label className='form-label float-end'>Province :  </label></td>
-                                        <td className='p-1'> <input type="text" className='form-control float-start '
-                                            id="province"
-                                            name="province"
-                                            style={{ width: '230px' }}
-                                            defaultValue={formik.values.province} onChange={formik.handleChange} disabled={isdisabled} /></td>
+                                        <td className='p-1'>
+                                            <select id="province" name="province" defaultValue={_.defaultTo(initialValues.province, '')} className={"form-control float-start"} style={{ width: '230px' }}    {...register("province")} disabled={isdisabled} >
+                                                <option value=' '></option>
+                                                { lookUp ? lookUp.TCX_PROVINCE.map((item)=>(
+                                                   <option defaultValue={item} key={item}>{item}</option>  
+                                                )):null}
+
+                                            </select>
+                                        </td>
                                         <td className=' p-1 tcx-form-label'><label className='form-label float-end'>Area :  </label></td>
-                                        <td className='p-1'> <input type="text" className='form-control float-start '
-                                            id="area"
-                                            name="area"
-                                            style={{ width: '230px' }}
-                                            defaultValue={_.defaultTo(formik.values.area, '')} disabled={isdisabled} /></td>
+                                        <td className='p-1'>
+                                            <select id="area" name="area" defaultValue={_.defaultTo(initialValues.area, '')} className={"form-control float-start"} style={{ width: '230px' }}    {...register("area")} disabled={isdisabled} >
+                                                <option value=' '></option>
+                                                { lookUp ? lookUp.TCX_AREA.map((item)=>(
+                                                   <option defaultValue={item} key={item}>{item}</option>  
+                                                )):null}
+
+                                            </select>
+                                        </td>
                                         <td className=' p-1 tcx-form-label'><label className='form-label float-end'>District :  </label></td>
-                                        <td className='p-1'> <input type="text" className='form-control float-start '
-                                            id="district"
-                                            name="district"
-                                            style={{ width: '230px' }}
-                                            defaultValue={_.defaultTo(formik.values.district, '')} onChange={formik.handleChange} disabled={isdisabled} /></td>
+                                        <td className='p-1'>
+                                            <select id="district" name="district" defaultValue={_.defaultTo(initialValues.district, '')} className={"form-control float-start"} style={{ width: '230px' }}    {...register("district")} disabled={isdisabled} >
+                                                <option value=' '></option>
+                                                { lookUp ? lookUp.TCX_DISTRICT.map((item)=>(
+                                                   <option defaultValue={item} key={item}>{item}</option>  
+                                                )):null}
+
+                                            </select>
+                                        </td>
                                     </tr>
                                     <tr className='p-1'>
                                         <td className=' p-1 tcx-form-label'><label className='form-label float-end'>Station :  </label></td>
-                                        <td className='p-1'> <input type="text"
-                                            className='form-control float-start '
-                                            name='station'
-                                            id='station'
-                                            style={{ width: '230px' }}
-                                            defaultValue={_.defaultTo(formik.values.station, '')} onChange={formik.handleChange} disabled={isdisabled} /></td>
+                                        <td className='p-1'>
+                                            <select id="station" name="station" defaultValue={_.defaultTo(initialValues.station, '')} className={"form-control float-start"} style={{ width: '230px' }}    {...register("station")} disabled={isdisabled} >
+                                                <option value=' '></option>
+                                                { lookUp ? lookUp.TCX_STATION.map((item)=>(
+                                                   <option defaultValue={item} key={item}>{item}</option>  
+                                                )):null}
+
+                                            </select>
+                                        </td>
 
                                         <td className=' p-1 tcx-form-label'><label className='form-label float-end'>Zone :  </label></td>
-                                        <td className='p-1'> <input type="text"
-                                            className='form-control float-start '
-                                            name='zone'
-                                            id='zone'
-                                            style={{ width: '230px' }}
-                                            defaultValue={_.defaultTo(formik.values.zone, '')} onChange={formik.handleChange} disabled={isdisabled} /></td>
+                                        <td className='p-1'>
+                                            <select id="zone" name="zone" defaultValue={_.defaultTo(initialValues.zone, '')} className={"form-control float-start"} style={{ width: '230px' }}    {...register("zone")} disabled={isdisabled} >
+                                                <option value=' '></option>
+                                                { lookUp ? lookUp.TCX_ZONE.map((item)=>(
+                                                   <option defaultValue={item} key={item}>{item}</option>  
+                                                )):null}
+
+                                            </select>
+                                        </td>
                                     </tr>
 
                                 </tbody>
@@ -516,7 +571,7 @@ function Employer_registration(props) {
                             </div>
 
                         </form>
-                    </FormikProvider>
+                
                 </div>
             </div>
         </div>
