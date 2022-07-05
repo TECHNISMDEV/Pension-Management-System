@@ -18,7 +18,7 @@ function Employer_register(props) {
 
     
     const [srNum, setSrId] = useState(props.id?props.id:null)
-    const [isDisable, setIsDisable] = useState(srNum?false:true)
+    const [isDisable, setIsDisable] = useState(true)
     const [date_received, setDate_received] = useState('')
     const [enableEmpRegForm, setEnableEmpRegForm] = useState(false)
     const [employer_number,setEmployer_Number] = useState('')

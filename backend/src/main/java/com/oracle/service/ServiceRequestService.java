@@ -86,7 +86,7 @@ public class ServiceRequestService {
 		company.setStation(companyVo.getStation());
 		company.setZone(companyVo.getZone());
 		company.setMainPhone(companyVo.getMainPhone());
-		company.setMainEmail(companyVo.getMailEmail());
+		company.setMainEmail(companyVo.getMainEmail());
 		// company.setPrContactId(serviceRequest.getPrContactId());
 
 		// service request
@@ -150,6 +150,8 @@ public class ServiceRequestService {
 		company.setPropFirstName(companyVo.getPropFirstName());
 		company.setPropLastName(companyVo.getPropLastName());
 		company.setPropPosition(companyVo.getPropPosition());
+		company.setPropNrc(companyVo.getNrc());
+		company.setPropNationality(companyVo.getNationality());
 		company.setLegalName(companyVo.getLegalName());
 		company.setSeasonFlag(companyVo.getSeasonFlag());
 		company.setPacraId(companyVo.getPacraId());
@@ -168,7 +170,7 @@ public class ServiceRequestService {
 		company.setStation(companyVo.getStation());
 		company.setZone(companyVo.getZone());
 		company.setMainPhone(companyVo.getMainPhone());
-		company.setMainEmail(companyVo.getMailEmail());
+		company.setMainEmail(companyVo.getMainEmail());
 		company.setArea(companyVo.getArea());
 		company.setNoOfEmployee(companyVo.getNoOfEmployee());
 

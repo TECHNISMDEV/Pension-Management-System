@@ -4,7 +4,7 @@ import { useFormik, Field, FormikProvider } from 'formik'
 import { set_tab_active } from '../../redux/actions/UserBehaviourAction';
 import { AiOutlineSearch } from "react-icons/ai";
 import { Modal, Button } from 'antd';
-import { t_date, set_employ_registration, API_URL, submitServiceRequestEmployerData } from '../../utils/commons'
+import { t_date, set_employ_registration, API_URL, submitServiceRequestEmployerData, formatDatePicker } from '../../utils/commons'
 import axios from 'axios';
 import 'antd/dist/antd.css';
 import { formatDate, set_employ_save } from '../../utils/commons'
@@ -26,16 +26,10 @@ function Employer_registration(props) {
     const [emp_no, setemp_no] = useState(props.id)
     const lookUp = props.lookUp
     const reg_sr_values = useSelector(state => state.SRReducer).reg_sr_employer;
-    const dispatch = useDispatch()
+
     const [isdisabled, setisdisabled] = useState(reg_sr_values ? false : true)
     const [companyData, setCompanyData] = useState({})
-    const [isAddressModalVisible, setisAddressModalVisible] = useState(false);
-    const [emp_name, setemp_name] = useState('')
-    const [date_rec, setdate_rec] = useState('')
-    const [city, setcity] = useState('')
-    const [postal_Code, setpostal_Code] = useState('')
-    const [State, setState] = useState('')
-    const [area, setarea] = useState('')
+
     const { TabPane } = Tabs;
     const [srForm, setSrForm] = useState(props.srForm)
     const _ = require("lodash");
@@ -58,13 +52,15 @@ function Employer_registration(props) {
     }
 
     const submitServiceRequestEmployer = (data,userId,srId)=>{
-        axios.post(API_URL+'/newServiceRequest',submitServiceRequestEmployerData(data,userId,srId,srForm)).
+        axios.post(API_URL+'/saveCompanyDetails',submitServiceRequestEmployerData(data,userId,srId,srForm)).
         then((res)=>{
             setCompanyData(res.data)
-            setCompanyFormData(res.data)
+           getCompanyDetails()
+            //setCompanyFormData(res.data)
             // setValue("employer_id",res.data.companyVo.id)
             alert("Service request saved successfully!!")
         }).catch((err)=>{
+            console.log(err)
             alert("Failed to save Service Request!!")
         })
     }
@@ -119,9 +115,7 @@ const setCompanyFormData = (companyData)=>{
     setValue('srId', srForm.id)
     setValue('companyName', companyData.id ? companyData.name : '')
     setValue('companyNumber', companyData.id ? companyData.id : '')
-
     setValue('legalName', companyData.id ? companyData.legalName : '')
-
     setValue('adressLine1', companyData.address ? companyData.address.adressLine1 : '')
     setValue('companyStatus', companyData.companyStatus ? companyData.companyStatus : '')
     setValue('companySubStatus', companyData.companySubStatus ? companyData.companySubStatus : '')
@@ -129,25 +123,26 @@ const setCompanyFormData = (companyData)=>{
     setValue('legalName', companyData.legalName)
     setValue('companyType', companyData.companyType)
     setValue('pacraId', companyData.pacraId)
-    setValue('mobileNo', companyData.contact ? companyData.contact.mobileNo : '')
-    setValue('email', companyData.contact ? companyData.contact.email : '')
+    setValue('mainPhone', companyData.mainPhone)
+    setValue('mainEmail', companyData.mainEmail)
     setValue('seasonFlag', companyData.seasonFlag == 0 ? false : true)
     setValue('fax', companyData.mainFax)
     setValue('province', companyData.province)
     setValue('region', companyData.region)
     setValue('station', companyData.station)
+    setValue('area', companyData.area)
     setValue('zone', companyData.zone)
     setValue('district', companyData.district)
     setValue('sector', companyData.sector)
     setValue('created',companyData.created)
-    setValue('dateIncorporated', companyData.created)
+    setValue('dateIncorporated', formatDatePicker(companyData.dateIncopr))
     setValue('holdingCompany', companyData.holdingCompany)
     setValue('subsidaryCompany', companyData.subsidaryCompany)
-    setValue('dateRegistered', companyData.companyRegDate)
-    setValue('no_of_employees', companyData.companyType)
-    setValue('dateEmployed', companyData.stEmploy)
-    setValue('nrc', companyData.vo ? companyData.vo.nrc : '')
-    setValue('nationality', companyData.address ? companyData.address.country : '')
+    setValue('dateRegistered', formatDatePicker(companyData.companyRegDate))
+    setValue('no_of_employees', companyData.compCxRef)
+    setValue('dateEmployed', formatDatePicker(companyData.stEmploy))
+    setValue('nrc', companyData.propNrc)
+    setValue('nationality', companyData.propNationality)
     setValue('propFirstName', companyData.propFirstName)
     setValue('propLastName', companyData.propLastName)
     setValue('propPosition', companyData.propPosition)
@@ -167,23 +162,24 @@ const initialValues = {
     legalName: companyData.legalName,
     companyType: companyData.companyType,
     pacraId: companyData.pacraId,
-    mobileNo:companyData.contact?companyData.contact.mobileNo:'',
-    email: companyData.contact?companyData.contact.email:'',
+    mainEmail: companyData.mainEmail,
     seasonFlag: companyData.seasonFlag == 0? false:true,
     fax:companyData.mainFax,
     province: companyData.province,
+    area:companyData.area,
     region: companyData.region,
     station: companyData.station,
     zone: companyData.zone,
     district: companyData.district,
+    mainPhone:companyData.mainPhone,
     sector: companyData.sector,
-    created: formatDate(companyData.created),
-    dateIncorporated:formatDate(companyData.dateIncopr),
+    created: companyData.created,
+    dateIncorporated:formatDatePicker(companyData.dateIncopr),
     holdingCompany:companyData.holdingCompany,
     subsidaryCompany:companyData.subsidaryCompany,
     dateRegistered: companyData.companyRegDate,
     no_of_employees: companyData.compCxRef,
-    dateEmployed: formatDate(companyData.stEmploy),
+    dateEmployed: formatDatePicker(companyData.stEmploy),
     nrc: companyData.vo?companyData.vo.nrc:'',
     nationality: companyData.address ? companyData.address.country : '',
     propFirstName: companyData.propFirstName,
@@ -286,18 +282,18 @@ const initialValues = {
                                             <td className=' p-1 tcx-form-label'><label className='form-label float-end'>Main Phone # :  </label></td>
                                             <td className='p-1'> <input type="number"
                                                 className='form-control float-start '
-                                                name='mobileNo'
-                                                id='mobileNo'
+                                                name='mainPhone'
+                                                id='mainPhone'
                                                 style={{ width: '230px' }}
-                                                defaultValue={initialValues.mobileNo}
-                                                {...register("phoneNo")} disabled={isdisabled} /></td>
+                                                defaultValue={initialValues.mainPhone}
+                                                {...register("mainPhone")} disabled={isdisabled} /></td>
                                             <td className=' p-1 tcx-form-label'><label className='form-label float-end'>Main Email ID :  </label></td>
                                             <td className='p-1'> <input type="text" className='form-control float-start '
-                                                id="email"
-                                                name="email"
+                                                id="mainEmail"
+                                                name="mainEmail"
                                                 style={{ width: '100%' }}
-                                                defaultValue={initialValues.email}
-                                                {...register("email")} disabled={isdisabled} /></td>
+                                                defaultValue={initialValues.mainEmail}
+                                                {...register("mainEmail")} disabled={isdisabled} /></td>
                                             <td className=' p-1 tcx-form-label'><label className='form-label float-end'>Main Fax :  </label></td>
                                             <td className='p-1'> <input type="text" className='form-control float-start '
                                                 id="fax"
@@ -313,7 +309,7 @@ const initialValues = {
                                                 name='adressLine1'
                                                 id='adressLine1'
                                                 style={{ width: '100%' }}
-                                                defaultValue={_.defaultTo(initialValues.adressLine1, '')} {...register("adressLine1")} disabled={isdisabled} /></td>
+                                                defaultValue={_.defaultTo(initialValues.adressLine1, '')} {...register("adressLine1")} disabled={true} /></td>
                                             <td className=' p-1 tcx-form-label'><label className='form-label float-end'>Status :  </label></td>
                                             <td className='p-1'> <input type="text" className='form-control float-start '
                                                 id="companyStatus"
@@ -388,14 +384,15 @@ const initialValues = {
                                             name='dateIncorporated'
                                             id='dateIncorporated'
                                             style={{ width: '230px' }}
-                                            defaultValue={formatDate(Date.parse(initialValues.dateIncorporated))}
-                                             {...register("dateIncorporated")} disabled={isdisabled} /></td>
+                                            
+                                            defaultValue={formatDate(Date.parse(initialValues.dateIncorporated))}    {...register("dateIncorporated")} 
+                                           disabled={isdisabled} /></td>
                                         <td className=' p-1 tcx-form-label'><label className='form-label float-end'>Date Started Employing :  </label></td>
                                         <td className='p-1'> <input type="date" className='form-control float-start '
                                             id="dateEmployed"
                                             name="dateEmployed"
                                             style={{ width: '100%' }}
-                                            defaultValue={formatDate(Date.parse(initialValues.dateEmployed))} {...register("dateEmployed")} disabled={isdisabled} /></td>
+                                            defaultValue={formatDate(initialValues.dateEmployed)} {...register("dateEmployed")} disabled={isdisabled} /></td>
                                         <td className=' p-1 tcx-form-label'><label className='form-label float-end'>Date Registered with NAPSA :  </label></td>
                                         <td className='p-1'> <input type="date" className='form-control float-start '
                                             id="dateRegistered"
@@ -562,7 +559,7 @@ const initialValues = {
                                         <div className='row'>
 
                                             <div className='col px-5'>
-                                                <Address empNumber={emp_no} />
+                                                <Address empNumber={emp_no}/>
 
                                             </div>
                                         </div>

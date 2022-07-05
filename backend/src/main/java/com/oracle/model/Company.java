@@ -75,6 +75,12 @@ public class Company implements Serializable {
 	@Column(name = "PROP_POSITION")
 	private String propPosition;
 
+	@Column(name = "PROP_NATIONALITY")
+	private String propNationality;
+
+	@Column(name = "PROP_NRC")
+	private String propNrc;
+
 	@Column(name = "SEASONAL_FLG")
 	private String seasonFlag;
 
@@ -186,7 +192,7 @@ public class Company implements Serializable {
 		company.setStation(this.getStation());
 		company.setZone(this.getZone());
 		company.setMainPhone(this.getMainPhone());
-		company.setMailEmail(this.getMainEmail());
+		company.setMainEmail(this.getMainEmail());
 		company.setNoOfEmployee(this.getNoOfEmployee());
 		
 		return company;

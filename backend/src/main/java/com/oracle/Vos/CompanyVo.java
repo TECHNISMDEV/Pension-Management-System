@@ -58,10 +58,6 @@ public class CompanyVo {
 
 	private String lastName;
 
-	private String mobileNo;
-
-	private String email;
-
 	private String contactType;
 
 	private String contactTypeId;
@@ -124,7 +120,7 @@ public class CompanyVo {
 
 	private String mainPhone;
 	
-	private String mailEmail;
+	private String mainEmail;
 	
 	private String area;
 	

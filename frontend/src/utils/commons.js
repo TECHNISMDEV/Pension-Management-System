@@ -254,9 +254,10 @@ export const submitServiceRequestEmployerData =(srFormData,userId,srId,srForm)=>
           "adressLine3": "",
           "adressLine4": "",
           "adressType": "",
+          "area": srFormData.area,
           "city": "",
           "compCxRef": srFormData.no_of_employees,
-          "companyRegDate": srFormData.dateRegistered,
+          "companyRegDate": formatDatePicker(srFormData.dateRegistered),
           "companyStatus":srFormData.companyStatus,
           "companySubStatus":srFormData.companySubStatus,
           "companyType": srFormData.companyType,
@@ -265,14 +266,13 @@ export const submitServiceRequestEmployerData =(srFormData,userId,srId,srForm)=>
           "country": srFormData.nationality,
           "created":'',
           "createdBy": userId,
-          "dateIncopr": srFormData.dateIncorporated,
+          "dateIncopr": formatDatePicker(srFormData.dateIncorporated),
           "district": srFormData.district,
           "districtProvience": srFormData.province,
           "dob": "",
           "documentNum": srFormData.companyName,
           "documentType":srFormData.companyName,
           "dod": "",
-          "email": srFormData.email,
           "firstName": '',
           "holdingCompany": srFormData.holdingCompany,
           "id": srFormData.companyNumber,
@@ -282,10 +282,10 @@ export const submitServiceRequestEmployerData =(srFormData,userId,srId,srForm)=>
           "legalName": srFormData.legalName,
           "loginUserId": userId,
           "mainFax": srFormData.fax,
-          "mainPhone": srFormData.mobileNo,
+          "mainPhone": srFormData.mainPhone,
+          "mainEmail":srFormData.mainEmail,
           "memberId": "string",
           "middleName": "string",
-          "mobileNo": srFormData.mobileNo,
           "name": srFormData.companyName,
           "nationality": srFormData.nationality,
           "nrc": srFormData.nrc,
@@ -303,7 +303,7 @@ export const submitServiceRequestEmployerData =(srFormData,userId,srId,srForm)=>
           "sector": srFormData.sector,
           "srStatus": srFormData.status,
           "ssn": "string",
-          "stEmploy": srFormData.dateEmployed,
+          "stEmploy": formatDatePicker(srFormData.dateEmployed),
           "state": srFormData.province,
           "station": srFormData.station,
           "subsidaryCompany": srFormData.subsidaryCompany,
@@ -428,6 +428,23 @@ return payload
 
 }
 
+export const  formatDatePicker = (date)=>{
+    var d = new Date(date),
+        month = '' + (d.getMonth()+1),
+        day = '' + d.getDate(),
+        year = d.getFullYear(),
+        hour = d.getHours(),
+        minutes = d.getMinutes(),
+        seconds = d.getSeconds();
+
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+
+    return [year, month, day].join('-');
+}
+
 export const  formatDate = (date)=>{
     var d = new Date(date),
         month = '' + (d.getMonth()+1),
@@ -508,6 +525,7 @@ export const submitNewAddress = (data,empNumber,userId) =>{
         created: '',
         districtProvience: data.districtProvience,
         id: empNumber,
+        isPrimary: data.adressType?true:false,
         lastUpdBy: '',
         last_Updated: '',
         loginId: userId,
