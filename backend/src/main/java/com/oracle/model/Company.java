@@ -125,6 +125,12 @@ public class Company implements Serializable {
 
 	@Column(name = "MAIN_PHONE")
 	private String mainPhone;
+	
+	@Column(name="MAIN_EMAIL")
+	private String mainEmail;
+	
+	@Column(name = "AREA")
+	private String area;
 
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "company")
 	@JsonBackReference
@@ -177,6 +183,7 @@ public class Company implements Serializable {
 		company.setStation(this.getStation());
 		company.setZone(this.getZone());
 		company.setMainPhone(this.getMainPhone());
+		company.setMailEmail(this.getMainEmail());
 		
 		return company;
 	}

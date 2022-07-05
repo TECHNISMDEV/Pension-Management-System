@@ -123,5 +123,9 @@ public class CompanyVo {
 	private String legalName;
 
 	private String mainPhone;
+	
+	private String mailEmail;
+	
+	private String area;
 
 }

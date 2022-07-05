@@ -30,7 +30,7 @@ import com.oracle.Vos.ServiceRequestUiVo;
 import com.oracle.Vos.UploadFileResponse;
 
 import com.oracle.model.AppUser;
-
+import com.oracle.model.Company;
 import com.oracle.model.Document;
 import com.oracle.model.ServiceRequest;
 import com.oracle.repository.AppUserService;
@@ -104,26 +104,39 @@ public class ServiceRequestController {
 	
 	@PostMapping(path = "/newServiceRequest", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<?> addNewServiceRequest(@RequestBody ServiceRequestUiVo serviceRequest) {
-		ServiceRequest serRequest=null;
-		Optional<ServiceRequest> existingSerRequest=serviceRequestRepository.findById(serviceRequest.getServiceRequestVo().getId());
+		
 		String loginId=serviceRequest.getServiceRequestVo().getLoginUserId();
 		AppUser user=appUserService.findUserById(loginId);
-		if(existingSerRequest.isPresent())
-		{
-			serRequest=existingSerRequest.get();
-		}
-		if (serRequest != null) {
-			ServiceRequest updatedServiceRequest= ServiceRequestService.updateServiceRequest(serRequest,serviceRequest);
-			serviceRequest.setServiceRequestVo(updatedServiceRequest.getVo());
-			serviceRequest.getServiceRequestVo().setUser(user);
-			serviceRequest.setCompanyVo(updatedServiceRequest.getCompany().getVo());
-			return ResponseEntity.ok(serviceRequest);
-		}else {
+		
+		
 			ServiceRequest req =ServiceRequestService.saveNewServiceRequest(serviceRequest);
 			serviceRequest.setServiceRequestVo(req.getVo());
 			serviceRequest.getServiceRequestVo().setUser(user);
 			serviceRequest.setCompanyVo(req.getCompany().getVo());
+		
+		return ResponseEntity.ok(serviceRequest);
+
+		
+	}
+	
+	@PostMapping(path = "/saveCompanyDetails", consumes = "application/json", produces = "application/json")
+	public ResponseEntity<?> saveCompanyDetails(@RequestBody ServiceRequestUiVo serviceRequest) {
+		Company company=null;
+		Optional<Company> existingCompany=companyRepository.findById(serviceRequest.getCompanyVo().getId());
+		String loginId=serviceRequest.getCompanyVo().getLoginUserId();
+		AppUser user=appUserService.findUserById(loginId);
+		if(existingCompany.isPresent())
+		{
+			company=existingCompany.get();
+		}
+		if (company != null) {
+			Company updatedCompany= ServiceRequestService.updateServiceRequestForCompanyInfo(company,serviceRequest);
+			serviceRequest.getServiceRequestVo().setUser(user);
+			serviceRequest.setCompanyVo(updatedCompany.getVo());
 			return ResponseEntity.ok(serviceRequest);
+		}else {
+			
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Company doesnot exist");
 	}
 		
 	}

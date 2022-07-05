@@ -56,15 +56,15 @@ public class ServiceRequestService {
 
 		// Company
 		company.setCreated(DateUtil.getCurrentDate());
-		company.setCreatedBy(companyVo.getLoginUserId());
+		company.setCreatedBy(serviceRequest.getLoginUserId());
 		company.setLastUpdated(DateUtil.getCurrentDate());
-		company.setLastUpdatedBy(companyVo.getLoginUserId());
+		company.setLastUpdatedBy(serviceRequest.getLoginUserId());
 		company.setCompanyRegDate(companyVo.getCompanyRegDate());
 		company.setCompCxRef(companyVo.getCompCxRef());
 		company.setDocumentNum(DateUtil.getCurrentDate().toString());
 		company.setDocumentType(companyVo.getDocumentType());
 		company.setName(companyVo.getName().toUpperCase());
-		company.setOwnerId(companyVo.getLoginUserId());
+		company.setOwnerId(serviceRequest.getLoginUserId());
 		company.setPropFirstName(companyVo.getPropFirstName());
 		company.setPropLastName(companyVo.getPropLastName());
 		company.setPropPosition(companyVo.getPropPosition());
@@ -86,6 +86,7 @@ public class ServiceRequestService {
 		company.setStation(companyVo.getStation());
 		company.setZone(companyVo.getZone());
 		company.setMainPhone(companyVo.getMainPhone());
+		company.setMainEmail(companyVo.getMailEmail());
 		// company.setPrContactId(serviceRequest.getPrContactId());
 
 		// service request
@@ -133,15 +134,14 @@ public class ServiceRequestService {
 		return repository.findByOwnerId(ownerId);
 	}
 
-	public ServiceRequest updateServiceRequest(ServiceRequest serRequest, ServiceRequestUiVo uiVo) {
+	public Company updateServiceRequestForCompanyInfo(Company company, ServiceRequestUiVo uiVo) {
 		CompanyVo companyVo = uiVo.getCompanyVo();
-		ServiceRequestVo serviceRequest = uiVo.getServiceRequestVo();
 
-		Company company = serRequest.getCompany(); // Company
+		//Company company = serRequest.getCompany(); // Company
 		// company.setCreated(DateUtil.getCurrentDate());
 		// company.setCreatedBy(serviceRequest.getCraeatedBy());
 		company.setLastUpdated(DateUtil.getCurrentDate());
-		company.setLastUpdatedBy(companyVo.getLoginUserId());
+		company.setLastUpdatedBy(uiVo.getCompanyVo().getLoginUserId());
 		company.setCompanyRegDate(companyVo.getCompanyRegDate());
 		company.setCompCxRef(companyVo.getCompCxRef());
 		company.setDocumentNum(companyVo.getDocumentNum());
@@ -168,39 +168,43 @@ public class ServiceRequestService {
 		company.setStation(companyVo.getStation());
 		company.setZone(companyVo.getZone());
 		company.setMainPhone(companyVo.getMainPhone());
+		company.setMainEmail(companyVo.getMailEmail());
+		company.setArea(companyVo.getArea());
 
-		serRequest.setCompany(company);
+		/*
+		 * serRequest.setCompany(company);
+		 * 
+		 * serRequest.setId(serviceRequest.getId());
+		 * 
+		 * serRequest.setLast_Updated(DateUtil.getCurrentDate());
+		 * serRequest.setLastUpdBy(serviceRequest.getLoginUserId());
+		 * serRequest.setOrgId(serviceRequest.getOrgId());
+		 * serRequest.setClaimId(serviceRequest.getClaimId());
+		 * serRequest.setSource(serviceRequest.getSource());
+		 * serRequest.setContactName(serviceRequest.getContactName());
+		 * serRequest.setStartDate(serviceRequest.getStartDate());
+		 * serRequest.setEndDate(serviceRequest.getEndDate());
+		 * serRequest.setArea(serviceRequest.getArea());
+		 * serRequest.setSubArea(serviceRequest.getSubArea());
+		 * serRequest.setSource(serviceRequest.getSource());
+		 * serRequest.setStatus(serviceRequest.getStatus());
+		 * 
+		 * serRequest.setProcess(serviceRequest.getProcess());
+		 * serRequest.setResolution(serviceRequest.getResolution());
+		 * serRequest.setComments(serviceRequest.getComments());
+		 * serRequest.setProcess(serviceRequest.getPriority());
+		 * serRequest.setContactNumber(serviceRequest.getContactNumber());
+		 * serRequest.setContactEmail(serviceRequest.getContactEmail());
+		 * serRequest.setSrPropiterFirstName(serviceRequest.getSrPropiterFirstName());
+		 * serRequest.setSrPropiterLastName(serviceRequest.getSrPropiterLastName());
+		 * serRequest.setProprietorNRC(serviceRequest.getProprietorNRC());
+		 * serRequest.setPropiterNationality(serviceRequest.getPropiterNationality());
+		 * serRequest.setName(serviceRequest.getName());
+		 * serRequest.setCompanyType(serviceRequest.getCompanyType());
+		 * serRequest.setLocation(serviceRequest.getLocation());
+		 */
 
-		serRequest.setId(serviceRequest.getId());
-
-		serRequest.setLast_Updated(DateUtil.getCurrentDate());
-		serRequest.setLastUpdBy(serviceRequest.getLoginUserId());
-		serRequest.setOrgId(serviceRequest.getOrgId());
-		serRequest.setClaimId(serviceRequest.getClaimId());
-		serRequest.setSource(serviceRequest.getSource());
-		serRequest.setContactName(serviceRequest.getContactName());
-		serRequest.setStartDate(serviceRequest.getStartDate());
-		serRequest.setEndDate(serviceRequest.getEndDate());
-		serRequest.setArea(serviceRequest.getArea());
-		serRequest.setSubArea(serviceRequest.getSubArea());
-		serRequest.setSource(serviceRequest.getSource());
-		serRequest.setStatus(serviceRequest.getStatus());
-		
-		serRequest.setProcess(serviceRequest.getProcess());
-		serRequest.setResolution(serviceRequest.getResolution());
-		serRequest.setComments(serviceRequest.getComments());
-		serRequest.setProcess(serviceRequest.getPriority());
-		serRequest.setContactNumber(serviceRequest.getContactNumber());
-		serRequest.setContactEmail(serviceRequest.getContactEmail());
-		serRequest.setSrPropiterFirstName(serviceRequest.getSrPropiterFirstName());
-		serRequest.setSrPropiterLastName(serviceRequest.getSrPropiterLastName());
-		serRequest.setProprietorNRC(serviceRequest.getProprietorNRC());
-		serRequest.setPropiterNationality(serviceRequest.getPropiterNationality());
-		serRequest.setName(serviceRequest.getName());
-		serRequest.setCompanyType(serviceRequest.getCompanyType());
-		serRequest.setLocation(serviceRequest.getLocation());
-
-		return repository.save(serRequest);
+		return companyRepository.save(company);
 
 	}
 
