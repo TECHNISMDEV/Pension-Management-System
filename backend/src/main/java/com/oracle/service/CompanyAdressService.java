@@ -74,6 +74,8 @@ public class CompanyAdressService {
 		 Company company=companyRepository.findById(add.getCompanyId()).get();
 		 company.setAddress(add);
 		 companyRepository.save(company);
+		}else {
+			return adressRepository.save(address);
 		}
 		 return address;
 		 

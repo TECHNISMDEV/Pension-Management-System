@@ -169,7 +169,7 @@ function Address(props) {
                                 id="isPrimary"
                                 name="isPrimary"
                                 style={{ width: '100%' }}
-                                defaultChecked={initialValues.isPrimary} {...register("adressType")}/>
+                                defaultChecked={initialValues.isPrimary} {...register("isPrimary")}/>
                                 </td>
                         </tr>
                         <tr>  <td className='tcx-form-label'><label className='form-label float-end'>Address Type :</label></td>
