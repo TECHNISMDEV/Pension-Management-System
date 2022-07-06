@@ -108,7 +108,8 @@ function Address(props) {
         adressLine2: '',
         adressLine3: '',
         adressLine4: '',
-        adressType: false,
+        adressType: '',
+        isPrimary:false,
         city: '',
         companyId: '',
         country: '',
@@ -162,14 +163,25 @@ function Address(props) {
                                 </td>
                         </tr>
                       
-                        <tr>  <td className='tcx-form-label'><label className='form-label float-end'>Address Type :</label></td>
+                        <tr>  <td className='tcx-form-label'><label className='form-label float-end'>Is Primary ? :</label></td>
                             <td className='p-1'>  <input type="checkbox"
                                 className='float-start'
-                                id="adressType"
-                                name="adressType"
+                                id="isPrimary"
+                                name="isPrimary"
                                 style={{ width: '100%' }}
-                                defaultChecked={initialValues.adressType} {...register("adressType")}/>
+                                defaultChecked={initialValues.isPrimary} {...register("adressType")}/>
                                 </td>
+                        </tr>
+                        <tr>  <td className='tcx-form-label'><label className='form-label float-end'>Address Type :</label></td>
+                        <td className='p-1'>
+                                            
+                                            <select class="form-select float-start" name='adressType' id='adressType' style={{ width: '230px' }} defaultValue={initialValues.adressType}    {...register("adressType")}>
+                                                <option value=''></option>
+                                                <option value='Home'>Home</option>
+                                                <option value='Work'>Work</option>
+                                                
+                                            </select>
+                                        </td>
                         </tr>
                         <tr>  <td className='tcx-form-label'><label className='form-label float-end'>City :</label></td>
                             <td className='p-1'>  <input type="text"
