@@ -118,7 +118,7 @@ const setCompanyFormData = (companyData)=>{
     setValue('companyName', companyData.id ? companyData.name : '')
     setValue('companyNumber', companyData.id ? companyData.id : '')
     setValue('legalName', companyData.id ? companyData.legalName : '')
-    setValue('adressLine1', companyData.address ? companyData.address.adressLine1 : '')
+    setValue('adressLine1', companyData.address ? companyData.address.adressLine1 + ', '+companyData.address.adressLine2+', '+companyData.address.city+', '+companyData.address.state+', '+companyData.address.country+ ', '+companyData.address.postalCode: '')
     setValue('companyStatus', companyData.companyStatus ? companyData.companyStatus : '')
     setValue('companySubStatus', companyData.companySubStatus ? companyData.companySubStatus : '')
     setValue('postalCode', companyData.address ? companyData.address.postalCode : '')
@@ -361,12 +361,7 @@ const initialValues = {
                                             defaultValue={initialValues.subsidaryCompany}  {...register("subsidaryCompany")} disabled={isdisabled} /></td>
                                         <td className=' p-1 tcx-form-label'><label className='form-label float-end'>Sector Code :  </label></td>
                                         <td className='p-1'>
-                                            {/* <input type="text" className='form-control float-start '
-                            id="pacraId"
-                            name="pacraId"
-                            style={{ width: '100%' }}
-                            defaultValue={initialValues.sectorCode}  disabled={isdisabled} /> */}
-
+                                            
                                             <select class="form-select float-start" name='sector' id='sector' style={{ width: '230px' }} defaultValue={initialValues.sector}    {...register("sector")} disabled={isdisabled}>
                                                 <option value=''></option>
                                                 { lookUp ? lookUp.TCX_SECTOR.map((item)=>(
