@@ -135,7 +135,7 @@ public class ServiceRequestController {
 			Company updatedCompany= ServiceRequestService.updateServiceRequestForCompanyInfo(company,serviceRequest);
 			serviceRequest.getServiceRequestVo().setUser(user);
 			serviceRequest.setCompanyVo(updatedCompany.getVo());
-			serviceRequest.setServiceRequestVo(updatedCompany.getRequest().getVo());
+			//serviceRequest.setServiceRequestVo(updatedCompany.getRequest().getVo());
 			return ResponseEntity.ok(serviceRequest);
 		}else {
 			
@@ -184,26 +184,21 @@ public class ServiceRequestController {
     }
 	
 	@GetMapping("/files/{id}")
-	  public ResponseEntity<byte[]> getFile(@PathVariable String id) {
-		  MediaType mediaType=null;
-		  
-			  Document fileDB = ServiceRequestService.getFile(id);
-			  mediaType=MediaType.parseMediaType(fileDB.getType());
-			  
-				
-				  if(null==mediaType) { 
-					  mediaType=MediaType.APPLICATION_OCTET_STREAM ;
-					  }
-				 
-			  
-			  
-			  return
-				ResponseEntity.ok() .contentType(mediaType)
-			  .header(HttpHeaders.CONTENT_DISPOSITION,"attachment:filename=\""+fileDB.
-			  getFileName()+"\"") .body(fileDB.getActualFile());
-			 
-		
-	  }
+	public ResponseEntity<byte[]> getFile(@PathVariable String id) {
+		MediaType mediaType = null;
+
+		Document fileDB = ServiceRequestService.getFile(id);
+		mediaType = MediaType.parseMediaType(fileDB.getType());
+
+		if (null == mediaType) {
+			mediaType = MediaType.APPLICATION_OCTET_STREAM;
+		}
+
+		return ResponseEntity.ok().contentType(mediaType)
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment:filename=\"" + fileDB.getFileName() + "\"")
+				.body(fileDB.getActualFile());
+
+	}
 
 	  @PutMapping("/sendForApproval/{serviceRequestId}")
 		public ResponseEntity<?> sendForApproval(@PathVariable(value = "serviceRequestId") String serviceRequestId ) {

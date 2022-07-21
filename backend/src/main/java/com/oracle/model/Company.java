@@ -141,9 +141,12 @@ public class Company implements Serializable {
 	@Column(name="NO_OF_EMPLOYEE")
 	private Integer noOfEmployee;
 
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "company")
-	@JsonBackReference
-	private ServiceRequest request;
+	/*
+	 * @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy =
+	 * "company")
+	 * 
+	 * @JsonBackReference private ServiceRequest request;
+	 */
 
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "PR_ADRESS_ID", referencedColumnName = "ID")
