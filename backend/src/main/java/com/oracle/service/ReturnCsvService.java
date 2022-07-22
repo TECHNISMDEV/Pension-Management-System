@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.oracle.Vos.ReturnUiVo;
+import com.oracle.exceptioncontroller.CompanyNotExistException;
 import com.oracle.helper.CSVHelper;
 import com.oracle.model.Collection;
 import com.oracle.model.Company;
@@ -50,7 +51,7 @@ public class ReturnCsvService {
 				Company c=companyRepository.findById(item.getComapnyNumber()).get();
 				if(c==null)
 				{
-					return null;
+					throw new CompanyNotExistException();
 				}
 				if(existingReturn==null)
 				{
