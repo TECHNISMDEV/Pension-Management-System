@@ -363,7 +363,7 @@ function Employer_register(props) {
                                             name="owner_name"
                                             id="owner_name"
                                             style={{ width: '100%' }}
-                                            defaultValue={initialValues.owner_name} placeholder="Owner name"  {...register("owner_name")}  required disabled={isDisable} />
+                                            defaultValue={initialValues.owner_name} placeholder="Owner name"  {...register("owner_name")} disabled={isDisable} />
                                         </td>
                                         <td className='p-1 tcx-form-label'></td>
                                             <td className='p-1 tcx-form-label'></td>

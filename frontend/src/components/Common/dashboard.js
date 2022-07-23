@@ -21,6 +21,7 @@ import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import { grey } from "@material-ui/core/colors";
 import Collections from '../Collections/collections';
 import EmployerList from '../Employer/employer_list';
+import Returns from '../Returns/returns';
 
 const theme = createMuiTheme({
     overrides: {
@@ -165,7 +166,8 @@ const [req_id, setreq_id] = useState(id)
                     <EmployerList/>
                     </TabPanel>
                     <TabPanel value={value} index={3}>
-                       <Return />
+                       {/* <Return /> */}
+                       <Returns/>
                     </TabPanel>
                     <TabPanel value={value} index={4}>
                         <Members/>
