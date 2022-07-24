@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Table, Modal,Radio } from 'antd';
 import axios from 'axios';
 import { API_URL, formatDate } from '../../utils/commons';
+import { useSelector } from 'react-redux';
 
 
 function Returns(props) {
@@ -16,6 +17,8 @@ function Returns(props) {
     const [isLoadingReturns, setIsLoadingReturns] = useState(false)
     const [validateReturnId,setValidateReturnId] = useState(null)
 
+    const userdata = useSelector(state => state.AuthReducer).user;
+
     const showModal = () => {
         setIsReturnModal(true);
     };
@@ -26,7 +29,7 @@ function Returns(props) {
         formData.append("file", uploadFile)
         axios({
             method: "post",
-            url: API_URL + "/file-upload",
+            url: API_URL + "/file-upload/"+userdata.id,
             data: formData,
             headers: { "Content-Type": "multipart/form-data" },
         }).then(
@@ -75,7 +78,7 @@ function Returns(props) {
             (res) => {
                 console.log(res.data)
                 setIsLoadingReturnItems(false)
-                setReturnItems(res.data.returns)
+                setReturnItems(res.data.items)
             }
         )
     }
@@ -179,18 +182,18 @@ function Returns(props) {
         },   
         {
             title: 'Employer Share',
-            dataIndex: 'status',
-            key: 'status',
+            dataIndex: 'companyShare',
+            key: 'companyShare',
         },   
         {
             title: 'Employee Share',
-            dataIndex: 'status',
-            key: 'status',
+            dataIndex: 'memberShare',
+            key: 'memberShare',
         },   
         {
             title: 'Total Contribution',
             dataIndex: ['retur', 'totalReturnAmount'],
-            key: 'status',
+            key: 'return',
         },   
         {
             title: 'Status',
@@ -199,8 +202,8 @@ function Returns(props) {
         },   
         {
             title: 'Comments',
-            dataIndex: 'status',
-            key: 'status',
+            dataIndex: 'comment',
+            key: 'comment',
         },     
     ]
 
@@ -256,8 +259,9 @@ function Returns(props) {
 
                     />
 
-  
-                   { isReturnItems && <div className='card'> <Table onRow={(record, rowIndex) => {
+{ isReturnItems && <h1 className='display-6'>Return Items</h1>}
+{ isReturnItems && <hr/>}
+                   { isReturnItems && <div className=''> <Table onRow={(record, rowIndex) => {
                         return {
                             onClick: event => {}, // click row
                             onDoubleClick: event => { }, // double click row

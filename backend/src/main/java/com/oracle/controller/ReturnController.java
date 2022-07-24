@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,7 @@ import springfox.documentation.service.ResponseMessage;
 @CrossOrigin
 @RestController
 @RequestMapping("/app")
+@Slf4j
 public class ReturnController {
 	@Autowired
 	ReturnCsvService returnCsvservice;
@@ -55,6 +57,7 @@ public class ReturnController {
 				return ResponseEntity.ok(returns);
 			} catch (Exception e) {
 				message = "Could not- upload the file: " + file.getOriginalFilename() + "!";
+				log.error("Exception===> {}",e);
 				return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
 						.body(new com.oracle.message.ResponseMessage(message, ""));
 			}
