@@ -39,13 +39,13 @@ public class ReturnCsvService {
 	@Autowired
 	CompanyRepository companyRepository;
 
-	public ReturnUiVo save(MultipartFile file) {
+	public ReturnUiVo save(MultipartFile file,String loginId) {
 		List<ReturnItems> returnItemlist=new ArrayList<ReturnItems>();
 		List<Return> returnList=new ArrayList<Return>();
 		
 		try {
-			List<ReturnItems> returns = new CSVHelper().csvToRedturnList(file.getInputStream());
-			for(ReturnItems item:returns)
+			List<ReturnItems> returnItem = new CSVHelper().csvToRedturnList(file.getInputStream());
+			for(ReturnItems item:returnItem)
 			{
 				Return existingReturn=returnRepository.findReturnRecordByEmpMonthYear(item.getRetur().getCompanyId(),item.getRetur().getMonth(),item.getRetur().getYear());
 				Company c=companyRepository.findById(item.getComapnyNumber()).get();
@@ -56,6 +56,8 @@ public class ReturnCsvService {
 				if(existingReturn==null)
 				{
 					item.getRetur().setSubmissionNumber(Integer.parseInt(dataSourceConfigService.generatedValue("TCX_SUBMISSION_NO_SEQ", "")));
+					//item.setLastUpdatedBy(loginId);
+					//item.setCreatedBy(loginId);
 					Collection col=new Collection();
 					col.setSubmissionNo(new Integer(item.getRetur().getSubmissionNumber()).toString());
 					col.setCompany(c);
@@ -65,9 +67,21 @@ public class ReturnCsvService {
 					
 
 				}else {
-					item.setRetur(existingReturn);
+					List<ReturnItems> returnItems=existingReturn.getItems();
+					for(ReturnItems existingreturnItem:returnItems) {
+						existingreturnItem.setComapnyNumber(item.getComapnyNumber());
+						existingreturnItem.setCompanyShare(item.getCompanyShare());
+						existingreturnItem.setComment(null);
+						existingreturnItem.setMemberDob(item.getMemberDob());
+						existingreturnItem.setMemberDocNumber(item.getMemberDocNumber());
+						existingreturnItem.setMemberId(item.getMemberId());
+						existingreturnItem.setMemberNrc(item.getMemberNrc());
+						existingreturnItem.setMemFirstName(item.getMemFirstName());
+						existingreturnItem.setMemeLastName(item.getMemeLastName());
+					    existingreturnItem.setRetur(existingReturn);
 					returnList.add(existingReturn);
-					ReturnItems savedReturnItem=returnItemRepository.save(item);
+					ReturnItems savedReturnItem=returnItemRepository.save(existingreturnItem);
+					}
 					//returnItemlist.add(savedReturnItem);
 				}
 			}

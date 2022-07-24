@@ -21,6 +21,7 @@ import com.oracle.Vos.ReturnUiVo;
 import com.oracle.helper.CSVHelper;
 import com.oracle.model.Return;
 import com.oracle.model.ReturnItems;
+import com.oracle.repository.MemberRepository;
 import com.oracle.repository.ReturnItemRepo;
 import com.oracle.repository.ReturnRepository;
 import com.oracle.service.ReturnCsvService;
@@ -39,14 +40,17 @@ public class ReturnController {
 
 	@Autowired
 	ReturnRepository returnRepo;
+	
+	@Autowired
+	MemberRepository memberRepository;
 
-	@PostMapping("/file-upload")
-	public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {
+	@PostMapping("/file-upload/{loginId}")
+	public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file,@PathVariable String loginId) {
 		String message = "";
 
 		if (CSVHelper.hasCSVFormat(file)) {
 			try {
-				ReturnUiVo returns = returnCsvservice.save(file);
+				ReturnUiVo returns = returnCsvservice.save(file,loginId);
 
 				return ResponseEntity.ok(returns);
 			} catch (Exception e) {
@@ -61,28 +65,35 @@ public class ReturnController {
 	}
 
 	@GetMapping(path = "/validate/{Id}")
-	public ResponseEntity<?> getReturnItemById(@PathVariable String Id) {
+	public ResponseEntity<?> validateReturnItem(@PathVariable String Id) {
 		List<Return> updatedReturn = new ArrayList<Return>();
 		List<ReturnItems> updatedListItem = new ArrayList<ReturnItems>();
 		System.out.println("----");
 		ReturnUiVo uiVo = new ReturnUiVo();
 		List<ReturnItems> listItem = returnItemRepo.findReturnItemByReturnId(Id);
 		Return ret = returnRepo.findById(Id).get();
+		
 		for (ReturnItems rItem : listItem) {
-			if (rItem.getMemberDob() == null) {
-				// rItem.setComment("Date of Birth is empty");
+			if(null==memberRepository.findByNrc(rItem.getMemberNrc()))
+			{
+				rItem.setComment("Member detail is not correct "+ rItem.getMemberNrc());
+				updatedListItem.add(returnItemRepo.save(rItem));
+				break;
+			}
+			else if (rItem.getMemberDob() == null) {
+				 rItem.setComment("Date of Birth is empty");
 				updatedListItem.add(returnItemRepo.save(rItem));
 				break;
 			} else if (rItem.getMemFirstName() == null) {
-				// rItem.setComment("First name is empty");
+				 rItem.setComment("First name is empty");
 				updatedListItem.add(returnItemRepo.save(rItem));
 				break;
 			} else if (rItem.getMemeLastName() == null) {
-				// rItem.setComment("First name is empty");
+				 rItem.setComment("First name is empty");
 				updatedListItem.add(returnItemRepo.save(rItem));
 				break;
 			} else if (rItem.getMemberNrc() == null) {
-				// rItem.setComment("First name is empty");
+				 rItem.setComment("First name is empty");
 				// returnItemRepo.save(rItem);
 				updatedListItem.add(returnItemRepo.save(rItem));
 				break;
