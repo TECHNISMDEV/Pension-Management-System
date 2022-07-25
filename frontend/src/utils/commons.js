@@ -463,6 +463,21 @@ export const  formatDate = (date)=>{
     return [month, day, year].join('/') + " "+[hour,minutes,seconds].join(':');
 }
 
+export const  formatDateWithoutTimestamp = (date)=>{
+    var d = new Date(date),
+        month = '' + (d.getMonth()+1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+       
+
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+
+    return [month, day, year].join('/');
+}
+
 
 export const setsubmitpayment = (responseData,payments)=>{
     var pay_list =[];

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Table, Modal,Radio } from 'antd';
 import axios from 'axios';
-import { API_URL, formatDate } from '../../utils/commons';
+import { API_URL, formatDate,formatDateWithoutTimestamp } from '../../utils/commons';
 import { useSelector } from 'react-redux';
 
 
@@ -173,7 +173,7 @@ function Returns(props) {
             title: 'Date Of Birth',
             dataIndex: 'memberDob',
             key: 'memberDob',
-            render: (text)=><p>{formatDate(text)}</p>
+            render: (text)=><p>{formatDateWithoutTimestamp(text)}</p>
         },   
         {
             title: 'Gross Wage',
