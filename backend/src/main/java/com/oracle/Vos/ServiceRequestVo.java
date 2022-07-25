@@ -78,6 +78,8 @@ public class ServiceRequestVo {
 	
 	private String loginUserId;
 	
+	private String companyId;
+	
 	AppUser user;
 	
 	

@@ -64,9 +64,9 @@ public class ReturnItems extends CommonFields {
 	@Column(name="STATUS")
 	private String status;
 	
-	/*
-	 * @Column(name="COMMENT") private String comment;
-	 */
+	
+	  @Column(name="COMMENTS") private String comment;
+	 
 	
 	 @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 	 @JoinColumn(name="RETURN_ID",referencedColumnName = "ID")
@@ -199,11 +199,11 @@ public class ReturnItems extends CommonFields {
 		this.status = status;
 	}
 
-	/*
-	 * public String getComment() { return comment; }
-	 * 
-	 * public void setComment(String comment) { this.comment = comment; }
-	 */
+	
+	  public String getComment() { return comment; }
+	  
+	  public void setComment(String comment) { this.comment = comment; }
+	 
 	
 	
 }

@@ -145,6 +145,8 @@ public class ServiceRequest implements Serializable {
 	 private CompanyMember member;
 	 
 	 
+	 
+	 
 	 public ServiceRequestVo getVo()
 	 {
 		 ServiceRequestVo request=new ServiceRequestVo();

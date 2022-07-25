@@ -84,3 +84,19 @@
     border-radius: 50rem!important;
   }
 
+  .ant-table-row-selected{
+  background-color: #75757583!important;
+  color: white!important;
+  
+}
+
+.ant-table-tbody > tr.ant-table-row-selected > td {
+  background-color: #75757583!important;
+  border-color: rgba(0, 0, 0, 0.03);
+  font-weight: bold !important ;
+}
+
+.ant-table-tbody > tr.ant-table-row-selected:hover > td {
+  background: none !important;
+}
+

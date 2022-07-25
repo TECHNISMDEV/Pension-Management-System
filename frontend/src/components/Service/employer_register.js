@@ -68,6 +68,7 @@ function Employer_register(props) {
 
     const onSubmitSR = data =>{
         console.log(data)
+     
         submitServiceRequest(data,userdata.id)
     }
 
@@ -143,6 +144,8 @@ function Employer_register(props) {
         then((res)=>{
             setEmployer_Number(res.data.companyVo.id)
             setValue("employer_id",res.data.companyVo.id)
+            setSrForm(res.data)
+            console.log(res.data)
             alert("Service request created successfully!!")
         }).catch((err)=>{
             alert("Failed to create Service Request!!")
@@ -363,7 +366,7 @@ function Employer_register(props) {
                                             name="owner_name"
                                             id="owner_name"
                                             style={{ width: '100%' }}
-                                            defaultValue={initialValues.owner_name} placeholder="Owner name"  {...register("owner_name")}  required disabled={isDisable} />
+                                            defaultValue={initialValues.owner_name} placeholder="Owner name"  {...register("owner_name")} disabled={isDisable} />
                                         </td>
                                         <td className='p-1 tcx-form-label'></td>
                                             <td className='p-1 tcx-form-label'></td>

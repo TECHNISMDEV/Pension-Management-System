@@ -29,6 +29,7 @@ function Address(props) {
     };
 
     const submitNewAddressData= (data)=>{
+        if(checkIfPrimaryExists(data)){
         axios.post(API_URL+'/addCompanyAdress',  submitNewAddress(data,empNumber,userdata.id)).
         then((res)=>{
            
@@ -36,8 +37,15 @@ function Address(props) {
         }).catch((err)=>{
             alert(err)
         })
+    }
 }
 
+const checkIfPrimaryExists = (data)=>{
+    // if(data.isPrimary){
+    //     addressData.
+    // }
+    return true;
+}
 
     useEffect(()=>{
         

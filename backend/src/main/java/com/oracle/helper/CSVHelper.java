@@ -63,7 +63,7 @@ public class CSVHelper {
 				return1.setCompanyId(csvRecord.get(0));
 				return1.setYear(Integer.parseInt(csvRecord.get(1)));
 				return1.setMonth(Integer.parseInt(csvRecord.get(2)));
-				return1.setTotalReturnAmount(Integer.parseInt(csvRecord.get(8)));
+				return1.setTotalReturnAmount(Integer.parseInt(csvRecord.get(9)));
 				return1.setReturnType("Normal");
 				return1.setCreated(DateUtil.getCurrentDate());
 				return1.setLastUpdated(DateUtil.getCurrentDate());
@@ -77,7 +77,10 @@ public class CSVHelper {
 				rItems.setYear(Integer.parseInt(csvRecord.get(1)));
 				rItems.setMonth(Integer.parseInt(csvRecord.get(2)));
 				rItems.setMemberDocNumber(csvRecord.get(10));
-				String sDate1=csvRecord.get(7);  
+				rItems.setCompanyShare(Long.parseLong(csvRecord.get(10)));
+				rItems.setMemberShare(Long.parseLong(csvRecord.get(11)));
+				rItems.setMemGrossSalary(Long.parseLong(csvRecord.get(9)));
+				String sDate1=csvRecord.get(8);  
 				rItems.setMemberDob(DateUtil.convertStringToDate(sDate1));
 				rItems.setRetur(return1);
 
