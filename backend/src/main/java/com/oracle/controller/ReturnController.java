@@ -20,8 +20,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.oracle.Vos.ReturnUiVo;
 import com.oracle.helper.CSVHelper;
+import com.oracle.model.AppUser;
 import com.oracle.model.Return;
 import com.oracle.model.ReturnItems;
+import com.oracle.repository.AppUserService;
 import com.oracle.repository.MemberRepository;
 import com.oracle.repository.ReturnItemRepo;
 import com.oracle.repository.ReturnRepository;
@@ -45,17 +47,26 @@ public class ReturnController {
 	
 	@Autowired
 	MemberRepository memberRepository;
+	
+	@Autowired
+	AppUserService appUserService;
 
 	@PostMapping("/file-upload/{loginId}")
 	public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file,@PathVariable String loginId) {
 		String message = "";
+		AppUser appUser=appUserService.findUserById(loginId);
 
 		if (CSVHelper.hasCSVFormat(file)) {
 			try {
 				ReturnUiVo returns = returnCsvservice.save(file,loginId);
+				for(Return r:returns.getReturns())
+				{
+					r.setCreatedBy(appUser.getLogin());
+				}
 
 				return ResponseEntity.ok(returns);
 			} catch (Exception e) {
+				e.printStackTrace();
 				message = "Could not- upload the file: " + file.getOriginalFilename() + "!";
 				log.error("Exception===> {}",e);
 				return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
@@ -122,6 +133,12 @@ public class ReturnController {
 		// r.setId(returnId);
 		return returnItemRepo.findReturnItemByReturnId(returnId);
 		// return returnItemRepo.findByRetur(r);
+
+	}
+	@GetMapping(path = "/findAllOpenReturnByOwnerId/{loginId}")
+	public List<Return> findAllOpenReturnByOwnerId(@PathVariable String loginId) {
+		
+		return returnRepo.findAllOpenReturnByOwnerId(loginId);
 
 	}
 }

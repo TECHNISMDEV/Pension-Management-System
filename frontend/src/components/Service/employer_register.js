@@ -346,7 +346,7 @@ function Employer_register(props) {
                                         <td className='p-1 tcx-form-label'> <label class="form-label float-end">Nationality: </label></td>
 
                                         <td className='p-1'>  
-                                         <select id="nationality" name="nationality"  {...register("nationality")} defaultValue={initialValues.nationality} className={"form-control float-start"} style={{ width: '230px' }}  disabled={isDisable} >
+                                         <select id="nationality" name="nationality"  {...register("nationality")} defaultValue={initialValues.nationality} className={"form-control float-start"}  disabled={isDisable} >
                                              
                                                 { lookUp ? lookUp.TCX_NATIOANLITY.map((item)=>(
                                                    <option defaultValue={item} key={item} >{item}</option>  
