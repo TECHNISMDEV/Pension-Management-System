@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table, Modal,Radio } from 'antd';
 import axios from 'axios';
 import { API_URL, formatDate,formatDateWithoutTimestamp } from '../../utils/commons';
@@ -18,6 +18,17 @@ function Returns(props) {
     const [validateReturnId,setValidateReturnId] = useState(null)
 
     const userdata = useSelector(state => state.AuthReducer).user;
+
+    useEffect(()=>{
+        setIsLoadingReturns(true)
+        axios.get(API_URL + '/findAllOpenReturnByOwnerId/'+userdata.id).then(
+            (res) => {
+                console.log(res.data)
+                setIsLoadingReturns(false)
+                setReturns(res.data)
+            }
+        )
+        },[])
 
     const showModal = () => {
         setIsReturnModal(true);
@@ -120,11 +131,11 @@ function Returns(props) {
             dataIndex: 'createdBy',
             key: 'createdBy',
         },
-        {
-            title: 'Processing Centre',
-            dataIndex: '',
-            key: '',
-        },
+        // {
+        //     title: 'Processing Centre',
+        //     dataIndex: '',
+        //     key: '',
+        // },
         {
             title: 'Date Validated',
             dataIndex: '',
@@ -139,12 +150,13 @@ function Returns(props) {
             title: 'Members Count',
             dataIndex: '',
             key: '',
+            render: (text)=><p>{1}</p>
         },
-        {
-            title: 'Date Cancel',
-            dataIndex: '',
-            key: '',
-        },
+        // {
+        //     title: 'Date Cancel',
+        //     dataIndex: '',
+        //     key: '',
+        // },
         {
             title: 'Status',
             dataIndex: 'status',
@@ -173,7 +185,7 @@ function Returns(props) {
             title: 'Date Of Birth',
             dataIndex: 'memberDob',
             key: 'memberDob',
-            render: (text)=><p>{formatDateWithoutTimestamp(text)}</p>
+            render: (text)=><p>{formatDate(text).split(' ')[0]}</p>
         },   
         {
             title: 'Gross Wage',
@@ -229,8 +241,8 @@ function Returns(props) {
             <div class="card py-3">
                 <div class="card-body">
                     <table className="float-end">
-                        {isImported && <td className="p-3"> <button type="button" className="btn btn-danger float-start rounded-pill" onClick={() => { validateReturn()}}>Validate</button></td>}
-                       {!isImported && <td className="p-3"> <button type="button" className="btn btn-danger float-start rounded-pill" onClick={() => { showModal() }}>Import Returns</button></td>}
+                        {!isImported && <td className="p-3"> <button type="button" className="btn btn-danger float-start rounded-pill" onClick={() => { showModal() }}>Import Returns</button></td>}
+                        { <td className="p-3"> <button type="button" className="btn btn-danger float-start rounded-pill" onClick={() => { validateReturn()}}>Validate</button></td>}
                         {!isImported &&<td className="p-3"> <button type="reset" className="btn btn-danger float-start rounded-pill" onClick={() => { }}>Cancel</button></td>}
                     </table>
 

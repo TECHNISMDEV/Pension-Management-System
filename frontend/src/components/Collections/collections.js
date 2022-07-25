@@ -8,9 +8,12 @@ import { useTable } from 'react-table'
 import { Modal } from 'antd';
 import { setsubmitpayment } from '../../utils/commons'
 import { Redirect } from 'react-router';
+import { Table } from 'antd';
+import { useSelector } from 'react-redux';
 const { TabPane } = Tabs;
 
 function Collections() {
+    const _ = require("lodash");
     const [enableManRecep, setEnableManRecep] = useState(true)
     const [trans_Type, settrans_Type] = useState('')
     const [isnew, setisnew] = useState(true)
@@ -28,13 +31,14 @@ function Collections() {
     const [responseData, setresponseData] = useState([])
     const [payments, setpayments] = useState([])
     const [payment_trans, setpayment_trans] = useState([])
-    const [returns, setreturns] = useState([])
+    const [returns, setReturns] = useState([])
     const [addpayment, setaddpayment] = useState(false)
     const [addpayment_type, setaddpayment_type] = useState('')
     const [addpayment_amt, setaddpayment_amt] = useState()
     const [addpayment_cashcode, setaddpayment_cashcode] = useState('')
     const [addpayment_sub_no, setaddpayment_sub_no] = useState('')
     const [isEmployersearch, setisEmployersearch] = useState(false)
+    const userdata = useSelector(state => state.AuthReducer).user;
     useEffect(() => {
         if (!ret_total == 0) {
             setamt_due(ret_total)
@@ -95,12 +99,13 @@ function Collections() {
                 setemp_no(res.data[0].returns.company.id)
                 setstatus(res.data[0].returns.collection.status)
                 setaddress(res.data[0].returns.company.address.adressLine1 + ' ' + res.data[0].returns.company.address.adressLine2)
-                setlogin_user(res.data[0].returns.collection.craeatedBy)
+                setlogin_user(userdata.id)
 
                 setproc_cent('20')
 
                 //setpayments(res.data[0].payments),
                 console.log(res.data)
+                setReturns(res.data)
                 // res.data.map((pay) => (
                 //     console.log(pay.payments[0]),
                 //     add_payment_data(pay.payments[0])
@@ -128,12 +133,13 @@ function Collections() {
                 setemp_no(res.data[0].returns.company.id)
                 setstatus(res.data[0].returns.collection.status)
                 setaddress(res.data[0].returns.company.address?res.data[0].returns.company.address.adressLine1 + ' ' + res.data[0].returns.company.address.adressLine2:'')
-                setlogin_user(res.data[0].returns.collection.craeatedBy)
+                setlogin_user(userdata.id)
                 setsubm(res.data[0].returns.collection.submissionNo)
                 setproc_cent('20')
                 //setamt_due((res.data[0].returns.damount).toFixed(2))
                 //setpayments(res.data[0].payments),
-                setreturns(returns.concat(res.data[0].returns))
+                //setReturns(returns.concat(res.data[0].returns))
+                setReturns(res.data)
                 console.log(returns)
                 //setamt_paid((res.data[0].returns.retPaidAMT + res.data[0].returns.penPaidAMT).toFixed(2))
                 setresponseData(res.data)
@@ -191,6 +197,11 @@ function Collections() {
                 "amt":formik.values.addpayment_amt
             }
         )
+        // setpayment_trans(...payment_trans,{
+        //     "payments_type":formik.values.addpayment_type,
+        //     "subm_no":formik.values.addpayment_sub_no,
+        //     "amt":formik.values.addpayment_amt
+        // })
     setaddpayment_sub_no(' ')
     setaddpayment_type('')
     setaddpayment_amt('')
@@ -229,6 +240,119 @@ function Collections() {
             )
         )
     }
+
+
+
+const collectionColumns = [
+    {
+        title: 'Submission No',
+        dataIndex: ['returns','submissionNo'],
+        key: 'submissionNo',
+    }, 
+    {
+        title: 'Year',
+        dataIndex: ['returns','year'],
+        key: 'year',
+    }, 
+    {
+        title: 'Month',
+        dataIndex: ['returns','month'],
+        key: 'month',
+    }, 
+    {
+        title: 'Returns Total',
+        dataIndex: ['returns','treturnAmount'],
+        key: 'treturnAmount',
+    }, 
+    {
+        title: 'Penalty',
+        dataIndex: ['returns','pamount'],
+        key: 'pamount',
+        render:(pen)=><p>{pen?pen:0}</p>
+    }, 
+    {
+        title: 'Full/Partial Amount',
+        dataIndex: ['returns',''],
+        key: '',
+    }, 
+    {
+        title: 'Balance',
+        dataIndex: ['returns','treturnAmount'],
+        key: 'treturnAmount',
+        render:(total,row)=><p>{row.returns.treturnAmount - row.returns.retPaidAMT}</p>
+    }, 
+    {
+        title: 'Status',
+        dataIndex: ['returns','status'],
+        key: 'status',
+    }, 
+    {
+        title: 'Payment Id',
+        dataIndex: ['payments','id'],
+        key: 'id',
+    }, 
+    {
+        title: 'Return Paid',
+        dataIndex: ['returns','retPaidAMT'],
+        key: 'retPaidAMT',
+    }, 
+]
+
+const paymentsColumns = [
+    {
+        title: 'Payment Mode',
+        dataIndex: 'payments_type',
+        key: 'payments_type',
+    }, 
+    {
+        title: 'Amount',
+        dataIndex: 'amt',
+        key: 'amt',
+    }, 
+    {
+        title: 'Cash Code',
+        dataIndex: '',
+        key: '',
+        render: (text,row)=><p>{row.payments_type.toLowerCase() === 'cash'?'S999':''}</p>
+    }, 
+    {
+        title: 'Cash Code',
+        dataIndex: ['returns','treturnAmount'],
+        key: 'treturnAmount',
+    }, 
+    {
+        title: 'Bank Name',
+        dataIndex: ['returns','pamount'],
+        key: 'pamount',
+        render:(pen)=><p>{pen?pen:0}</p>
+    }, 
+    {
+        title: 'Branch Name',
+        dataIndex: ['returns',''],
+        key: '',
+    }, 
+    {
+        title: 'Cheque No',
+        dataIndex: ['returns','treturnAmount'],
+        key: 'treturnAmount',
+       
+    }, 
+    {
+        title: 'Cheque Received',
+        dataIndex: ['returns','status'],
+        key: 'status',
+    }, 
+    {
+        title: 'EFT Bank Code',
+        dataIndex: ['payments','id'],
+        key: 'id',
+    }, 
+    {
+        title: 'EFT Bank Name',
+        dataIndex: ['returns','retPaidAMT'],
+        key: 'retPaidAMT',
+    }, 
+]
     return (
         <div className="p-3">
         <div className="row px-3">
@@ -312,7 +436,8 @@ function Collections() {
                                             <AiOutlineSearch style={{ padding: '0px' }} size={30} color={'black'} />
                                         </a>
                                     </td>
-
+                                    <td className='p-1'><label className='form-label float-end'>Login User: </label></td>
+                                    <td className='p-1'> <input className="form-control float-start" style={{ width: '230px' }} defaultValue={formik.values.login_user} name='login_user' id='login_user' onChange={formik.handleChange} disabled></input></td>
                                 </tr>
                                 <tr>
                                     <td className='p-1'><label className='form-label float-end'>Date Received: </label></td>
@@ -321,12 +446,15 @@ function Collections() {
                                     <td className='p-1'> <input className="form-control float-start" style={{ width: '230px' }} defaultValue={formik.values.emp_name} name='emp_name' id='emp_name' onChange={formik.handleChange} disabled></input></td>
                                     <td className='p-1'><label className='form-label float-end'>Amount Paid: </label></td>
                                     <td className='p-1'> <input className="form-control float-start" style={{ width: '230px' }} defaultValue={formik.values.amt_paid} name='amt_paid' id='amt_paid' onChange={formik.handleChange} disabled></input></td>
+                                    <td className='p-1'><label className='form-label float-end'>Manual Receipt: </label></td>
+                                    <td className='p-1'> <input className="form-control float-start" style={{ width: '230px' }} defaultValue={formik.values.man_rec} name='man_rec' id='man_rec' onChange={formik.handleChange} disabled={formik.values.trans_type == 'Manual' ? false : true} ></input></td>
+                               
                                 </tr>
                                 <tr>
                                     <td className='p-1'><label className='form-label float-end'>Date Printed: </label></td>
                                     <td className='p-1'> <input className="form-control float-start" style={{ width: '230px' }} defaultValue={formik.values.date_received} name='date_received' id='date_received' onChange={formik.handleChange} disabled></input></td>
                                     <td className='p-1'><label className='form-label float-end'>Employer Address: </label></td>
-                                    <td className='p-1'> <textarea className="form-control float-start" style={{ width: '230px' }} defaultValue={formik.values.address} name='address' id='address' onChange={formik.handleChange} disabled></textarea></td>
+                                    <td className='p-1'> <input className="form-control float-start" style={{ width: '230px' }} defaultValue={formik.values.address} name='address' id='address' onChange={formik.handleChange} disabled/></td>
                                     <td className='p-1'><label className='form-label float-end'>Amount Due: </label></td>
                                     <td className='p-1'> <input className="form-control float-start" style={{ width: '230px' }} defaultValue={formik.values.amt_due} name='amt_due' id='amt_due' onChange={formik.handleChange} disabled></input></td>
                                 </tr>
@@ -337,7 +465,7 @@ function Collections() {
                                     <td className='p-1'> <input className="form-control float-start" style={{ width: '230px' }} defaultValue={formik.values.status} name='status' id='status' onChange={formik.handleChange} disabled></input></td>
 
                                 </tr>
-                                <tr>
+                                {/* <tr>
                                     <td className='p-1'><label className='form-label float-end'>Login User: </label></td>
                                     <td className='p-1'> <input className="form-control float-start" style={{ width: '230px' }} defaultValue={formik.values.login_user} name='login_user' id='login_user' onChange={formik.handleChange} disabled></input></td>
 
@@ -345,7 +473,7 @@ function Collections() {
                                 <tr>
                                     <td className='p-1'><label className='form-label float-end'>Manual Receipt: </label></td>
                                     <td className='p-1'> <input className="form-control float-start" style={{ width: '230px' }} defaultValue={formik.values.man_rec} name='man_rec' id='man_rec' onChange={formik.handleChange} disabled={formik.values.trans_type == 'Manual' ? false : true} ></input></td>
-                                </tr>
+                                </tr> */}
                             </tbody>
                         </table>
 
@@ -370,7 +498,10 @@ function Collections() {
                                                         <button type="button" className="btn btn-danger float-start rounded-pill mx-3" style={{ width: '190px' }} onClick={calcu_ret_total}>Calculate All</button>
 
                                                         <button type="button" className="btn btn-danger float-start rounded-pill mx-3" style={{ width: '190px' }} disabled>Remove Return</button>
-                                                        <p className='form-label fs-5 fw-bold mx-5 float-start' style={{ display: ret_total ? 'block' : 'none' }}>Total :- {amt_due ? amt_due : ret_total}</p>
+                                                     
+                                                    </td>
+                                                    <td>
+                                                    <h1 className='display-4 mx-5 p-0 float-end' style={{ display: ret_total ? 'block' : 'none' }}>Returns Total : {amt_due ? amt_due : ret_total}</h1>
                                                     </td>
 
                                                 </tr>
@@ -383,7 +514,28 @@ function Collections() {
                                     </div>
                                     <div className='row m-3'>
                                         <div style={{maxHeight:'200px',overflow:'auto'}}>
-                                        <table class="table table-striped">
+
+                                                <Table onRow={(record, rowIndex) => {
+                                                    return {
+                                                        onClick: event => { }, // click row
+                                                        onDoubleClick: event => { }, // double click row
+                                                        onContextMenu: event => { }, // right button click row
+                                                        onMouseEnter: event => { }, // mouse enter row
+                                                        onMouseLeave: event => { }, // mouse leave row
+                                                    };
+
+                                                }} rowKey="submissionNo"
+                                                    columns={collectionColumns} dataSource={returns}
+                                                    //loading={isLoadingReturnItems}
+                                                    pagination={{
+                                                        position: ['none', 'bottomCenter'],
+                                                        defaultPageSize: 5,
+                                                    }}
+
+                                                />
+
+
+                                        {/* <table class="table table-striped">
                                             <thead class="thead-dark" style={{position: 'sticky', top: '0'}}>
                                                 <tr>
                                                     <th scope="col">Submission No</th>
@@ -441,7 +593,7 @@ function Collections() {
                                                     </tr> : ''
                                                 ))}
                                             </tbody>
-                                        </table>
+                                        </table> */}
                                         </div>
 
 
@@ -454,21 +606,43 @@ function Collections() {
                                         <button type="button" className="btn btn-danger float-end rounded-pill mx-2" style={{ width: '150px' }} onClick={handlepaymentreset} disabled={isnew}>Reset</button>
                                     </div>
                                     <div className='row m-3'>
+
+                                            
+                                   {/* {<Table onRow={(record, rowIndex) => {
+                                                    return {
+                                                        onClick: event => { }, // click row
+                                                        onDoubleClick: event => { }, // double click row
+                                                        onContextMenu: event => { }, // right button click row
+                                                        onMouseEnter: event => { }, // mouse enter row
+                                                        onMouseLeave: event => { }, // mouse leave row
+                                                    };
+
+                                                }} 
+                                                    columns={paymentsColumns} dataSource={payment_trans}
+                                                    //loading={isLoadingReturnItems}
+                                                    pagination={{
+                                                        position: ['none', 'bottomCenter'],
+                                                        defaultPageSize: 5,
+                                                    }}
+
+                                                />} */}
+
+
+
                                         <table className='table table-striped'>
                                             <thead>
                                                 <tr>
-                                                    <td>Payment Mode</td>
-                                                    <td>Amount</td>
-                                                    <td>Cash Code</td>
-                                                    <td>Bank Code</td>
-                                                    <td>Bank Name</td>
-                                                    <td>Branch Name</td>
-                                                    <td>Cheque No</td>
-                                                    <td>Cheque Received</td>
-                                                    <td>EFT Bank Code</td>
-                                                    <td>EFT Bank Name</td>
-                                                    <td>Town</td>
-                                                    <td>Payment Id</td>
+                                                    <td><b>Payment Mode</b></td>
+                                                    <td><b>Amount</b></td>
+                                                    <td><b>Cash Code</b></td>
+                                                    <td><b>Bank Code</b></td>
+                                                    <td><b>Bank Name</b></td>
+                                                    <td><b>Branch Name</b></td>
+                                                    <td><b>Cheque No</b></td>
+                                                    <td><b>Cheque Received</b></td>
+                                                    <td><b>EFT Bank Code</b></td>
+                                                    <td><b>EFT Bank Name</b></td>
+                                                   
 
                                                 </tr>
 
@@ -506,12 +680,7 @@ function Collections() {
                                                         <td>
                                                             { }
                                                         </td>
-                                                        <td>
-                                                            { }
-                                                        </td>
-                                                        <td>
-                                                            {payt.id}
-                                                        </td>
+                                                        
                                                     </tr>
                                                 ))}
                                             </tbody>
