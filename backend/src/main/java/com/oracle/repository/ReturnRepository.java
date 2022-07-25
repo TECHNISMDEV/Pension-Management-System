@@ -13,5 +13,8 @@ public interface ReturnRepository extends JpaRepository<Return, String> {
 	Return findReturnRecordByEmpMonthYear(String companyId, int month, int year);
 
 	List<Return> findByCompanyId(String companyId);
+	
+	@Query("SELECT r FROM Return r WHERE r.createdBy =:loginId AND r.status NOT IN ('Validated','Paid') ")
+	List<Return> findAllOpenReturnByOwnerId(String loginId);
 
 }

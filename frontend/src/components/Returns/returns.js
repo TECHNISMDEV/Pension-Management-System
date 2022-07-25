@@ -117,8 +117,8 @@ function Returns(props) {
         },
         {
             title: 'Imported by',
-            dataIndex: 'submissionNumber',
-            key: 'submissionNumber',
+            dataIndex: 'createdBy',
+            key: 'createdBy',
         },
         {
             title: 'Processing Centre',
