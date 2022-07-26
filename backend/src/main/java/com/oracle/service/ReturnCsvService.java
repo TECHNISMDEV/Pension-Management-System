@@ -15,11 +15,13 @@ import org.springframework.web.multipart.MultipartFile;
 import com.oracle.Vos.ReturnUiVo;
 import com.oracle.exceptioncontroller.CompanyNotExistException;
 import com.oracle.helper.CSVHelper;
+import com.oracle.model.AppUser;
 import com.oracle.model.Collection;
 import com.oracle.model.Company;
 import com.oracle.model.Return;
 import com.oracle.model.ReturnItems;
 import com.oracle.model.Returns;
+import com.oracle.repository.AppUserService;
 import com.oracle.repository.CompanyRepository;
 import com.oracle.repository.ReturnItemRepo;
 import com.oracle.repository.ReturnRepository;
@@ -38,17 +40,21 @@ public class ReturnCsvService {
 	
 	@Autowired
 	CompanyRepository companyRepository;
+	
+	@Autowired
+	AppUserService appUserService;
 
 	public ReturnUiVo save(MultipartFile file,String loginId) {
 		List<ReturnItems> returnItemlist=new ArrayList<ReturnItems>();
 		List<Return> returnList=new ArrayList<Return>();
-		
 		try {
 			List<ReturnItems> returnItem = new CSVHelper().csvToRedturnList(file.getInputStream());
 			for(ReturnItems item:returnItem)
 			{
 				Return existingReturn=returnRepository.findReturnRecordByEmpMonthYear(item.getRetur().getCompanyId(),item.getRetur().getMonth(),item.getRetur().getYear());
 				Company c=companyRepository.findById(item.getComapnyNumber()).get();
+				ReturnItems existingReturnItem=returnItemRepository.findReturnItemByNrcAndCompanyIdAndMonthAndYear
+						(item.getMemberNrc(),item.getComapnyNumber(),item.getMonth(),item.getYear());
 				if(c==null)
 				{
 					throw new CompanyNotExistException();
@@ -56,34 +62,37 @@ public class ReturnCsvService {
 				if(existingReturn==null)
 				{
 					item.getRetur().setSubmissionNumber(Integer.parseInt(dataSourceConfigService.generatedValue("TCX_SUBMISSION_NO_SEQ", "")));
-					//item.setLastUpdatedBy(loginId);
-					//item.setCreatedBy(loginId);
 					Collection col=new Collection();
 					col.setSubmissionNo(new Integer(item.getRetur().getSubmissionNumber()).toString());
 					col.setCompany(c);
 					item.getRetur().setCollection(col);
+					item.getRetur().setCreatedBy(loginId);
 					ReturnItems savedItem= returnItemRepository.save(item);
 					returnList.add(savedItem.getRetur());
 					
 
-				}else {
-					List<ReturnItems> returnItems=existingReturn.getItems();
-					for(ReturnItems existingreturnItem:returnItems) {
-						existingreturnItem.setComapnyNumber(item.getComapnyNumber());
-						existingreturnItem.setCompanyShare(item.getCompanyShare());
-						existingreturnItem.setComment(null);
-						existingreturnItem.setMemberDob(item.getMemberDob());
-						existingreturnItem.setMemberDocNumber(item.getMemberDocNumber());
-						existingreturnItem.setMemberId(item.getMemberId());
-						existingreturnItem.setMemberNrc(item.getMemberNrc());
-						existingreturnItem.setMemFirstName(item.getMemFirstName());
-						existingreturnItem.setMemeLastName(item.getMemeLastName());
-					    existingreturnItem.setRetur(existingReturn);
-					returnList.add(existingReturn);
-					ReturnItems savedReturnItem=returnItemRepository.save(existingreturnItem);
+				} else {
+
+					List<ReturnItems> returnItems = existingReturn.getItems();
+					if (null != returnItems) {
+						if(null!=existingReturnItem)
+						{
+							returnList.add(existingReturn);
+							returnItemRepository.save(existingReturnItem);
+						}else {
+							item.setRetur(existingReturn);
+							returnList.add(existingReturn);
+							returnItemRepository.save(item);
+						}
+						
+						} else {
+						item.setRetur(existingReturn);
+						returnList.add(existingReturn);
+						returnItemRepository.save(item);
+
 					}
-					//returnItemlist.add(savedReturnItem);
-				}
+
+				}	
 			}
 			ReturnUiVo uiVo=new ReturnUiVo();
 			returnList=returnList.stream().distinct().collect(Collectors.toList());

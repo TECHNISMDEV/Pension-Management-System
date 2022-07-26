@@ -138,8 +138,9 @@ function Returns(props) {
         // },
         {
             title: 'Date Validated',
-            dataIndex: '',
-            key: '',
+            dataIndex: 'lastUpdated',
+            key: 'lastUpdated',
+            render:  (text) => <p>{formatDate(text)}</p>,
         },
         {
             title: 'Return Total',

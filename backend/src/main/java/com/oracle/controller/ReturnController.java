@@ -28,6 +28,7 @@ import com.oracle.repository.MemberRepository;
 import com.oracle.repository.ReturnItemRepo;
 import com.oracle.repository.ReturnRepository;
 import com.oracle.service.ReturnCsvService;
+import com.oracle.util.DateUtil;
 
 import springfox.documentation.service.ResponseMessage;
 
@@ -103,11 +104,11 @@ public class ReturnController {
 				updatedListItem.add(returnItemRepo.save(rItem));
 				break;
 			} else if (rItem.getMemeLastName() == null) {
-				 rItem.setComment("First name is empty");
+				 rItem.setComment("Last name is empty");
 				updatedListItem.add(returnItemRepo.save(rItem));
 				break;
 			} else if (rItem.getMemberNrc() == null) {
-				 rItem.setComment("First name is empty");
+				 rItem.setComment("NRC is empty");
 				// returnItemRepo.save(rItem);
 				updatedListItem.add(returnItemRepo.save(rItem));
 				break;
@@ -116,6 +117,7 @@ public class ReturnController {
 			else {
 				rItem.setStatus("Validated");
 				ret.setStatus("Validated");
+				ret.setLastUpdated(DateUtil.getCurrentDate());
 				updatedReturn.add(returnRepo.save(ret));
 				updatedListItem.add(returnItemRepo.save(rItem));
 				// returnItemRepo.save(rItem);

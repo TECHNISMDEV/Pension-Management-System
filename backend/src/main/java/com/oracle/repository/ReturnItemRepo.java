@@ -14,4 +14,11 @@ public interface ReturnItemRepo extends JpaRepository<ReturnItems, String> {
 	List<ReturnItems> findReturnItemByReturnId(String returnId);
 	
 	List<ReturnItems> findByRetur(Return retur);
+	
+	@Query(value="select * from RETURNS_ITEMS ri where MEMBER_NRC=:memberNrc and COMPANY_NUMBER=:comapnyNumber", nativeQuery=true)
+	ReturnItems findReturnItemByNrcAndCompanyId(String memberNrc, String comapnyNumber);
+
+	@Query(value="select * from RETURNS_ITEMS ri where MEMBER_NRC=:memberNrc and COMPANY_NUMBER=:comapnyNumber and MONTH=:month and YEAR=:year", nativeQuery=true)
+	ReturnItems findReturnItemByNrcAndCompanyIdAndMonthAndYear(String memberNrc, String comapnyNumber, Integer month,
+			Integer year);
 }
