@@ -16,5 +16,5 @@ public interface ReturnRepository extends JpaRepository<Return, String> {
 	
 	@Query("SELECT r FROM Return r WHERE r.createdBy =:loginId AND r.status NOT IN ('Validated','Paid') ")
 	List<Return> findAllOpenReturnByOwnerId(String loginId);
-
+	Return findBySubmissionNumber(Integer submissionNumber);
 }

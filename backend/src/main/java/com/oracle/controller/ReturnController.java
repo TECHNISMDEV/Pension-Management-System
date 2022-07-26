@@ -3,18 +3,14 @@ package com.oracle.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import com.oracle.dto.SubmissionList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -79,8 +75,8 @@ public class ReturnController {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new com.oracle.message.ResponseMessage(message, ""));
 	}
 
-	@GetMapping(path = "/validate/{Id}")
-	public ResponseEntity<?> validateReturnItem(@PathVariable String Id) {
+	@PostMapping(path = "/validate/{Id}",consumes = "application/json")
+	public ResponseEntity<?> validateReturnItem(@PathVariable String Id, @RequestBody SubmissionList submissionNumberList) {
 		List<Return> updatedReturn = new ArrayList<Return>();
 		List<ReturnItems> updatedListItem = new ArrayList<ReturnItems>();
 		System.out.println("----");
@@ -89,41 +85,47 @@ public class ReturnController {
 		Return ret = returnRepo.findById(Id).get();
 		
 		for (ReturnItems rItem : listItem) {
-			if(null==memberRepository.findByNrc(rItem.getMemberNrc()))
-			{
-				rItem.setComment("Member detail is not correct "+ rItem.getMemberNrc());
-				updatedListItem.add(returnItemRepo.save(rItem));
-				break;
-			}
-			else if (rItem.getMemberDob() == null) {
+			/*
+			 * if(null==memberRepository.findByNrc(rItem.getMemberNrc())) {
+			 * rItem.setComment("Member detail is not correct "+ rItem.getMemberNrc());
+			 * updatedListItem.add(rItem);
+			 * 
+			 * } else
+			 */ 
+			if (rItem.getMemberDob() == null) {
 				 rItem.setComment("Date of Birth is empty");
-				updatedListItem.add(returnItemRepo.save(rItem));
-				break;
+				updatedListItem.add(rItem);
+				
 			} else if (rItem.getMemFirstName() == null) {
 				 rItem.setComment("First name is empty");
-				updatedListItem.add(returnItemRepo.save(rItem));
-				break;
+				updatedListItem.add(rItem);
+				
 			} else if (rItem.getMemeLastName() == null) {
 				 rItem.setComment("Last name is empty");
-				updatedListItem.add(returnItemRepo.save(rItem));
-				break;
+				updatedListItem.add(rItem);
+				
 			} else if (rItem.getMemberNrc() == null) {
 				 rItem.setComment("NRC is empty");
 				// returnItemRepo.save(rItem);
-				updatedListItem.add(returnItemRepo.save(rItem));
-				break;
+				updatedListItem.add(rItem);
+				
 			} 
 			
 			else {
 				rItem.setStatus("Validated");
 				ret.setStatus("Validated");
 				ret.setLastUpdated(DateUtil.getCurrentDate());
-				updatedReturn.add(returnRepo.save(ret));
+				ret.setValidateDate(DateUtil.getCurrentDate());
+				returnRepo.save(ret);
+
+				for(Integer submissionNumber:submissionNumberList.getSubmissionNumberList()) {
+					updatedReturn.add(returnRepo.findBySubmissionNumber(submissionNumber));
+				}
 				updatedListItem.add(returnItemRepo.save(rItem));
 				// returnItemRepo.save(rItem);
 			}
 		}
-		uiVo.setReturns(updatedReturn);
+		uiVo.setReturns(updatedReturn.stream().distinct().collect(Collectors.toList()));
 		uiVo.setItems(updatedListItem);
 		return ResponseEntity.ok(uiVo);
 

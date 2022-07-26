@@ -3,6 +3,7 @@ package com.oracle.service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collector;
@@ -96,10 +97,33 @@ public class ReturnCsvService {
 			}
 			ReturnUiVo uiVo=new ReturnUiVo();
 			returnList=returnList.stream().distinct().collect(Collectors.toList());
-			uiVo.setReturns(returnList);
+			List<Return> UpdatedreturnList=new ArrayList<Return>();
+			Iterator<Return> iterator=returnList.iterator();
+			while(iterator.hasNext()){
+				Return r=iterator.next();
+				r.setTotalReturnAmount(getTotalPaybleAmount(r).intValue());
+				
+				UpdatedreturnList.add(returnRepository.save(r));
+			}
+				
+			
+				
+			uiVo.setReturns(UpdatedreturnList);
 			return uiVo;
 		} catch (IOException e) {
 			throw new RuntimeException("fail to store csv data: " + e.getMessage());
 		}
+	}
+
+	private Long getTotalPaybleAmount(Return r) {
+		Long count=0l;
+		List<ReturnItems> riList=returnItemRepository.findByRetur(r);
+		for(ReturnItems ri:riList )
+		{
+			 count=ri.getMemGrossSalary()+count;
+		}
+		
+		return count;
+		
 	}
 }

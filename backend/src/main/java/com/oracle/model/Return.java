@@ -96,6 +96,9 @@ public class Return {
 	@Column(name = "PENALTY_PAID_AMT")
 	private Integer penaltyPaidAmount;
 	
+	@Column(name="VALIDATE_DT")
+	private Date validateDate;
+	
 	@OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "retur")
 	@JsonBackReference
 	private List<ReturnItems> items;
@@ -110,7 +113,7 @@ public class Return {
 	public Return(String id, Date created, String createdBy, Date lastUpdated, String lastUpdatedBy, int year,
 			int month, String returnType, String companyId, int totalReturnAmount, int dueAmount, String collectionId,
 			int returnPaidAmount, int submissionNumber, String status, String subStatus, int penaltyAmount,
-			int penaltyAdjAmount, int penaltyPaidAmount) {
+			int penaltyAdjAmount, int penaltyPaidAmount,Date valiDateDate) {
 		super();
 		this.id = id;
 		this.created = created;
@@ -131,6 +134,7 @@ public class Return {
 		this.penaltyAmount = penaltyAmount;
 		this.penaltyAdjAmount = penaltyAdjAmount;
 		this.penaltyPaidAmount = penaltyPaidAmount;
+		this.validateDate=valiDateDate;
 	}
 	
 	public Return() {

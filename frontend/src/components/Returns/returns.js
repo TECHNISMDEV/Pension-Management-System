@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Modal,Radio } from 'antd';
 import axios from 'axios';
-import { API_URL, formatDate,formatDateWithoutTimestamp } from '../../utils/commons';
+import { API_URL, formatDate,formatDateWithoutTimestamp, getListOfSubmission } from '../../utils/commons';
 import { useSelector } from 'react-redux';
 
 
@@ -84,11 +84,22 @@ function Returns(props) {
     }
 
     const validateReturn = ()=>{
+        setIsLoadingReturns(true)
         setIsLoadingReturnItems(true)
-        axios.get(API_URL + '/validate/'+validateReturnId).then(
+
+        axios({
+            method: "POST",
+            url: API_URL + '/validate/'+validateReturnId,
+            data: getListOfSubmission(returns),
+            headers: {
+                'Content-Type': 'application/json'
+            },
+          }).then(
             (res) => {
                 console.log(res.data)
                 setIsLoadingReturnItems(false)
+                setIsLoadingReturns(false)
+                setReturns(res.data.returns)
                 setReturnItems(res.data.items)
             }
         )
@@ -138,8 +149,8 @@ function Returns(props) {
         // },
         {
             title: 'Date Validated',
-            dataIndex: 'lastUpdated',
-            key: 'lastUpdated',
+            dataIndex: 'validateDate',
+            key: 'validateDate',
             render:  (text) => <p>{formatDate(text)}</p>,
         },
         {
@@ -190,8 +201,8 @@ function Returns(props) {
         },   
         {
             title: 'Gross Wage',
-            dataIndex: 'memGrossSalary',
-            key: 'memGrossSalary',
+            dataIndex: 'grossWage',
+            key: 'grossWage',
         },   
         {
             title: 'Employer Share',
@@ -205,8 +216,8 @@ function Returns(props) {
         },   
         {
             title: 'Total Contribution',
-            dataIndex: ['retur', 'totalReturnAmount'],
-            key: 'return',
+            dataIndex: 'memGrossSalary',
+            key: 'memGrossSalary',
         },   
         {
             title: 'Status',

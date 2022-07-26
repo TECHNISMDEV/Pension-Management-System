@@ -321,7 +321,7 @@ export const submitServiceRequestEmployerData =(srFormData,userId,srId,srForm)=>
             "craeatedBy": "",
             "created":'',
             "endDate": "",
-            "id": "",
+            "id": srForm.id,
             "lastUpdBy": "",
             "last_Updated":'',
             "location":"",
@@ -551,4 +551,17 @@ export const submitNewAddress = (data,empNumber,userId) =>{
       }
 
       return payload
+}
+
+export const getListOfSubmission = (returns)=>{
+var submissionNumberArr = []
+    returns.map((key)=>{
+        submissionNumberArr.push(key.submissionNumber)
+    })
+
+ var payload = {
+    "submissionNumberList": submissionNumberArr
+  }
+    console.log(payload)
+return payload
 }

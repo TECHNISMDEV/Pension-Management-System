@@ -79,8 +79,10 @@ public class CSVHelper {
 				rItems.setMemberDocNumber(csvRecord.get(10));
 				rItems.setCompanyShare(Long.parseLong(csvRecord.get(10)));
 				rItems.setMemberShare(Long.parseLong(csvRecord.get(11)));
-				rItems.setMemGrossSalary(Long.parseLong(csvRecord.get(9)));
-				String sDate1=csvRecord.get(8);  
+				rItems.setGrossWage(Long.parseLong(csvRecord.get(9)));
+				rItems.setMemGrossSalary(rItems.getCompanyShare()+rItems.getMemberShare());
+				String sDate1=csvRecord.get(8);
+				
 				rItems.setMemberDob(DateUtil.convertStringToDate(sDate1));
 				rItems.setRetur(return1);
 
