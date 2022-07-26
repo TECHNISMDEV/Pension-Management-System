@@ -33,7 +33,7 @@ function Employer_registration(props) {
     const [companyData, setCompanyData] = useState({})
 
     const { TabPane } = Tabs;
-    const [srForm, setSrForm] = useState(props.srForm)
+    const [srForm, setSrForm] = useState(props.srFormData)
     const _ = require("lodash");
     let history = useHistory(); 
 
@@ -50,7 +50,7 @@ function Employer_registration(props) {
 
     const onSubmitSRE = data =>{
         console.log(data)
-       submitServiceRequestEmployer(data,userdata.id,props.srForm)
+       submitServiceRequestEmployer(data,userdata.id,srForm.id)
     }
 
     const submitServiceRequestEmployer = (data,userId,srId)=>{
@@ -75,9 +75,9 @@ function Employer_registration(props) {
     }, [])
 
 
-    const sendForApproval = ()=>{
+    const sendForApprovalSR = (srId)=>{
 
-        axios.put(API_URL + "/sendForApproval/" + srForm.serviceRequestVo.id).then(
+        axios.put(API_URL + "/sendForApproval/" + srId).then(
             (res) => (
                 console.log(res.data),
                 alert("Sent for approval"),
@@ -217,7 +217,7 @@ const initialValues = {
 
 
                                         <td className="px-3"> <button type="button" className="btn btn-danger float-end rounded-pill" onClick={handleSubmit(onSubmitSRE)}>Save</button></td>
-                                        <td className="px-3">  <button type="button" className="btn btn-danger float-end rounded-pill" style={{ width: "200px" }} onClick={sendForApproval} >Send for Approval</button></td>
+                                        <td className="px-3">  <button type="button" className="btn btn-danger float-end rounded-pill" style={{ width: "200px" }} onClick={()=>{sendForApprovalSR(srForm.id)}} >Send for Approval</button></td>
                                         <td className="px-3">  <button type="button" className="btn btn-danger float-end rounded-pill" onClick={sendForAccept} >Accept</button></td>
 
                                         <td className="px-3">  <button type="button" className="btn btn-danger float-end rounded-pill" onClick={() => { }} >Reject</button></td>

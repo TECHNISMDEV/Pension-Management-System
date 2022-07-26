@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Modal,Radio } from 'antd';
 import axios from 'axios';
-import { API_URL, formatDate,formatDateWithoutTimestamp } from '../../utils/commons';
+import { API_URL, formatDate,formatDateWithoutTimestamp, getListOfSubmission } from '../../utils/commons';
 import { useSelector } from 'react-redux';
 
 
@@ -84,11 +84,22 @@ function Returns(props) {
     }
 
     const validateReturn = ()=>{
+        setIsLoadingReturns(true)
         setIsLoadingReturnItems(true)
-        axios.get(API_URL + '/validate/'+validateReturnId).then(
+
+        axios({
+            method: "POST",
+            url: API_URL + '/validate/'+validateReturnId,
+            data: getListOfSubmission(returns),
+            headers: {
+                'Content-Type': 'application/json'
+            },
+          }).then(
             (res) => {
                 console.log(res.data)
                 setIsLoadingReturnItems(false)
+                setIsLoadingReturns(false)
+                setReturns(res.data.returns)
                 setReturnItems(res.data.items)
             }
         )

@@ -79,10 +79,10 @@ function EmployerFormView(props) {
                             value={_.defaultTo(formData.id,'')} disabled /></td>
                         <td className=' p-1 tcx-form-label'><label className='form-label float-end'>Employer Type :  </label></td>
                         <td className='p-1'> <input type="text" className='form-control float-start '
-                            id="type"
-                            name="type"
+                            id="companyType"
+                            name="companyType"
                             style={{ width: '100%' }}
-                            value={_.defaultTo(formData.type,'')} disabled /></td>
+                            value={formData.companyType} disabled /></td>
                         <td className=' p-1 tcx-form-label'><label className='form-label float-end'>PACRA ID :  </label></td>
                         <td className='p-1'> <input type="text" className='form-control float-start '
                             id="pacraId"
@@ -100,16 +100,16 @@ function EmployerFormView(props) {
                         <td className=' p-1 tcx-form-label'><label className='form-label float-end'>Main Phone # :  </label></td>
                         <td className='p-1'> <input type="text"
                             className='form-control float-start '
-                            name='contactNo'
-                            id='contactNo'
+                            name='mainPhone'
+                            id='mainPhone'
                             style={{ width: '230px' }}
-                            value={formData.contact?_.defaultTo(formData.contact.mobileNo,''):''} disabled /></td>
+                            value={formData.mainPhone} disabled /></td>
                         <td className=' p-1 tcx-form-label'><label className='form-label float-end'>Main Email ID :  </label></td>
                         <td className='p-1'> <input type="text" className='form-control float-start '
-                            id="type"
-                            name="type"
+                            id="mainEmail"
+                            name="mainEmail"
                             style={{ width: '100%' }}
-                            value={formData.contact?_.defaultTo(formData.contact.mailId,''):''} disabled /></td>
+                            value={formData.mainEmail} disabled /></td>
                         <td className=' p-1 tcx-form-label'><label className='form-label float-end'>Main Fax :  </label></td>
                         <td className='p-1'> <input type="text" className='form-control float-start '
                             id="pacraId"
@@ -128,16 +128,16 @@ function EmployerFormView(props) {
                             value={formData.address?_.defaultTo(formData.address.adressLine1,''):''} disabled /></td>
                         <td className=' p-1 tcx-form-label'><label className='form-label float-end'>Status :  </label></td>
                         <td className='p-1'> <input type="text" className='form-control float-start '
-                            id="pacraId"
-                            name="pacraId"
+                            id="companyStatus"
+                            name="companyStatus"
                             style={{ width: '100%' }}
-                            value={_.defaultTo(formData.status,'')} disabled /></td>
+                            value={formData.companyStatus} disabled /></td>
                         <td className=' p-1 tcx-form-label'><label className='form-label float-end'>Sub Status :  </label></td>
                         <td className='p-1'> <input type="text" className='form-control float-start '
-                            id="seasonFlag"
-                            name="seasonFlag"
+                            id="companySubStatus"
+                            name="companySubStatus"
                             style={{ width: '100%' }}
-                            value={_.defaultTo(formData.subStatus,'')} disabled /></td>
+                            value={formData.companySubStatus} disabled /></td>
                     </tr>
 
                 </tbody>
@@ -168,16 +168,16 @@ function EmployerFormView(props) {
                             value={_.defaultTo(formData.subsidaryCompany,'')} disabled /></td>
                         <td className=' p-1 tcx-form-label'><label className='form-label float-end'>Sector Code :  </label></td>
                         <td className='p-1'> <input type="text" className='form-control float-start '
-                            id="pacraId"
-                            name="pacraId"
+                            id="sector"
+                            name="sector"
                             style={{ width: '100%' }}
-                            value={_.defaultTo(formData.sectorCode,'')} disabled /></td>
+                            value={formData.sector} disabled /></td>
                         <td className=' p-1 tcx-form-label'><label className='form-label float-end'>Number of Employees :  </label></td>
                         <td className='p-1'> <input type="text" className='form-control float-start '
-                            id="seasonFlag"
-                            name="seasonFlag"
+                            id="noOfEmployee"
+                            name="noOfEmployee"
                             style={{ width: '100%' }}
-                            value={_.defaultTo(formData.numberOfEmployees,'')} disabled /></td>
+                            value={formData.compCxRef} disabled /></td>
                     </tr>
                     <tr className='p-1'>
                         <td className=' p-1 tcx-form-label'><label className='form-label float-end'>Date Incorporated :  </label></td>
@@ -230,10 +230,10 @@ function EmployerFormView(props) {
                             value={_.defaultTo(formData.propLastName,'')} disabled /></td>
                         <td className=' p-1 tcx-form-label'><label className='form-label float-end'>NRC # :  </label></td>
                         <td className='p-1'> <input type="text" className='form-control float-start '
-                            id="pacraId"
-                            name="pacraId"
+                            id="propNrc"
+                            name="propNrc"
                             style={{ width: '100%' }}
-                            value={_.defaultTo(formData.nrcNumber,'')} disabled /></td>
+                            value={formData.propNrc} disabled /></td>
                         <td className=' p-1 tcx-form-label'><label className='form-label float-end'>Nationality :  </label></td>
                         <td className='p-1'> <input type="text" className='form-control float-start '
                             id="seasonFlag"
