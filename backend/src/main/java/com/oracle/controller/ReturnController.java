@@ -89,41 +89,43 @@ public class ReturnController {
 		Return ret = returnRepo.findById(Id).get();
 		
 		for (ReturnItems rItem : listItem) {
-			if(null==memberRepository.findByNrc(rItem.getMemberNrc()))
-			{
-				rItem.setComment("Member detail is not correct "+ rItem.getMemberNrc());
-				updatedListItem.add(returnItemRepo.save(rItem));
-				break;
-			}
-			else if (rItem.getMemberDob() == null) {
+			/*
+			 * if(null==memberRepository.findByNrc(rItem.getMemberNrc())) {
+			 * rItem.setComment("Member detail is not correct "+ rItem.getMemberNrc());
+			 * updatedListItem.add(rItem);
+			 * 
+			 * } else
+			 */ 
+			if (rItem.getMemberDob() == null) {
 				 rItem.setComment("Date of Birth is empty");
-				updatedListItem.add(returnItemRepo.save(rItem));
-				break;
+				updatedListItem.add(rItem);
+				
 			} else if (rItem.getMemFirstName() == null) {
 				 rItem.setComment("First name is empty");
-				updatedListItem.add(returnItemRepo.save(rItem));
-				break;
+				updatedListItem.add(rItem);
+				
 			} else if (rItem.getMemeLastName() == null) {
 				 rItem.setComment("Last name is empty");
-				updatedListItem.add(returnItemRepo.save(rItem));
-				break;
+				updatedListItem.add(rItem);
+				
 			} else if (rItem.getMemberNrc() == null) {
 				 rItem.setComment("NRC is empty");
 				// returnItemRepo.save(rItem);
-				updatedListItem.add(returnItemRepo.save(rItem));
-				break;
+				updatedListItem.add(rItem);
+				
 			} 
 			
 			else {
 				rItem.setStatus("Validated");
 				ret.setStatus("Validated");
 				ret.setLastUpdated(DateUtil.getCurrentDate());
+				ret.setValidateDate(DateUtil.getCurrentDate());
 				updatedReturn.add(returnRepo.save(ret));
 				updatedListItem.add(returnItemRepo.save(rItem));
 				// returnItemRepo.save(rItem);
 			}
 		}
-		uiVo.setReturns(updatedReturn);
+		uiVo.setReturns(updatedReturn.stream().distinct().toList());
 		uiVo.setItems(updatedListItem);
 		return ResponseEntity.ok(uiVo);
 

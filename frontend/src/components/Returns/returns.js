@@ -138,8 +138,8 @@ function Returns(props) {
         // },
         {
             title: 'Date Validated',
-            dataIndex: 'lastUpdated',
-            key: 'lastUpdated',
+            dataIndex: 'validateDate',
+            key: 'validateDate',
             render:  (text) => <p>{formatDate(text)}</p>,
         },
         {
@@ -190,8 +190,8 @@ function Returns(props) {
         },   
         {
             title: 'Gross Wage',
-            dataIndex: 'memGrossSalary',
-            key: 'memGrossSalary',
+            dataIndex: 'grossWage',
+            key: 'grossWage',
         },   
         {
             title: 'Employer Share',
@@ -205,8 +205,8 @@ function Returns(props) {
         },   
         {
             title: 'Total Contribution',
-            dataIndex: ['retur', 'totalReturnAmount'],
-            key: 'return',
+            dataIndex: 'memGrossSalary',
+            key: 'memGrossSalary',
         },   
         {
             title: 'Status',

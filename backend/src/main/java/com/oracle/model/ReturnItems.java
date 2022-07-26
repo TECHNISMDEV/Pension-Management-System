@@ -63,6 +63,8 @@ public class ReturnItems extends CommonFields {
 	private String memeLastName;
 	@Column(name="STATUS")
 	private String status;
+	@Column(name="GROSS_WAGE")
+	private Long grossWage;
 	
 	
 	  @Column(name="COMMENTS") private String comment;
@@ -203,6 +205,14 @@ public class ReturnItems extends CommonFields {
 	  public String getComment() { return comment; }
 	  
 	  public void setComment(String comment) { this.comment = comment; }
+
+	public Long getGrossWage() {
+		return grossWage;
+	}
+
+	public void setGrossWage(Long grossWage) {
+		this.grossWage = grossWage;
+	}
 	 
 	
 	
