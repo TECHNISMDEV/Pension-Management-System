@@ -103,6 +103,9 @@ public class ServiceRequestController {
 	public ResponseEntity<?> findAllServiceRequestByOwnerId(@PathVariable String ownerId) {
 		List<ServiceRequest> list= serviceRequestRepository.findByOwnerId(ownerId);
 		list=list.stream().sorted(Comparator.comparing(ServiceRequest::getCreated).reversed()).collect(Collectors.toList());
+		AppUser appUser=appUserService.findUserById(ownerId);
+		
+list.forEach((l)->l.setOwnerId(appUser.getLogin()));		
 	return (ResponseEntity<?>)
 	Optional.of(list).map(e -> new
 	ResponseEntity<>(e, HttpStatus.OK)) .orElseThrow(() -> new
