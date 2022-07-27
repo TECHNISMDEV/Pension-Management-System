@@ -217,7 +217,7 @@ const initialValues = {
 
 
                                         <td className="px-3"> <button type="button" className="btn btn-danger float-end rounded-pill" onClick={handleSubmit(onSubmitSRE)}>Save</button></td>
-                                        <td className="px-3">  <button type="button" className="btn btn-danger float-end rounded-pill" style={{ width: "200px" }} onClick={()=>{sendForApprovalSR(srForm.id)}} >Send for Approval</button></td>
+                                        <td className="px-3">  <button type="button" className="btn btn-danger float-end rounded-pill" style={{ width: "200px" }} onClick={()=>{sendForApprovalSR(props.srFormData.id)}} >Send for Approval</button></td>
                                         <td className="px-3">  <button type="button" className="btn btn-danger float-end rounded-pill" onClick={sendForAccept} >Accept</button></td>
 
                                         <td className="px-3">  <button type="button" className="btn btn-danger float-end rounded-pill" onClick={() => { }} >Reject</button></td>
