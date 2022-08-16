@@ -53,9 +53,12 @@ public class CompanyMember {
 	@Column(name="END_DATE")
 	private Date endDate;
 	
-	@OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "member")
-	@JsonBackReference
-	private ServiceRequest request;
+	/*
+	 * @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy =
+	 * "member")
+	 * 
+	 * @JsonBackReference private ServiceRequest request;
+	 */
 	
 	@OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 	 @JoinColumn(name="MEMBER_ID",referencedColumnName = "ID")
@@ -132,13 +135,11 @@ public class CompanyMember {
 		this.endDate = endDate;
 	}
 
-	public ServiceRequest getRequest() {
-		return request;
-	}
-
-	public void setRequest(ServiceRequest request) {
-		this.request = request;
-	}
+	/*
+	 * public ServiceRequest getRequest() { return request; }
+	 * 
+	 * public void setRequest(ServiceRequest request) { this.request = request; }
+	 */
 
 	public Member getMember() {
 		return member;

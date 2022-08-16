@@ -3,6 +3,8 @@ package com.oracle.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,9 +46,21 @@ public class CompanyMemberController {
 
 		String loginId=vo.getLoginId();
 		AppUser user=appUserService.findUserById(loginId);
+		vo.setCreatedBy(loginId);
+		vo.setLastUpdatedBy(loginId);
+		
 		Member memebr=service.addCompanyMember(vo);
 		
-		return ResponseEntity.ok(memebr);
+		return ResponseEntity.ok(memebr.getVo());
+	}
+	
+	@GetMapping(path = "/getServiceRequestById/{Id}")
+	public ResponseEntity<?> getMemberByCompanyId(@PathVariable String Id) {
+
+		ServiceRequestForMemberRegistration vo=service.getServiceRequestById(Id);
+		
+		
+		return ResponseEntity.ok(vo);
 	}
 	
 	

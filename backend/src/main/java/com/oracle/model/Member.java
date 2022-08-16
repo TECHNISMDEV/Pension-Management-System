@@ -16,6 +16,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.oracle.Vos.MemberVO;
 import com.oracle.sequenceGenerator.StringPrefixedSequenceIdGenerator;
 
 @Entity
@@ -171,6 +172,31 @@ public class Member extends CommonFields {
 	}
 	public void setNationality(String nationality) {
 		this.nationality = nationality;
+	}
+	
+	public MemberVO getVo() {
+		MemberVO memberVO=new MemberVO();
+		memberVO.setCreated(this.getCreated());
+		memberVO.setCreatedBy(this.getCreatedBy());
+		memberVO.setDob(this.getDob());
+		memberVO.setDod(this.getDod());
+		memberVO.setDocumaentName(this.getDocumaentName());
+		memberVO.setDocumentType(this.getDocumentType());
+		memberVO.setEmail(this.getEmail());
+		memberVO.setFirstName(this.getFirstName());
+		memberVO.setId(this.getId());
+		memberVO.setLastName(this.getLastName());
+		memberVO.setLastUpdated(this.getLastUpdated());
+		memberVO.setLastUpdatedBy(this.getLastUpdatedBy());
+		memberVO.setMiddleName(this.getMiddleName());
+		memberVO.setMobile(this.getMobile());
+		memberVO.setNationality(this.getNationality());
+		memberVO.setNrc(this.getNrc());
+		memberVO.setPrAdressId(this.getPrAdressId());
+		memberVO.setPrBenificaryId(this.getPrBenificaryId());
+		memberVO.setRetirmentDate(this.getRetirmentDate());
+		memberVO.setSsn(this.getSsn());
+		return memberVO;
 	}
 	
 	
