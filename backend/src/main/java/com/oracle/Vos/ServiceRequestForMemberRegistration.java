@@ -1,5 +1,7 @@
 package com.oracle.Vos;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,5 +15,5 @@ public class ServiceRequestForMemberRegistration {
 	
 	private CompanyVo companyVo;
 	
-	//private MemberVO memberVO;
+	private List<MemberVO> memberVO;
 }

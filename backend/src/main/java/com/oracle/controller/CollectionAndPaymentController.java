@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.oracle.Vos.CollectionAndPaymentUiVo;
+import com.oracle.Vos.CollectionVoForSubmitPayment;
 import com.oracle.dto.ReturnsCollectionResponse;
 import com.oracle.model.Payments;
 import com.oracle.model.Return;
@@ -122,6 +123,7 @@ public class CollectionAndPaymentController
 	@CrossOrigin
 	public  ResponseEntity<?> saveCollection(@RequestBody List<CollectionAndPaymentUiVo> collectionResponse)
 	{
+		CollectionVoForSubmitPayment collectionuiVo=new CollectionVoForSubmitPayment();
 		for(CollectionAndPaymentUiVo uiVo:collectionResponse)
 		{
 			List<Returns> returns = returnsRepository.findBySubmissionNo(uiVo.getSubmissionId());
@@ -133,22 +135,26 @@ public class CollectionAndPaymentController
 				ret.setPenPaidAMT(Double.parseDouble(uiVo.getPenPaidAMT()));
 				ret.setRetPaidAMT(Double.parseDouble(uiVo.getRetPaidAMT()));
 				ret.setStatus("Paid");
-				returnsRepository.save(ret);
+				//returnsRepository.save(ret);
+				collectionuiVo.getReturnList().add(returnsRepository.save(ret));
 				Payments pay=new Payments();
 				pay.setAmount(Double.parseDouble(uiVo.getAmount()));
 				pay.setPayment_Type(uiVo.getPayment_Type());
 				pay.setCollection(ret.getCollection());
 				pay.setStatus("Paid");
 				paymentRepository.save(pay);
+				collectionuiVo.getPaymentsList().add(paymentRepository.save(pay));
+				
 				
 				
 			}
 			
-				
+			//collectionuiVo.setPaymentsList(paymentList)	;
+			//collectionuiVo.setReturnList(returns);
 			
 		}
 		//paymentRepository.saveAll(payment);
-		return ResponseEntity.ok(true);
+		return ResponseEntity.ok(collectionuiVo);
 		
 	}
 	

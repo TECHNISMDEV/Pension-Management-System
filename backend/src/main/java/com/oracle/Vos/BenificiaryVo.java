@@ -1,10 +1,6 @@
 package com.oracle.Vos;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-
-import com.oracle.model.CommonFields;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MemberVO extends CommonFields {
+public class BenificiaryVo {
 
 	private String id;
 
@@ -32,29 +28,15 @@ public class MemberVO extends CommonFields {
 	private String ssn;
 
 	private String nrc;
-	
+
 	private String email;
-	
+
 	private Long mobile;
-	
-	private String prAdressId;
-	
-	private String prBenificaryId;
-	
-	private Date retirmentDate;
-	
-	private Date dod;
-	
-	private String ownerId;
-	
+
 	private String nationality;
+
+	private String memberNrc;
 	
-	private String loginId;
-	
-	private String serviceRequestNumber;
-	
-	private String companyId;
-	
-	private List<BenificiaryVo> benificiaryVo=new ArrayList<>();
+	private Date memberDob;
 
 }
