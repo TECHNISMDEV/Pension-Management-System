@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.oracle.Vos.BenificiaryVo;
 import com.oracle.Vos.MemberVO;
 import com.oracle.Vos.ReturnUiVo;
 import com.oracle.Vos.ServiceRequestForMemberRegistration;
@@ -63,6 +64,19 @@ public class CompanyMemberController {
 		vo.setLastUpdatedBy(loginId);
 		
 		Member memebr=service.addCompanyMember(vo);
+		
+		return ResponseEntity.ok(memebr.getVo());
+	}
+	
+	@PostMapping(path = "/AddBenificiary/{memberId}")
+	public ResponseEntity<?> AddBenificiary(@RequestBody BenificiaryVo vo,@PathVariable String memberId) {
+
+		String loginId=vo.getLoginId();
+		AppUser user=appUserService.findUserById(loginId);
+		vo.setCreatedBy(loginId);
+		vo.setLastUpdatedBy(loginId);
+		
+		Benificiary memebr=service.addBenificiary(vo,memberId);
 		
 		return ResponseEntity.ok(memebr.getVo());
 	}

@@ -18,6 +18,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.oracle.Vos.BenificiaryVo;
 import com.oracle.sequenceGenerator.StringPrefixedSequenceIdGenerator;
 
 import lombok.Data;
@@ -68,6 +69,28 @@ public class Benificiary extends CommonFields{
 	 @ManyToOne
 	 @JoinColumn(name="MEMBER_ID", referencedColumnName = "ID")
 	private Member member;
+
+
+	public BenificiaryVo getVo() {
+		BenificiaryVo vo=new BenificiaryVo();
+		vo.setId(this.getId());
+		vo.setCreatedAt(this.getCreated());
+		vo.setCreatedBy(this.getCreatedBy());
+		vo.setDob(this.getDob());
+		vo.setDocumaentName(this.getDocumaentName());
+		vo.setDocumentType(this.getDocumentType());
+		vo.setEmail(this.getEmail());
+		vo.setFirstName(this.getFirstName());
+		vo.setLastName(this.getLastName());
+		vo.setMiddleName(this.getMiddleName());
+		vo.setMobile(this.getMobile());
+		vo.setLastUpdatedAt(this.getLastUpdated());
+		vo.setLastUpdatedBy(this.getLastUpdatedBy());
+		vo.setNationality(this.getNationality());
+		vo.setNrc(this.getNrc());
+		vo.setSsn(this.getSsn());
+		return vo;
+	}
 	
 	
 	
