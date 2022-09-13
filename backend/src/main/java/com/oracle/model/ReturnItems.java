@@ -67,7 +67,8 @@ public class ReturnItems extends CommonFields {
 	private Long grossWage;
 	
 	
-	  @Column(name="COMMENTS") private String comment;
+	  @Column(name="COMMENTS") 
+	  private String comment;
 	 
 	
 	 @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)

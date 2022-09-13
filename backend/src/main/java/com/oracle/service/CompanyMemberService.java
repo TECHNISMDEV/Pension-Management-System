@@ -1,18 +1,27 @@
 package com.oracle.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.oracle.Vos.BenificiaryVo;
 import com.oracle.Vos.MemberVO;
+import com.oracle.Vos.ReturnUiVo;
 import com.oracle.Vos.ServiceRequestForMemberRegistration;
 import com.oracle.exceptioncontroller.CompanyNotExistException;
+import com.oracle.helper.CSVHelper;
+import com.oracle.helper.MemberAndBenifitsCSVHelper;
+import com.oracle.model.Benificiary;
 import com.oracle.model.Company;
 import com.oracle.model.CompanyMember;
 import com.oracle.model.Member;
+import com.oracle.model.ReturnItems;
 import com.oracle.model.ServiceRequest;
+import com.oracle.repository.BenificaryRepository;
 import com.oracle.repository.CompanyMemberRepository;
 import com.oracle.repository.CompanyRepository;
 import com.oracle.repository.MemberRepository;
@@ -34,6 +43,9 @@ public class CompanyMemberService {
 	
 	@Autowired
 	CompanyMemberRepository companyMemberRepository;
+	
+	@Autowired
+	BenificaryRepository benificaryRepository;
 	
 	public ServiceRequest saveMemberServiceRequest(ServiceRequestForMemberRegistration serviceRequestRegistration)
 	{
@@ -106,5 +118,90 @@ public class CompanyMemberService {
 		
 		memberRegistration.setMemberVO(memberList);
 		return memberRegistration;
+	}
+	public List<MemberVO> uploadMemberWithBenifits(MultipartFile file, String loginId) {
+		// TODO Auto-generated method stub
+		try {
+			List<MemberVO> memberVolist= new MemberAndBenifitsCSVHelper().excelToMemberList(file.getInputStream());
+			List<MemberVO> memberVOsForUI=new ArrayList<>();
+			
+			for(MemberVO vo: memberVolist) {
+				 Member existingmember=memberRepository.findByNrc(vo.getNrc());
+				 if(null!=existingmember) {
+					 //update member here
+				 }else {
+					Member member=new Member();
+					member.setCreated(DateUtil.getCurrentDate());
+					member.setCreatedBy(vo.getLoginId());
+					member.setDob(vo.getDob());
+					member.setDod(vo.getDod());
+					member.setDocumaentName(DateUtil.getCurrentDate().toString());
+					member.setDocumentType(vo.getDocumentType());
+					member.setEmail(vo.getEmail());
+					member.setFirstName(vo.getFirstName());
+					member.setMiddleName(vo.getMiddleName());
+					member.setLastName(vo.getLastName());
+					member.setMobile(vo.getMobile());
+					member.setNationality(vo.getNationality());
+					member.setNrc(vo.getNrc());
+					member.setLastUpdated(vo.getLastUpdated());
+					member.setLastUpdatedBy(vo.getLoginId());
+					member.setRetirmentDate(vo.getRetirmentDate());
+					member.setOwnerId(vo.getLoginId());
+					//retrieveBenificiaryList(vo);
+					
+					
+					member=memberRepository.save(member);
+					
+					List<Benificiary> benificiaries=retrieveBenificiaryList(vo,member);
+					benificaryRepository.saveAll(benificiaries);
+					
+					CompanyMember companyMember=new CompanyMember();
+					companyMember.setCompanyId(vo.getCompanyId());
+					companyMember.setEndDate(vo.getRetirmentDate());//Can be change later
+					companyMember.setStarDate(DateUtil.getCurrentDate());
+					companyMember.setMember(member);
+					companyMemberRepository.save(companyMember);
+					memberVOsForUI.add(member.getVo());
+				 }
+				
+			}
+			
+			return memberVOsForUI;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+
+	private List<Benificiary> retrieveBenificiaryList(MemberVO vo, Member member) {
+
+		List<Benificiary> benfList = new ArrayList<>();
+
+		for (BenificiaryVo bVo : vo.getBenificiaryVo()) {
+			Benificiary b = new Benificiary();
+			b.setCreated(DateUtil.getCurrentDate());
+			b.setCreatedBy("0-USR1");
+			b.setDob(bVo.getDob());
+			b.setDocumaentName(bVo.getDocumaentName());
+			b.setDocumentType(bVo.getDocumentType());
+			b.setEmail(bVo.getEmail());
+			b.setFirstName(bVo.getFirstName());
+			b.setMiddleName(bVo.getMiddleName());
+			b.setLastName(bVo.getLastName());
+			b.setMobile(bVo.getMobile());
+			b.setNationality(bVo.getNationality());
+			b.setNrc(bVo.getNrc());
+			b.setMember(member);
+			benfList.add(b);
+		}
+		return benfList;
+	}
+	public List<Benificiary> getBenificiaryByMemberId(String id) {
+		// TODO Auto-generated method stub
+		List<Benificiary> list=benificaryRepository.findBenificiaryListByMemberId(id);
+		return list;
 	}
 }

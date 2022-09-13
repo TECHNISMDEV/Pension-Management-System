@@ -1,6 +1,7 @@
 package com.oracle.model;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -9,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -19,8 +21,11 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.oracle.Vos.MemberVO;
 import com.oracle.sequenceGenerator.StringPrefixedSequenceIdGenerator;
 
+import lombok.Data;
+
 @Entity
 @Table(name="MEMBER")
+@Data
 public class Member extends CommonFields {
 
 	@Id
@@ -38,7 +43,7 @@ public class Member extends CommonFields {
 	private String firstName;
 	@Column(name="LAST_NAME")
 	private String lastName;
-	@Column(name="MIDDLET_NAME")
+	@Column(name="MIDDLE_NAME")
 	private String middleName;
 	@Column(name="DOB")
 	private Date dob;
@@ -71,108 +76,11 @@ public class Member extends CommonFields {
 	@JsonBackReference
 	private ServiceRequest request;
 	
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
-	public String getFirstName() {
-		return firstName;
-	}
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-	public String getLastName() {
-		return lastName;
-	}
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-	public String getMiddleName() {
-		return middleName;
-	}
-	public void setMiddleName(String middleName) {
-		this.middleName = middleName;
-	}
-	public Date getDob() {
-		return dob;
-	}
-	public void setDob(Date dob) {
-		this.dob = dob;
-	}
-	public String getDocumaentName() {
-		return documaentName;
-	}
-	public void setDocumaentName(String documaentName) {
-		this.documaentName = documaentName;
-	}
-	public String getDocumentType() {
-		return documentType;
-	}
-	public void setDocumentType(String documentType) {
-		this.documentType = documentType;
-	}
-	public String getSsn() {
-		return ssn;
-	}
-	public void setSsn(String ssn) {
-		this.ssn = ssn;
-	}
-	public String getNrc() {
-		return nrc;
-	}
-	public void setNrc(String nrc) {
-		this.nrc = nrc;
-	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	public Long getMobile() {
-		return mobile;
-	}
-	public void setMobile(Long mobile) {
-		this.mobile = mobile;
-	}
-	public String getPrAdressId() {
-		return prAdressId;
-	}
-	public void setPrAdressId(String prAdressId) {
-		this.prAdressId = prAdressId;
-	}
-	public String getPrBenificaryId() {
-		return prBenificaryId;
-	}
-	public void setPrBenificaryId(String prBenificaryId) {
-		this.prBenificaryId = prBenificaryId;
-	}
-	public Date getRetirmentDate() {
-		return retirmentDate;
-	}
-	public void setRetirmentDate(Date retirmentDate) {
-		this.retirmentDate = retirmentDate;
-	}
-	public Date getDod() {
-		return dod;
-	}
-	public void setDod(Date dod) {
-		this.dod = dod;
-	}
-	public String getOwnerId() {
-		return ownerId;
-	}
-	public void setOwnerId(String ownerId) {
-		this.ownerId = ownerId;
-	}
-	public String getNationality() {
-		return nationality;
-	}
-	public void setNationality(String nationality) {
-		this.nationality = nationality;
-	}
+	@OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "member")
+	@JsonBackReference
+	private List<Benificiary> benificiary;
+	
+	
 	
 	public MemberVO getVo() {
 		MemberVO memberVO=new MemberVO();
@@ -196,6 +104,7 @@ public class Member extends CommonFields {
 		memberVO.setPrBenificaryId(this.getPrBenificaryId());
 		memberVO.setRetirmentDate(this.getRetirmentDate());
 		memberVO.setSsn(this.getSsn());
+		//memberVO.setBenificiaryVo(this.getBenificiary());
 		return memberVO;
 	}
 	

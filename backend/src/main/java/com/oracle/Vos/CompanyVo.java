@@ -5,12 +5,14 @@ import java.util.Date;
 import javax.persistence.Column;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+
 public class CompanyVo {
 
 	private String id;
@@ -126,4 +128,5 @@ public class CompanyVo {
 	
 	private Integer noOfEmployee;
 
+	
 }
