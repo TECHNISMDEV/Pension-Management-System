@@ -125,6 +125,7 @@ function Member_register() {
                                         <option defaultValue={formik.values.sr_type}>{formik.values.sr_type}</option>
 
                                     </select>
+                                    
                                     </td>
                                     <td className='p-1'><label className='form-label float-end'>Employer #: </label></td>
                                     <td className='p-1'><input type="text"

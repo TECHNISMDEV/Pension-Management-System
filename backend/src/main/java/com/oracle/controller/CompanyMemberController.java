@@ -124,6 +124,14 @@ public class CompanyMemberController {
 		
 		return ResponseEntity.ok(list);
 	}
-	
+
+	@GetMapping(path = "/getMemberByCompanyId/{companyId}")
+	public ResponseEntity<?> getMemberListByCompanyId(@PathVariable String companyId) {
+
+		List<Member> vo=service.getMemberListByCompanyId(companyId);
+
+
+		return ResponseEntity.ok(vo);
+	}
 	
 }

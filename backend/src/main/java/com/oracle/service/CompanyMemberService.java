@@ -67,6 +67,10 @@ public class CompanyMemberService {
 
 	}
 
+	public List<Member> getMemberListByCompanyId(String companyId){
+		List<Member> memberList = memberRepository.findByCompanyId(companyId);
+		return memberList;
+	}
 	public Member addCompanyMember(MemberVO vo) {
 		Member member = new Member();
 		member.setCreated(vo.getCreated());

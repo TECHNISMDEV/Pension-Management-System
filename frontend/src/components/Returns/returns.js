@@ -72,7 +72,7 @@ function Returns(props) {
     const showReturnItems = (selectedRowKeys) => {
         setIsReturnItems(true)
         setIsLoadingReturnItems(true)
-       setValidateReturnId(selectedRowKeys[0])
+        setValidateReturnId(selectedRowKeys[0])
         axios.get(API_URL + '/getItemsByReturnId/'+selectedRowKeys[0]).then(
             (res) => {
                 console.log(res.data)
