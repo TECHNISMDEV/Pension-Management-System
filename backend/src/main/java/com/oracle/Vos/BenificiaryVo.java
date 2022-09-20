@@ -2,6 +2,8 @@ package com.oracle.Vos;
 
 import java.util.Date;
 
+import com.oracle.model.CommonFields;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -38,5 +40,15 @@ public class BenificiaryVo {
 	private String memberNrc;
 	
 	private Date memberDob;
+	
+	private String loginId;
+	
+	private Date createdAt;
+	
+	private String createdBy;
+	
+	private Date lastUpdatedAt;
+	
+	private String lastUpdatedBy;
 
 }

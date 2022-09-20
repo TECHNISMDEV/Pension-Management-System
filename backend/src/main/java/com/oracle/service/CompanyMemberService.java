@@ -34,25 +34,23 @@ public class CompanyMemberService {
 
 	@Autowired
 	ServiceRequestRepository repository;
-	
+
 	@Autowired
 	CompanyRepository companyRepository;
-	
+
 	@Autowired
 	MemberRepository memberRepository;
-	
+
 	@Autowired
 	CompanyMemberRepository companyMemberRepository;
-	
+
 	@Autowired
 	BenificaryRepository benificaryRepository;
-	
-	public ServiceRequest saveMemberServiceRequest(ServiceRequestForMemberRegistration serviceRequestRegistration)
-	{
+
+	public ServiceRequest saveMemberServiceRequest(ServiceRequestForMemberRegistration serviceRequestRegistration) {
 		ServiceRequest serviceRequest = new ServiceRequest();
-		Company company=companyRepository.getCompanyById(serviceRequestRegistration.getCompanyVo().getId());
-		if(null==company)
-		{
+		Company company = companyRepository.getCompanyById(serviceRequestRegistration.getCompanyVo().getId());
+		if (null == company) {
 			throw new CompanyNotExistException();
 		}
 		serviceRequest.setId(serviceRequestRegistration.getServiceRequestVo().getId());
@@ -62,16 +60,19 @@ public class CompanyMemberService {
 		serviceRequest.setCreated(DateUtil.getCurrentDate());
 		serviceRequest.setComments(serviceRequestRegistration.getServiceRequestVo().getComments());
 		serviceRequest.setOwnerId(serviceRequestRegistration.getServiceRequestVo().getLoginUserId());
-		
-		serviceRequest.setCompany(company);
-		
-		return repository.save(serviceRequest);
-		
 
-		
+		serviceRequest.setCompany(company);
+
+		return repository.save(serviceRequest);
+
+	}
+
+	public List<Member> getMemberListByCompanyId(String companyId){
+		List<Member> memberList = memberRepository.findByCompanyId(companyId);
+		return memberList;
 	}
 	public Member addCompanyMember(MemberVO vo) {
-		Member member=new Member();
+		Member member = new Member();
 		member.setCreated(vo.getCreated());
 		member.setCreatedBy(vo.getLoginId());
 		member.setDob(vo.getDob());
@@ -89,48 +90,66 @@ public class CompanyMemberService {
 		member.setLastUpdatedBy(vo.getLoginId());
 		member.setRetirmentDate(vo.getRetirmentDate());
 		member.setOwnerId(vo.getLoginId());
-		
-		member=memberRepository.save(member);
-		
-		CompanyMember companyMember=new CompanyMember();
+
+		member = memberRepository.save(member);
+
+		CompanyMember companyMember = new CompanyMember();
 		companyMember.setCompanyId(vo.getCompanyId());
-		companyMember.setEndDate(vo.getRetirmentDate());//Can be change later
+		companyMember.setEndDate(vo.getRetirmentDate());// Can be change later
 		companyMember.setStarDate(DateUtil.getCurrentDate());
 		companyMember.setMember(member);
 		companyMemberRepository.save(companyMember);
-		
+
 		return member;
 	}
+
 	public ServiceRequestForMemberRegistration getServiceRequestById(String id) {
-		
-		ServiceRequestForMemberRegistration memberRegistration=new ServiceRequestForMemberRegistration();
-		List<MemberVO> memberList=new ArrayList<>();
-		
-		ServiceRequest request=repository.findById(id).get();
+
+		ServiceRequestForMemberRegistration memberRegistration = new ServiceRequestForMemberRegistration();
+		List<MemberVO> memberList = new ArrayList<>();
+
+		ServiceRequest request = repository.findById(id).get();
 		memberRegistration.setServiceRequestVo(request.getVo());
 		memberRegistration.setCompanyVo(request.getCompany().getVo());
-		
-		List<CompanyMember> companyMemberList=companyMemberRepository.getCompanyMemberByCompanyId(request.getCompany().getId());
-		
-		companyMemberList.forEach(companymember->{
+
+		List<CompanyMember> companyMemberList = companyMemberRepository
+				.getCompanyMemberByCompanyId(request.getCompany().getId());
+
+		companyMemberList.forEach(companymember -> {
 			memberList.add(companymember.getMember().getVo());
 		});
-		
+
 		memberRegistration.setMemberVO(memberList);
 		return memberRegistration;
 	}
+
 	public List<MemberVO> uploadMemberWithBenifits(MultipartFile file, String loginId) {
 		// TODO Auto-generated method stub
 		try {
-			List<MemberVO> memberVolist= new MemberAndBenifitsCSVHelper().excelToMemberList(file.getInputStream());
-			List<MemberVO> memberVOsForUI=new ArrayList<>();
-			
-			for(MemberVO vo: memberVolist) {
-				 Member existingmember=memberRepository.findByNrc(vo.getNrc());
-				 if(null!=existingmember) {
-					 //update member here
-				 }else {
-					Member member=new Member();
+			List<MemberVO> memberVolist = new MemberAndBenifitsCSVHelper().excelToMemberList(file.getInputStream());
+			List<MemberVO> memberVOsForUI = new ArrayList<>();
+
+			for (MemberVO vo : memberVolist) {
+				Member existingmember = memberRepository.findByNrc(vo.getNrc());
+				if (null != existingmember) {
+					// update member here
+					List<Benificiary> exisBenificiaries = existingmember.getBenificiary();
+					existingmember.setCreatedBy(loginId);
+					existingmember.setDob(vo.getDob());
+					existingmember.setDocumaentName(vo.getDocumaentName());
+					existingmember.setDocumentType(vo.getDocumentType());
+					existingmember.setDod(vo.getDod());
+					existingmember.setEmail(vo.getEmail());
+					existingmember.setFirstName(vo.getFirstName());
+					existingmember.setMiddleName(vo.getMiddleName());
+					existingmember.setLastName(vo.getLastName());
+					existingmember.setLastUpdated(DateUtil.getCurrentDate());
+					existingmember.setLastUpdatedBy(loginId);
+					existingmember = memberRepository.save(existingmember);
+					memberVOsForUI.add(existingmember.getVo());	
+
+				} else {
+					Member member = new Member();
 					member.setCreated(DateUtil.getCurrentDate());
 					member.setCreatedBy(vo.getLoginId());
 					member.setDob(vo.getDob());
@@ -148,25 +167,24 @@ public class CompanyMemberService {
 					member.setLastUpdatedBy(vo.getLoginId());
 					member.setRetirmentDate(vo.getRetirmentDate());
 					member.setOwnerId(vo.getLoginId());
-					//retrieveBenificiaryList(vo);
-					
-					
-					member=memberRepository.save(member);
-					
-					List<Benificiary> benificiaries=retrieveBenificiaryList(vo,member);
+					// retrieveBenificiaryList(vo);
+
+					member = memberRepository.save(member);
+
+					List<Benificiary> benificiaries = retrieveBenificiaryList(vo, member);
 					benificaryRepository.saveAll(benificiaries);
-					
-					CompanyMember companyMember=new CompanyMember();
+
+					CompanyMember companyMember = new CompanyMember();
 					companyMember.setCompanyId(vo.getCompanyId());
-					companyMember.setEndDate(vo.getRetirmentDate());//Can be change later
+					companyMember.setEndDate(vo.getRetirmentDate());// Can be change later
 					companyMember.setStarDate(DateUtil.getCurrentDate());
 					companyMember.setMember(member);
 					companyMemberRepository.save(companyMember);
 					memberVOsForUI.add(member.getVo());
-				 }
-				
+				}
+
 			}
-			
+
 			return memberVOsForUI;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -183,7 +201,7 @@ public class CompanyMemberService {
 		for (BenificiaryVo bVo : vo.getBenificiaryVo()) {
 			Benificiary b = new Benificiary();
 			b.setCreated(DateUtil.getCurrentDate());
-			b.setCreatedBy("0-USR1");
+			b.setCreatedBy(member.getCreatedBy());
 			b.setDob(bVo.getDob());
 			b.setDocumaentName(bVo.getDocumaentName());
 			b.setDocumentType(bVo.getDocumentType());
@@ -199,9 +217,42 @@ public class CompanyMemberService {
 		}
 		return benfList;
 	}
+
 	public List<Benificiary> getBenificiaryByMemberId(String id) {
 		// TODO Auto-generated method stub
-		List<Benificiary> list=benificaryRepository.findBenificiaryListByMemberId(id);
+		List<Benificiary> list = benificaryRepository.findBenificiaryListByMemberId(id);
 		return list;
+	}
+
+	public Benificiary addBenificiary(BenificiaryVo vo, String memberId) {
+		Benificiary b=null;
+
+			if(vo.getId().isEmpty())
+			{
+				b=new Benificiary();
+			}else {
+				b=benificaryRepository.findById(vo.getId()).get();
+			}
+			b.setCreated(DateUtil.getCurrentDate());
+			b.setCreatedBy(vo.getLoginId());
+			b.setDob(vo.getDob());
+			b.setDocumaentName(vo.getDocumaentName());
+			b.setDocumentType(vo.getDocumentType());
+			b.setEmail(vo.getEmail());
+			b.setFirstName(vo.getFirstName());
+			b.setMiddleName(vo.getMiddleName());
+			b.setLastName(vo.getLastName());
+			b.setMobile(vo.getMobile());
+			b.setNationality(vo.getNationality());
+			b.setNrc(vo.getNrc());
+			b.setSsn(vo.getSsn());
+			b.setMember(memberRepository.findById(memberId).get());
+			
+			
+			
+			
+		
+		return benificaryRepository.save(b);
+		
 	}
 }

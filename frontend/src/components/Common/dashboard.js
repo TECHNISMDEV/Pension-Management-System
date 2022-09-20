@@ -48,6 +48,7 @@ const theme = createMuiTheme({
     }
   });
 
+
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
 
@@ -100,6 +101,7 @@ const [req_id, setreq_id] = useState(id)
     const dispatch = useDispatch();
 
     const handleChange = (event, newValue) => {
+
         history.push(`/dashboard/${tabNameToIndex[newValue]}`);
         dispatch(set_tab_active(newValue))
         setValue(newValue);
