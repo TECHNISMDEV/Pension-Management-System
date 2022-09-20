@@ -98,7 +98,7 @@ function Collections() {
                 setreg_date(formatDate(res.data[0].returns.collection.created))
                 setemp_no(res.data[0].returns.company.id)
                 setstatus(res.data[0].returns.collection.status)
-                setaddress(res.data[0].returns.company.address.adressLine1 + ' ' + res.data[0].returns.company.address.adressLine2)
+                setaddress(res.data[0].returns.company.address?res.data[0].returns.company.address.adressLine1 + ' ' + res.data[0].returns.company.address.adressLine2:'')
                 setlogin_user(userdata.id)
 
                 setproc_cent('20')

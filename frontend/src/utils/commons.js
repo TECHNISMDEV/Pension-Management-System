@@ -717,14 +717,14 @@ export const submitMemberServiceRequest = (data, userId)=>{
           "user": {
             "craeatedBy": "",
             "created": "",
-            "email": data.contact_mail,
+            "email": "",
             "firstName": "",
             "id": "",
             "lastName": "",
             "lastUpdBy": "",
             "last_Updated": "",
             "login": userId,
-            "mobileNo": data.contact_no,
+            "mobileNo": "",
             "position": {
               "creDate": "",
               "createdBy": "",
