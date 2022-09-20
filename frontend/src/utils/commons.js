@@ -744,3 +744,83 @@ export const submitMemberServiceRequest = (data, userId)=>{
       }
       return payload
 }
+
+
+export const addMemberRequest = (data,userId,srFormData,empNumber)=>{
+  var payload = {
+    "benificiaryVo": [
+      {
+        "createdAt": "",
+        "createdBy": "",
+        "dob": "",
+        "documaentName": "",
+        "documentType": "",
+        "email": "",
+        "firstName": "",
+        "id": "",
+        "lastName": "",
+        "lastUpdatedAt": "",
+        "lastUpdatedBy": "",
+        "loginId": "",
+        "memberDob": "",
+        "memberNrc": "",
+        "middleName": "",
+        "mobile": 0,
+        "nationality": "",
+        "nrc": "",
+        "ssn": ""
+      }
+    ],
+    "companyId": empNumber,
+    "created": "",
+    "createdBy": userId,
+    "dob": data.dob,
+    "documaentName": data.docNum,
+    "documentType": data.docType,
+    "dod":data.dod,
+    "email": data.email,
+    "firstName": data.firstName,
+    "id": "",
+    "lastName": data.lastName,
+    "lastUpdated": "",
+    "lastUpdatedBy": "",
+    "loginId": userId,
+    "middleName": data.middleName,
+    "mobile": data.mobileNumber,
+    "nationality": data.nationality,
+    "nrc": data.nrc,
+    "ownerId": userId,
+    "prAdressId": "",
+    "prBenificaryId": "",
+    "retirmentDate": data.retirementDate,
+    "serviceRequestNumber": srFormData.sr_num,
+    "ssn": data.ssn
+  }
+
+  return payload
+}
+
+export const addBenfRequest = (data,userId,member)=>{
+  var payload = {
+    "createdAt": "",
+    "createdBy": userId,
+    "dob": data.dob,
+    "documaentName": data.docNum,
+    "documentType": data.docType,
+    "email": data.email,
+    "firstName": data.firstName,
+    "id": "",
+    "lastName": data.lastName,
+    "lastUpdatedAt": "",
+    "lastUpdatedBy": userId,
+    "loginId": userId,
+    "memberDob": member.dob,
+    "memberNrc": member.nrc,
+    "middleName": data.middleName,
+    "mobile": data.mobileNumber,
+    "nationality": data.nationality,
+    "nrc": data.nrc,
+    "ssn": data.ssn
+  }
+  return payload;
+}

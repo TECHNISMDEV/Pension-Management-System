@@ -116,6 +116,14 @@ function ServiceMemberRegistration(props) {
         
       }
 
+      useEffect(()=>{
+        axios.get(API_URL + '/getLookUpForEmployer').then(
+            (res) => {
+                setLookUp(res.data)
+               
+            })
+      },[])
+
     return (
        <>
         <div className="p-2">

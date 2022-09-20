@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Modal, Input, Space, Table, AutoComplete } from 'antd';
-import { API_URL, formatDate } from '../../utils/commons';
+import { addBenfRequest, addMemberRequest, API_URL, formatDate } from '../../utils/commons';
 import { useForm } from "react-hook-form";
 import * as yup from 'yup'
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -13,11 +13,13 @@ function MemberRegistration(props) {
     const [memberList, setMemberList] = useState([])
     const empNumber = props.id
     const [visibleModal, setVisibleModal] = useState(false);
-    const [visibleModalMB, setVisibleModalMB] = useState(false);
+    const [visibleModalMB, setVisibleModalMB] = useState(false)
     const [uploadFile, setUploadFile] = useState(null)
     const [showBenfTable, setShowBenfTable] = useState(false)
     const [benfList,setBenfList] = useState([])
-    
+    const [selectRow,setSelectRow] = useState(null)
+    const [visibleModalBenf,setVisibleModalBenf] = useState(false)
+    const [selectedMember,setSelectedMember] = useState()
 
     const lookUp = props.lookUp
     const srFormData = props.srFormData
@@ -27,9 +29,15 @@ function MemberRegistration(props) {
         contact_no : yup.string().min(10),
         contact_mail : yup.string().email()
     })
-    const { register, handleSubmit, watch, reset,formState: { errors } ,setValue} = useForm(
+    const { register, handleSubmit, getValues,watch, reset,formState: { errors } ,setValue} = useForm(
         { resolver: yupResolver(schema) }
     );
+    const {
+        register: benfRegister,
+        formState: { errors: errors2 },
+        handleSubmit: benfHandleSubmit,
+        getValues:getBenfValues,
+      } = useForm( { resolver: yupResolver(schema) });
 
     const initialValues = {
         firstName:'',
@@ -47,6 +55,21 @@ function MemberRegistration(props) {
         retirementDate:'',
         dod:'',
         ownerId:'',
+        nationality:''
+        
+    }
+
+    const benfInitialValues = {
+        firstName:'',
+        middleName:'',
+        lastName:'',
+        dob:'',
+        docNum:'',
+        docType:'',
+        ssn:'',
+        nrc:'',
+        email:'',
+        mobileNumber:'',
         nationality:''
         
     }
@@ -88,6 +111,8 @@ function MemberRegistration(props) {
 
 
     const showBenfTablePanel = (record,rowIndex)=>{
+        setSelectRow(rowIndex)
+        setSelectedMember(record)
         axios.get(API_URL + '/getBenificiaryByMemberId/' + record.id).then(
 
             (res) => {
@@ -119,6 +144,7 @@ function MemberRegistration(props) {
             title: 'Date of Birth',
             dataIndex: 'dob',
             key: 'dob',
+            render: date => <p>{formatDate(date)}</p>,
         },
         {
             title: 'SSN',
@@ -153,7 +179,61 @@ function MemberRegistration(props) {
             title: 'Date of Death',
             dataIndex: 'dod',
             key: 'dod',
+            render: date => <p>{formatDate(date)}</p>,
         },
+
+        {
+            title: 'Nationality',
+            dataIndex: 'nationality',
+            key: 'nationality',
+        }
+    ];
+
+    const benfColumns = [
+        {
+            title: 'First Name',
+            dataIndex: 'firstName',
+            key: 'firstName',
+
+        },
+        {
+            title: 'Middle Name',
+            dataIndex: 'middleName',
+            key: 'middleName',
+        },
+        {
+            title: 'Last Name',
+            dataIndex: 'lastName',
+            key: 'lastName',
+        },
+        {
+            title: 'Date of Birth',
+            dataIndex: 'dob',
+            key: 'dob',
+            render: date => <p>{formatDate(date)}</p>,
+        },
+        {
+            title: 'SSN',
+            dataIndex: 'ssn',
+            key: 'ssn',
+        },
+        {
+            title: 'NRC',
+            dataIndex: 'nrc',
+            key: 'nrc',
+        },
+        {
+            title: 'Email',
+            dataIndex: 'email',
+            key: 'email',
+        },
+      
+        {
+            title: 'Mobile Number',
+            dataIndex: 'mobile',
+            key: 'mobile',
+        },
+        
 
         {
             title: 'Nationality',
@@ -167,7 +247,34 @@ function MemberRegistration(props) {
     }
 
     const handleAddMember = ()=>{
-        setVisibleModal(false)
+  
+
+      axios.post(API_URL + '/AddCompanyMember/',addMemberRequest(getValues(),userdata.id,srFormData,empNumber)).then(
+
+        (res) => {
+            console.log(res.data)
+       
+            setMemberList(prevArray => [...prevArray, res.data])
+            reset()
+            setVisibleModal(false)
+        }
+    )
+        
+    }
+
+    const handleBenfUpload = ()=>{
+
+ axios.post(API_URL + '/AddBenificiary/'+selectedMember.id,addBenfRequest(getBenfValues(),userdata.id,selectedMember)).then(
+
+    (res) => {
+        console.log(res.data)
+   
+        setBenfList(prevArray => [...prevArray, res.data])
+        reset()
+        setVisibleModalBenf(false)
+    }
+)
+    
     }
 
     return (
@@ -193,12 +300,12 @@ function MemberRegistration(props) {
                                 title="Add Member"
                                 centered
                                 open={visibleModal}
-                                onOk={() => handleAddMember}
+                                onOk={() => handleAddMember()}
                                 onCancel={() => setVisibleModal(false)}
                                width={1800}
                                 bodyStyle={{height:'auto', minHeight:'400px'}}
                             >
-                                <form className='form'>
+                                <form className='form' >
                                     <table>
 
                                         <tbody className='fs-6'>
@@ -291,17 +398,17 @@ function MemberRegistration(props) {
                                                 <td className=' p-3 tcx-form-label'><label className='form-label float-end'>Document Number :  </label></td>
                                                 <td className='p-3'> <input type="text"
                                                     className='form-control float-start '
-                                                    name='memberFirstName'
-                                                    id='memberFirstName'
+                                                    name='docNum'
+                                                    id='docNum'
                                                     style={{ width: '230px' }}
-                                                    defaultValue={_.defaultTo(initialValues.firstName, '')}    {...register("firstName")} /></td>
+                                                    defaultValue={_.defaultTo(initialValues.docNum, '')}    {...register("docNum")} /></td>
                                                     <td className=' p-3 tcx-form-label'><label className='form-label float-end'>Document Type :  </label></td>
                                                 <td className='p-3'> <input type="text"
                                                     className='form-control float-start '
-                                                    name='memberFirstName'
-                                                    id='memberFirstName'
+                                                    name='docType'
+                                                    id='docType'
                                                     style={{ width: '230px' }}
-                                                    defaultValue={_.defaultTo(initialValues.firstName, '')}    {...register("firstName")} /></td>
+                                                    defaultValue={_.defaultTo(initialValues.docType, '')}    {...register("docType")} /></td>
                                               
                                             </tr>
                                         </tbody>
@@ -314,7 +421,7 @@ function MemberRegistration(props) {
                             <div className="py-3"> <Modal
                                 title="Upload Members and Beneficiaries"
                                 centered
-                                visible={visibleModalMB}
+                                open={visibleModalMB}
                                 okText="Upload"
                                 onOk={() => handleMBUpload()}
                                 onCancel={() => setVisibleModalMB(false)}
@@ -325,17 +432,128 @@ function MemberRegistration(props) {
                     setUploadFile(e.target.files[0])
                     }} />
                             </Modal>
+
+                            <Modal
+                                title="Add Beneficiaries"
+                                centered
+                                open={visibleModalBenf}
+                                okText="Add"
+                                onOk={() => handleBenfUpload()}
+                                onCancel={() => setVisibleModalBenf(false)}
+                               width={1800}
+                                bodyStyle={{height:'auto'}}
+                            >
+                                <form className='form' >
+                                    <table>
+
+                                        <tbody className='fs-6'>
+
+                                            <tr>
+                                                <td className=' p-3 tcx-form-label'><label className='form-label float-end'>First Name :  </label></td>
+                                                <td className='p-3'> <input type="text"
+                                                    className='form-control float-start '
+                                                    name='firstName'
+                                                    id='firstName'
+                                                    style={{ width: '230px' }}
+                                                    defaultValue={_.defaultTo(benfInitialValues.firstName, '')}    {...benfRegister("firstName")} /></td>
+                                                    <td className=' p-3 tcx-form-label'><label className='form-label float-end'>Middle Name :  </label></td>
+                                                <td className='p-3'> <input type="text"
+                                                    className='form-control float-start '
+                                                    name='middleName'
+                                                    id='middleName'
+                                                    style={{ width: '230px' }}
+                                                    defaultValue={_.defaultTo(benfInitialValues.middleName, '')}    {...benfRegister("middleName")} /></td>
+                                                    <td className=' p-3 tcx-form-label'><label className='form-label float-end'>Last Name :  </label></td>
+                                                <td className='p-3'> <input type="text"
+                                                    className='form-control float-start '
+                                                    name='lastName'
+                                                    id='lastName'
+                                                    style={{ width: '230px' }}
+                                                    defaultValue={_.defaultTo(benfInitialValues.lastName, '')}    {...benfRegister("lastName")} /></td>
+                                                    <td className=' p-3 tcx-form-label'><label className='form-label float-end'>Date Of Birth :  </label></td>
+                                                <td className='p-3'> <input type="date"
+                                                    className='form-control float-start '
+                                                    name='dob'
+                                                    id='dob'
+                                                    style={{ width: '230px' }}
+                                                    defaultValue={_.defaultTo(benfInitialValues.dob, '')}    {...benfRegister("dob")} /></td>
+                                            </tr>
+                                            <tr>
+                                                <td className=' p-3 tcx-form-label'><label className='form-label float-end'>SSN :  </label></td>
+                                                <td className='p-3'> <input type="text"
+                                                    className='form-control float-start '
+                                                    name='ssn'
+                                                    id='ssn'
+                                                    style={{ width: '230px' }}
+                                                    defaultValue={_.defaultTo(benfInitialValues.ssn, '')}    {...benfRegister("ssn")} /></td>
+                                                    <td className=' p-3 tcx-form-label'><label className='form-label float-end'>NRC:  </label></td>
+                                                <td className='p-3'> <input type="number"
+                                                    className='form-control float-start '
+                                                    name='nrc'
+                                                    id='nrc'
+                                                    style={{ width: '230px' }}
+                                                    defaultValue={_.defaultTo(benfInitialValues.nrc, '')}    {...benfRegister("nrc")} /></td>
+                                                    <td className=' p-3 tcx-form-label'><label className='form-label float-end'>Email :  </label></td>
+                                                <td className='p-3'> <input type="text"
+                                                    className='form-control float-start '
+                                                    name='email'
+                                                    id='email'
+                                                    style={{ width: '230px' }}
+                                                    defaultValue={_.defaultTo(benfInitialValues.email, '')}    {...benfRegister("email")} /></td>
+                                                    <td className=' p-3 tcx-form-label'><label className='form-label float-end'>Mobile Number :  </label></td>
+                                                <td className='p-3'> <input type="text"
+                                                    className='form-control float-start '
+                                                    name='mobileNumber'
+                                                    id='mobileNumber'
+                                                    style={{ width: '230px' }}
+                                                    defaultValue={_.defaultTo(benfInitialValues.mobileNumber, '')}    {...benfRegister("mobileNumber")} /></td>
+                                            </tr>
+                                          
+                                            <tr>
+                                            <td className=' p-3 tcx-form-label'><label className='form-label float-end'>Nationality :  </label></td>
+                                                    <td className='p-3'>  <select id="nationality" name="nationality" defaultValue={_.defaultTo(benfInitialValues.nationality, '')} className={"form-control float-start"} style={{ width: '230px' }}    {...benfRegister("nationality")}>
+                                                <option value=' '></option>
+                                                { lookUp ? lookUp.TCX_NATIOANLITY.map((item)=>(
+                                                   <option defaultValue={item} key={item}>{item}</option>  
+                                                )):null}
+
+                                            </select></td>
+                                                <td className=' p-3 tcx-form-label'><label className='form-label float-end'>Document Number :  </label></td>
+                                                <td className='p-3'> <input type="text"
+                                                    className='form-control float-start '
+                                                    name='docNum'
+                                                    id='docNum'
+                                                    style={{ width: '230px' }}
+                                                    defaultValue={_.defaultTo(benfInitialValues.docNum, '')}    {...benfRegister("docNum")} /></td>
+                                                    <td className=' p-3 tcx-form-label'><label className='form-label float-end'>Document Type :  </label></td>
+                                                <td className='p-3'> <input type="text"
+                                                    className='form-control float-start '
+                                                    name='docType'
+                                                    id='docType'
+                                                    style={{ width: '230px' }}
+                                                    defaultValue={_.defaultTo(benfInitialValues.docType, '')}    {...benfRegister("docType")} /></td>
+                                              
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </form>
+                            </Modal>
                             </div>
 
-                            <Table onRow={(record, rowIndex) => {
+                            <Table 
+                            rowClassName={(record, index) => index === selectRow ? 'table-test-row' :  ''}
+                            onRow={(record, rowIndex) => {
                                 return {
+                                    
                                     onClick: event => { showBenfTablePanel(record,rowIndex) }, // click row ex:- handleEmployerRowClick(record, rowIndex)
                                     onDoubleClick: event => { }, // double click row
                                     onContextMenu: event => { }, // right button click row
                                     onMouseEnter: event => { }, // mouse enter row
                                     onMouseLeave: event => { }, // mouse leave row
                                 };
-                            }} columns={columns} dataSource={memberList}
+                            }} 
+                      
+                              columns={columns} dataSource={memberList}
                                 // loading={employerList.length===0?true:false}
                                 pagination={{
                                     position: ['none', 'bottomCenter'],
@@ -354,7 +572,7 @@ function MemberRegistration(props) {
 
 
                                       
-                                        <td className='p-3'><button type="button" className="btn btn-danger float-end rounded-pill" onClick={() => setVisibleModal(true)} >+ Add</button></td>
+                                        <td className='p-3'><button type="button" className="btn btn-danger float-end rounded-pill" onClick={() => setVisibleModalBenf(true)} >+ Add</button></td>
                                    
                                     </table>
                                 </div>
@@ -366,7 +584,7 @@ function MemberRegistration(props) {
                                     onMouseEnter: event => { }, // mouse enter row
                                     onMouseLeave: event => { }, // mouse leave row
                                 };
-                            }} columns={columns} dataSource={benfList}
+                            }} columns={benfColumns} dataSource={benfList}
                                 // loading={employerList.length===0?true:false}
                                 pagination={{
                                     position: ['none', 'bottomCenter'],

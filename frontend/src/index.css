@@ -75,3 +75,8 @@ white-space: normal;
 .ant-tabs-card > .ant-tabs-nav .ant-tabs-tab-active, .ant-tabs-card > div > .ant-tabs-nav .ant-tabs-tab-active {
 background-color:#555353 !important;
 }
+
+.table-test-row{
+  background-color:#aaaaaa !important;
+  color:aliceblue;
+}
