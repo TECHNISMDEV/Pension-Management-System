@@ -243,7 +243,29 @@ function MemberRegistration(props) {
     ];
 
     const handleMBUpload=()=>{
-        setVisibleModalMB(false)
+        var formData = new FormData()
+        formData.append("file", uploadFile)
+        axios({
+            method: "post",
+            url: API_URL + "/memberfile-upload/"+userdata.id,
+            data: formData,
+            headers: { "Content-Type": "multipart/form-data" },
+        }).then( (res) => {
+            
+            setMemberList(res.data)
+           
+            document.getElementById('uploadFileMember').value = ''
+            setVisibleModalMB(false)
+        }
+        ).catch(
+            err=>{
+                alert("Failed to upload the member upload file!!")
+                console.log("FAiled to upload member upload --> "+err)
+                document.getElementById('uploadFileMember').value = ''
+            }
+
+        )
+        
     }
 
     const handleAddMember = ()=>{
@@ -275,6 +297,13 @@ function MemberRegistration(props) {
     }
 )
     
+    }
+
+    const handleMBUploadCancel = ()=>{
+        document.getElementById('uploadFileMember').value = ''
+        console.log(document.getElementById('uploadFileMember').value)
+        setVisibleModalMB(false)
+
     }
 
     return (
@@ -424,13 +453,16 @@ function MemberRegistration(props) {
                                 open={visibleModalMB}
                                 okText="Upload"
                                 onOk={() => handleMBUpload()}
-                                onCancel={() => setVisibleModalMB(false)}
+                                onCancel={() => handleMBUploadCancel()}
                                width={800}
                                 bodyStyle={{height:'auto'}}
                             >
-                                <input type="file" id="uploadFile"class="custom-file-input" onChange={(e) => {
+                                <form className='memberUploadForm'>
+                                <input type="file" id="uploadFileMember"class="custom-file-input" onChange={(e) => {
                     setUploadFile(e.target.files[0])
                     }} />
+                                </form>
+                       
                             </Modal>
 
                             <Modal

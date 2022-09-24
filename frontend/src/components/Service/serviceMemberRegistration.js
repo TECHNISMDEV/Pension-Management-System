@@ -14,6 +14,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Alert } from 'antd';
 import { SearchOutlined } from '@material-ui/icons';
 import MemberRegistration from '../Members/MemberRegistration';
+import { AiOutlineSearch } from 'react-icons/ai';
 const _ = require('lodash')
 
 function ServiceMemberRegistration(props) {
@@ -219,7 +220,8 @@ function ServiceMemberRegistration(props) {
                                       id="employer_id"
                                       style={{ width: '100%' }}
                                       defaultValue={initialValues.employer_id}  {...register("employer_id")}  disabled={isDisable} />
-                                     <a type='button' className="px-2" onClick={findEmployer}> <SearchOutlined size='20' /></a> 
+                                     <a type='button' className="px-2" onClick={findEmployer}> 
+                                     <AiOutlineSearch style={{ margin: '5px', overflow: 'auto' }} size={30} color={'black'} /> </a>
                                       </td>
                                   
                                   <td className='p-1 tcx-form-label'>
