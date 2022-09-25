@@ -7,6 +7,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import axios from 'axios';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 function MemberRegistration(props) {
 
@@ -21,6 +22,7 @@ function MemberRegistration(props) {
     const [visibleModalBenf,setVisibleModalBenf] = useState(false)
     const [selectedMember,setSelectedMember] = useState()
 
+    const history = useHistory()
     const lookUp = props.lookUp
     const srFormData = props.srFormData
     const _ = require("lodash");
@@ -262,6 +264,7 @@ function MemberRegistration(props) {
                 alert("Failed to upload the member upload file!!")
                 console.log("FAiled to upload member upload --> "+err)
                 document.getElementById('uploadFileMember').value = ''
+                setVisibleModalMB(false)
             }
 
         )
@@ -306,6 +309,29 @@ function MemberRegistration(props) {
 
     }
 
+    const sendForApprovalSR = (srId)=>{
+
+ 
+
+        axios.put(API_URL + "/sendForApproval/" + srId).then(
+            (res) => (
+                console.log(res.data),
+                alert("Sent for approval"),
+                history.push("/dashboard/home")
+              
+            ))
+    }
+
+    const sendForAccept = ()=>{
+        axios.put(API_URL + "/approveSrRequest/" + srFormData.serviceRequestVo.id).then(
+            (res) => (
+                console.log(res.data),
+                alert("Service Request Accepted"),
+                history.push("/dashboard/home")
+            ))
+    }
+
+
     return (
         <>
             <div className="p-1">
@@ -317,8 +343,8 @@ function MemberRegistration(props) {
 
                                         <td className="px-3"> <button type="button" className="btn btn-danger float-end rounded-pill" style={{width:'100%'}} onClick={()=>{ setVisibleModalMB(true)}}>Members & Beneficiaries upload</button></td>
                                         <td className='p-3'><button type="button" className="btn btn-danger float-end rounded-pill" onClick={() => setVisibleModal(true)} >+ Add</button></td>
-                                        <td className="px-3">  <button type="button" className="btn btn-danger float-end rounded-pill" style={{ width: "200px" }} onClick={()=>{}} >Send for Approval</button></td>
-                                        <td className="px-3">  <button type="button" className="btn btn-danger float-end rounded-pill" onClick={()=>{}} >Accept</button></td>
+                                        <td className="px-3">  <button type="button" className="btn btn-danger float-end rounded-pill" style={{ width: "200px" }} onClick={()=>{sendForApprovalSR(srFormData.serviceRequestVo.id)}}>Send for Approval</button></td>
+                                        <td className="px-3">  <button type="button" className="btn btn-danger float-end rounded-pill" onClick={()=>{sendForAccept()}} >Accept</button></td>
 
                                         <td className="px-3">  <button type="button" className="btn btn-danger float-end rounded-pill" onClick={() => { }} >Reject</button></td>
                                     </table>

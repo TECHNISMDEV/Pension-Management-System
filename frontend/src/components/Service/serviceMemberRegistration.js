@@ -98,7 +98,7 @@ function ServiceMemberRegistration(props) {
             }
     
     const handleResetForm = () => {
-        history.push("/dashboard/service");
+        history.push("/dashboard/service?type=MR");
       };
 
       const findEmployer = ()=>{
@@ -123,7 +123,44 @@ function ServiceMemberRegistration(props) {
                 setLookUp(res.data)
                
             })
+            if(props.id){
+                axios.get(API_URL + '/serviceRequestBySrNumber/'+props.id).then(
+                (res) => {
+                    console.log(res.data)
+                    setSrForm(res.data)
+                    setEmployer_Number(res.data.companyVo.id)
+                    setSRFormData(res.data)
+                    setViewMemberPanel(true)
+                   
+                } 
+            )}
+            
       },[])
+
+      const setSRFormData = (data)=>{
+        console.log(data)
+        setValue("id",data.serviceRequestVo.id)
+        setValue("sr_num",data.serviceRequestVo.srNumber)
+        setValue("sr_type",data.serviceRequestVo.type)
+        setValue("status",data.serviceRequestVo.status)
+       // setValue("owner_type",data.serviceRequestVo.srNumber)
+        setValue("date_received",formatDate(data.serviceRequestVo.created))
+        setValue("contact_name",data.serviceRequestVo.contactName)
+        setValue("contact_no",data.serviceRequestVo.contactNumber)
+        setValue("contact_mail",data.serviceRequestVo.contactEmail)
+        setValue("employer_id",data.companyVo.id)
+        setValue("employer_name",data.companyVo.name)
+        setValue("employer_type",data.companyVo.companyType)
+        setValue("nationality",data.serviceRequestVo.propiterNationality)
+        setValue("location",data.serviceRequestVo.location)
+        setValue("nrc",data.serviceRequestVo.proprietorNRC)
+        setValue("prop_firstname",data.serviceRequestVo.srPropiterFirstName)
+        setValue("prop_lastname",data.serviceRequestVo.srPropiterLastName)
+        setValue("owner_name",data.serviceRequestVo.user.position.name)
+        setValue("owner_type",data.serviceRequestVo.user.position.positionType)
+        setValue("owner_id",data.serviceRequestVo.user.id)
+        setValue("notes",data.serviceRequestVo.comments)
+    }
 
     return (
        <>
