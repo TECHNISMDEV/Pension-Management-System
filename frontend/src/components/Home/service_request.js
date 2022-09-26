@@ -1,7 +1,7 @@
 import { React, useEffect, useState } from 'react'
 import {  useSelector } from 'react-redux'
 import {API_URL, formatDate} from '../../utils/commons'
-import {Link} from 'react-router-dom'
+import {Link, NavLink, useHistory} from 'react-router-dom'
 import axios from 'axios'
 
 import { SearchOutlined } from '@ant-design/icons';
@@ -13,8 +13,10 @@ function Service_request() {
 
     const [srData, setSrData] = useState(null)
     const _ = require('lodash')
+    const history = useHistory()
    
     const userdata = useSelector(state => state.AuthReducer).user;
+
     useEffect(() => {
         
         axios.get(API_URL+'/serviceRequestByOwnerId/'+userdata.id).then(
@@ -28,12 +30,24 @@ function Service_request() {
         
        
     }, [])
+
+    const handleSRRoute = (srNum,type)=>{
+      if(type == "Member Registration"){
+        history.push({ pathname: "/dashboard/service",search:'type=MR&srNum='+srNum});
+  
+      }else{
+        history.push({ pathname: "/dashboard/service",search:'type=SR&srNum='+srNum});
+      }
+      }
+
+
+
     const columns = [
         {
           title: 'SR#',
           dataIndex: 'srNumber',
           key: 'srNumber',
-          render: text => <a className="stretched-link" href={"/dashboard/service/"+text}>{text}</a>
+          render: (text,row) => <a className="stretched-link" type='button' onClick={()=>handleSRRoute(text,row.type)}>{text}</a>
         },
         {
           title: 'SR Type',

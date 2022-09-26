@@ -21,6 +21,7 @@ function Service(props) {
   const history = useHistory()
   const queryParams = new URLSearchParams(location.search)
   const term = queryParams.get("type")
+  const srNum = queryParams.get("srNum")
 
   const [activeTab,setActiveTab] = useState('1')
 
@@ -41,12 +42,12 @@ function Service(props) {
   <div class="card-body">
   <Tabs activeKey={activeTab} onChange={callback} type="card">
     <TabPane className= {styles.sub_tabs} tab="Employer Registration" key="1">
-      <Employer_register id={props.id}/>
+      <Employer_register id={srNum}/>
     {/* <ServiceRegistration id={props.id}/> */}
     </TabPane>
     <TabPane tab="Member Registration" key="2">
       {/* <Member_register/> */}
-      <ServiceMemberRegistration/>
+      <ServiceMemberRegistration id={srNum}/>
     </TabPane>
   </Tabs>
   </div>
