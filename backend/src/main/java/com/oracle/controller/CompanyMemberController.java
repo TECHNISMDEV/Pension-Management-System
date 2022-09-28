@@ -97,7 +97,7 @@ public class CompanyMemberController {
 
 		if (MemberAndBenifitsCSVHelper.hasExcelFormat(file)) {
 			try {
-				List<MemberVO> memberList = service.uploadMemberWithBenifits(file,loginId);
+				List<Member> memberList = service.uploadMemberWithBenifits(file,loginId);
 				
 
 				return ResponseEntity.ok(memberList);
@@ -106,7 +106,7 @@ public class CompanyMemberController {
 				message = "Could not- upload the file: " + file.getOriginalFilename() + "!";
 				log.error("Exception===> {}",e);
 				return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
-						.body(new com.oracle.message.ResponseMessage(message, ""));
+						.body(new com.oracle.message.ResponseMessage(message, e.getMessage()));
 			}
 		}else {
 			message = "Please upload a csv file!";

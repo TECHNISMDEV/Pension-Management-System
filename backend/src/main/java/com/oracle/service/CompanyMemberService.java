@@ -60,6 +60,9 @@ public class CompanyMemberService {
 		serviceRequest.setCreated(DateUtil.getCurrentDate());
 		serviceRequest.setComments(serviceRequestRegistration.getServiceRequestVo().getComments());
 		serviceRequest.setOwnerId(serviceRequestRegistration.getServiceRequestVo().getLoginUserId());
+		serviceRequest.setContactNumber(serviceRequestRegistration.getServiceRequestVo().getContactNumber());
+		serviceRequest.setContactName(serviceRequestRegistration.getServiceRequestVo().getContactName());
+		serviceRequest.setContactEmail(serviceRequestRegistration.getServiceRequestVo().getContactEmail());
 
 		serviceRequest.setCompany(company);
 
@@ -123,10 +126,11 @@ public class CompanyMemberService {
 		return memberRegistration;
 	}
 
-	public List<MemberVO> uploadMemberWithBenifits(MultipartFile file, String loginId) {
+	public List<Member> uploadMemberWithBenifits(MultipartFile file, String loginId) {
 		// TODO Auto-generated method stub
 		try {
 			List<MemberVO> memberVolist = new MemberAndBenifitsCSVHelper().excelToMemberList(file.getInputStream());
+			String companyId=memberVolist.size()>0?memberVolist.get(0).getCompanyId():null;
 			List<MemberVO> memberVOsForUI = new ArrayList<>();
 
 			for (MemberVO vo : memberVolist) {
@@ -136,7 +140,7 @@ public class CompanyMemberService {
 					List<Benificiary> exisBenificiaries = existingmember.getBenificiary();
 					existingmember.setCreatedBy(loginId);
 					existingmember.setDob(vo.getDob());
-					existingmember.setDocumaentName(vo.getDocumaentName());
+					existingmember.setDocumaentName(DateUtil.getCurrentDate().toString());
 					existingmember.setDocumentType(vo.getDocumentType());
 					existingmember.setDod(vo.getDod());
 					existingmember.setEmail(vo.getEmail());
@@ -185,7 +189,8 @@ public class CompanyMemberService {
 
 			}
 
-			return memberVOsForUI;
+			 return memberRepository.findByCompanyId(companyId);
+			//return memberVOsForUI;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
