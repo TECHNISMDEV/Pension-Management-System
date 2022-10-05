@@ -354,7 +354,7 @@ function MemberRegistration(props) {
                             <div className="py-3"> <Modal
                                 title="Add Member"
                                 centered
-                                open={visibleModal}
+                                visible={visibleModal}
                                 onOk={() => handleAddMember()}
                                 onCancel={() => setVisibleModal(false)}
                                width={1800}
@@ -476,7 +476,7 @@ function MemberRegistration(props) {
                             <div className="py-3"> <Modal
                                 title="Upload Members and Beneficiaries"
                                 centered
-                                open={visibleModalMB}
+                                visible={visibleModalMB}
                                 okText="Upload"
                                 onOk={() => handleMBUpload()}
                                 onCancel={() => handleMBUploadCancel()}
@@ -494,7 +494,7 @@ function MemberRegistration(props) {
                             <Modal
                                 title="Add Beneficiaries"
                                 centered
-                                open={visibleModalBenf}
+                                visible={visibleModalBenf}
                                 okText="Add"
                                 onOk={() => handleBenfUpload()}
                                 onCancel={() => setVisibleModalBenf(false)}
