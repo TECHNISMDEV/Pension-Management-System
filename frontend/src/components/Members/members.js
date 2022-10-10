@@ -19,7 +19,7 @@ function callback(key){
             <TabPane tab="Member List" key="1">
             </TabPane>
             <TabPane tab="Member Registration" key="2">
-             <Member_registeration/>
+             {/* <Member_registeration/> */}
             </TabPane>
           </Tabs>
           </div>

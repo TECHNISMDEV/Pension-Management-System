@@ -8,6 +8,7 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import ChecklistUpload from '../Employer/checklistUpload';
 
 function MemberRegistration(props) {
 
@@ -404,7 +405,7 @@ function MemberRegistration(props) {
                                                     style={{ width: '230px' }}
                                                     defaultValue={_.defaultTo(initialValues.ssn, '')}    {...register("ssn")} /></td>
                                                     <td className=' p-3 tcx-form-label'><label className='form-label float-end'>NRC:  </label></td>
-                                                <td className='p-3'> <input type="number"
+                                                <td className='p-3'> <input type="text"
                                                     className='form-control float-start '
                                                     name='nrc'
                                                     id='nrc'
@@ -651,6 +652,11 @@ function MemberRegistration(props) {
 
                             />
                         </div>}
+                        
+                        <div className='card my-2 p-3'>
+                        <ChecklistUpload empNumber={empNumber}/>
+                        </div>
+                        
                 </div>
             </div>
         </>
